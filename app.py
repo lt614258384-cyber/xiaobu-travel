@@ -5,7 +5,7 @@ from fastapi import FastAPI, Request, Form, UploadFile, File
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
-from models import get_session, Profile, init_db
+from models import get_session, Profile, init_db, JourneyState, JourneyLog, Location
 from config import settings
 
 app = FastAPI(title="小布的旅行")
@@ -67,3 +67,32 @@ async def profile_save(
     session.commit()
     session.close()
     return RedirectResponse(url="/profile", status_code=303)
+
+
+@app.get("/", response_class=HTMLResponse)
+async def index(request: Request):
+    session = get_session()
+    state = session.query(JourneyState).first()
+    logs = session.query(JourneyLog).order_by(JourneyLog.generated_at.desc()).all()
+
+    location = None
+    if state and state.current_location_id:
+        location = session.query(Location).get(state.current_location_id)
+
+    enriched = []
+    for log in logs:
+        loc_name = ""
+        if log.location_id:
+            loc = session.query(Location).get(log.location_id)
+            loc_name = loc.name if loc else ""
+        enriched.append({
+            "id": log.id, "location_name": loc_name,
+            "story_text": log.story_text, "image_path": log.image_path,
+            "weather": log.weather, "mood": log.mood,
+            "generated_at": log.generated_at,
+        })
+
+    session.close()
+    return templates.TemplateResponse(request, "index.html", {
+        "request": request, "state": state, "location": location, "logs": enriched,
+    })

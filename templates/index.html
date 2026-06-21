@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+{% if not logs %}
+<div class="empty-state">
+    <div class="icon">🐾</div>
+    <p>小布的旅行即将开始...</p>
+    <p style="font-size:0.9rem;color:var(--color-text-light);">先设置<a href="/profile">小布的档案</a>，然后小布就会从汪星发来照片啦</p>
+</div>
+{% else %}
+<div class="status-bar">
+    <div class="status-item"><div class="label">🐾 汪星第</div><div class="value">{{ state.day_number if state else 1 }} 天</div></div>
+    <div class="status-item"><div class="label">📍 当前在</div><div class="value">{{ location.name if location else '彩虹桥' }}</div></div>
+    <div class="status-item"><div class="label">🌤 今日天气</div><div class="value">{{ state.weather_today if state else '晴' }}</div></div>
+    <div class="status-item"><div class="label">💭 心情</div><div class="value">{{ state.mood if state else '期待' }}</div></div>
+</div>
+
+{% set latest = logs[0] %}
+<div class="hero-card">
+    <img src="/{{ latest.image_path }}" alt="小布在{{ latest.location_name }}">
+    {% if latest.story_text %}<div class="story">{{ latest.story_text }}</div>{% endif %}
+    <div class="meta">
+        <span>📍 {{ latest.location_name }}</span>
+        <span>🌤 {{ latest.weather }}</span>
+        <span>💭 {{ latest.mood }}</span>
+        <span>{{ latest.generated_at.strftime('%m月%d日 %H:%M') }}</span>
+    </div>
+</div>
+
+<div class="timeline-title">📸 过往瞬间</div>
+<div class="timeline">
+    {% for log in logs[1:] %}
+    <div class="timeline-card">
+        <img src="/{{ log.image_path }}" alt="小布在{{ log.location_name }}" loading="lazy">
+        <div class="info">
+            <div class="date">{{ log.generated_at.strftime('%m月%d日 %H:%M') }} · {{ log.location_name }}</div>
+            {% if log.story_text %}<div class="caption">{{ log.story_text }}</div>{% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% endblock %}
