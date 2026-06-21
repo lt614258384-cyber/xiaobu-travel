@@ -3,7 +3,7 @@ import httpx
 from models import Activity, Profile
 
 
-STORY_MODEL = "doubao-1-5-vision-pro-32k-250115"
+STORY_MODEL = "doubao-seed-1-8-251228"
 STORY_API_URL = "https://ark.cn-beijing.volces.com/api/v3/chat/completions"
 
 
@@ -67,26 +67,19 @@ class Storyteller:
         activity_name = activity.name
 
         system_prompt = (
-            f"你是{dog_name}，一只金毛犬，在汪星旅行。"
-            f"用狗狗的感官和视角写日记。100-200字。温暖、童趣。"
+            f"你是{dog_name}，一只金毛犬，正在汪星旅行。"
+            f"汪星是宠物离世后的温暖世界。"
+            f"用第一人称\"我\"写旅行日记。用狗狗的感官——闻到什么、听到什么、"
+            f"爪子踩到什么。尾巴摇代表开心。100-200字。温暖、童趣、不煽情。"
         )
 
-        # Condense memory: last 5 stories + summary of older ones
+        # Full memory — model has 256K context, plenty of room
         memory_section = ""
         if memory_context:
-            # Extract recent stories from memory (last ~5 entries)
-            parts = memory_context.split("### 第")
-            recent = parts[-5:] if len(parts) > 5 else parts[1:] if len(parts) > 1 else []
-            recent_text = ""
-            for p in recent:
-                lines = p.strip().split("\n", 1)
-                if len(lines) >= 2:
-                    recent_text += lines[1].strip()[:200] + "\n"
-            # Extract personality section only (not full journey)
-            personality = memory_context.split("## 我的汪星旅程")[0] if "## 我的汪星旅程" in memory_context else memory_context[:500]
             memory_section = (
-                f"{personality}\n\n"
-                f"最近几天：\n{recent_text}\n"
+                f"以下是你从来到汪星至今的全部记忆。今天的故事请基于这些经历——"
+                f"自然地提及去过的地方、交到的朋友、做过的事，让故事有连续性。\n\n"
+                f"{memory_context}\n\n"
             )
         else:
             memory_section = "这是你来到汪星的第一天，一切刚刚开始。\n\n"
@@ -96,7 +89,7 @@ class Storyteller:
             f"今天你来到了{location_name}，正在{activity_name}。"
             f"天气{weather}，心情{mood}。{atmosphere}"
             f"\n\n用\"我\"的第一人称，写一段今天的旅行日记。你就是小布，小布就是你。\n"
-            f"用\"我\"写。不要出现\"小布\"。"
+            f"用\"我\"写今天的旅行日记（第{all_stories_count + 1}天）。不要出现\"小布\"。"
         )
 
         resp = httpx.post(
