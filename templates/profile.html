@@ -64,16 +64,10 @@
             </p>
         </div>
         <div class="form-group">
-            <label>🤖 DeepSeek API Key（故事文案生成）</label>
-            <input type="password" name="text_api_key" id="text_api_key"
-                   value="{{ profile.text_api_key if profile else '' }}"
-                   placeholder="粘贴 DeepSeek API Key">
-            {% if profile and profile.text_api_key %}
-              <small>已保存（末尾：****{{ profile.text_api_key[-4:] }}）</small>
-            {% endif %}
-            <p style="font-size:0.8rem;color:var(--color-text-light);margin-top:4px;">
-                去 <a href="https://platform.deepseek.com/" target="_blank">DeepSeek 控制台</a> 创建 API Key，粘贴到这里即可
-            </p>
+            <label>📝 与小布的回忆</label>
+            <textarea name="real_life_memories" rows="6"
+                      placeholder="写下你和小布真实的回忆，AI 生成故事时会自然地融入这些记忆——比如最喜欢的玩具、一起去过的地方、做过的事、小癖好...&#10;&#10;例如：&#10;小布最喜欢咬着那个橙色的网球不放，每天傍晚都要我陪它在小区草坪上玩接球。&#10;有一次带它去海边，它第一次看到海浪，吓得往后退了三步，然后又好奇地凑过去闻。&#10;冬天的时候它最喜欢趴在暖气片旁边打盹，呼噜声能把人催眠。">{{ profile.real_life_memories if profile else '' }}</textarea>
+            <p style="font-size:0.8rem;color:var(--color-text-light);margin-top:4px;">这些回忆会写入小布的记忆文件，让汪星的故事和真实生活有温暖的连接</p>
         </div>
         <div class="form-group">
             <label>小布的照片（最多 10 张）</label>
