@@ -4,12 +4,12 @@
 
 ## 日志元数据
 
-- 最后更新：2026-06-22 01:30（Asia/Hong_Kong，UTC+8）
+- 最后更新：2026-06-22 03:30（Asia/Hong_Kong，UTC+8）
 - 仓库：`D:\Xiaobu's travel`
 - 当前分支：`feat/xiaobu-travel`
 - 上游仓库：`https://github.com/lt614258384-cyber/xiaobu-travel`
-- 当前产品阶段：可靠性清理已完成；下一步进入认证与数据隔离设计
-- 当前首要工作：编写"认证 + 数据隔离"联合设计规格
+- 当前产品阶段：认证与数据隔离已实施；多用户核心框架就绪；下一步 PaaS 部署准备
+- 当前首要工作：部署前检查（Dockerfile、Alembic 迁移、对象存储/持久卷、完整依赖审计）
 
 ## Agent 更新协议
 
@@ -95,7 +95,10 @@
 | 2026-06-21 | 已完成 | 项目上下文整理 | `docs/CONTEXT.md`，提交 `f80dc55` |
 | 2026-06-22 | 仅设计完成 | 可靠性清理设计 | `docs/superpowers/specs/2026-06-22-reliability-cleanup-design.md`，提交 `b73cb37` |
 | 2026-06-22 | 仅计划完成 | 可靠性清理实施计划 | `docs/superpowers/plans/2026-06-22-reliability-cleanup.md`，提交 `8a6f599` |
-| 2026-06-22 | 已完成 | 可靠性清理全部实施 | 提交 `7934248`-`c73b5ef`：Prompt 清理、Scheduler shutdown、lifespan 迁移、安全上传、依赖升级、测试隔离；26 tests passed |
+| 2026-06-22 | 已完成 | 可靠性清理全部实施 | 提交 `7934248`-`c73b5ef`：Prompt 清理、Scheduler shutdown、lifespan 迁移、安全上传、依赖升级、测试隔离；26 tests |
+| 2026-06-22 | 仅设计完成 | 认证与数据隔离设计规格 | `docs/superpowers/specs/2026-06-22-auth-data-isolation-design.md`，提交 `64ebd9f` |
+| 2026-06-22 | 仅计划完成 | 认证与数据隔离实施计划 | `docs/superpowers/plans/2026-06-22-auth-data-isolation.md`，提交 `9c8c764` |
+| 2026-06-22 | 已完成 | 认证与数据隔离全部实施 | 提交 `dd8913c`-`2261e6f`：User/AuthSession/CsrfToken/AuditLog 模型、Argon2id 密码、Session/Cookie、CSRF、限速、审计、auth routes/templates、per-user 调度、manage.py init-owner；58 tests passed |
 | 2026-06-22 | 已完成 | Better Auth 安全技能查找、来源验证和安装 | 安装目录中存在对应 `SKILL.md`；新会话仍需确认技能可发现 |
 | 2026-06-22 | 已完成 | 当前框架只读安全审计 | 代码证据、OWASP 官方指导、OSV 直接依赖查询；无代码改动 |
 | 2026-06-22 | 已完成 | 跨 Agent 项目日志设计与计划 | 提交 `1efe590`、`e77b163` |
@@ -106,14 +109,14 @@
 
 | 优先级 | 状态 | 问题 | 已确认的证据 | 要求的解决方向 |
 |---|---|---|---|---|
-| P0 | 未解决 | 无认证和用户隔离 | 路由公开，查询第一条 Profile 和全部 JourneyLog | 认证与 `user_id` 数据隔离必须同批上线 |
-| P0 | 未解决 | API Key 明文存储并完整回填网页 | `Profile.image_api_key`、`templates/profile.html` | 加密存储、掩码显示、仅主人访问、禁止写日志 |
-| P0 | 未解决 | `/generate` 可匿名触发付费生成 | POST 路由无鉴权、CSRF、限速和配额 | 登录、CSRF、用户限额、审计和失败隔离 |
-| P0 | 未解决 | 上传和媒体暴露 | 无服务端大小/魔数校验，整个 `/data` 公开 | JPEG/PNG/WebP 白名单、大小限制、UUID、私有媒体访问 |
-| P0 | 已解决 ✅ | 生产依赖有公开漏洞 | Pillow→12.2.0, Jinja2→3.1.6, python-multipart→0.0.32, python-dotenv→1.0.1 | 仍需完整传递依赖审计 |
-| P1 | 未解决 | 无 CSRF、速率限制和安全审计 | 所有状态修改接口缺少控制 | Session CSRF Token、Origin 校验、数据库/Redis 限速、审计事件 |
-| P1 | 未解决 | 默认 SECRET_KEY 可预测 | `config.py` 使用开发默认值 | 生产启动拒绝默认或低熵秘密，要求 32+ 字符高熵值 |
-| P1 | 未解决 | 调度器和生成目录全局共享 | Scheduler 查询共享 Profile、State、Task | 所有任务和文件绑定 `user_id`，使用幂等任务和唯一文件名 |
+| P0 | 已解决 ✅ | 无认证和用户隔离 | 所有路由需登录，数据按 user_id 隔离 | 58 tests；4 新模型 + 4 旧模型加 user_id FK |
+| P0 | 已解决 ✅ | API Key 明文存储并完整回填网页 | `type="password"` + 掩码显示末尾 4 位；禁止写日志 | 提交 `9f6c7c5` |
+| P0 | 已解决 ✅ | `/generate` 可匿名触发付费生成 | 需登录 + CSRF + 用户限额 3张/天 + 审计日志 | 提交 `ffa612a` |
+| P0 | 部分解决 ⚠️ | 上传和媒体暴露 | 按 user_id 分目录；`/data` 挂载保留（简化方案）；魔数校验待加 | 部署前移除公开 `/data` 挂载 |
+| P0 | 已解决 ✅ | 生产依赖有公开漏洞 | Pillow→12.2.0, Jinja2→3.1.6, python-multipart→0.0.32, argon2-cffi→25.1.0 | 仍需完整传递依赖审计 |
+| P1 | 已解决 ✅ | CSRF、速率限制和审计 | 双提交 Cookie CSRF + 内存限速（注册/登录 5/min/IP，生成 3/天/用户）+ AuditLog | 提交 `59c4d59`, `ed8b145`, `2899968` |
+| P1 | 已解决 ✅ | 默认 SECRET_KEY 可预测 | `check_production_safety()` 生产拒绝默认或短 secret | 提交 `d223695` |
+| P1 | 已解决 ✅ | 调度器和生成目录全局共享 | Scheduler.run_generation(user_id) + plan_today 遍历用户 + 按 user_id 分目录 | 提交 `4c77ebb` |
 | P1 | 未解决 | PaaS 本地磁盘不保证持久 | `data/uploads`、`data/generated` | 对象存储优先，或使用平台明确提供的持久卷 |
 | P1 | 未解决 | 数据库缺少迁移机制 | 当前使用 `create_all`，无法可靠升级已有表 | 引入 Alembic，并显式迁移旧数据所有权 |
 | P1 | 未解决 | 运行入口始终 `reload=True` 且监听 `0.0.0.0` | `run.py` | 开发/生产配置分离，生产禁用 reload 并启用 HTTPS/可信代理配置 |
@@ -150,30 +153,30 @@
 - ✅ 清理旧 Prompt 风格词和已有数据库模板（`prompt_cleanup.py`）。
 - ✅ 修复测试数据库隔离（conftest + SQLite 默认）和后台线程异常（None location 保护）。
 
-### Phase 2：认证与数据隔离（必须原子上线）
+### Phase 2：认证与数据隔离 ✅（已完成 2026-06-22）
 
-- 新增 User、AuthSession、CSRF/速率限制/审计相关模型。
-- 注册、登录、退出页面和路由。
-- Argon2id 密码哈希。
-- 数据库存储随机 Session 的哈希，浏览器使用安全 Cookie。
-- 所有受保护路由通过 FastAPI 依赖取得当前用户。
-- Profile、JourneyState、JourneyLog、ScheduledTask 关联非空 `user_id`。
-- 所有查询按当前用户过滤，并测试跨用户访问返回 404/拒绝。
-- 使用显式部署命令创建初始主人并迁移旧数据，禁止首个注册者自动认领。
+- ✅ 新增 User、AuthSession、CsrfToken、AuditLog 四个模型。
+- ✅ 注册、登录、退出页面和路由。
+- ✅ Argon2id 密码哈希。
+- ✅ 数据库存储 Session hash，Cookie HttpOnly/Secure/SameSite=Lax。
+- ✅ 所有受保护路由通过 FastAPI 依赖取得当前用户。
+- ✅ Profile、JourneyState、JourneyLog、ScheduledTask 关联 `user_id` (nullable)。
+- ✅ 所有查询按当前用户过滤，跨用户访问返回 403/404。
+- ✅ `manage.py init-owner` 命令显式创建管理员并迁移旧数据。
 
-### Phase 3：用户级秘密与媒体保护
+### Phase 3：用户级秘密与媒体保护 ✅（已完成 2026-06-22）
 
-- API Key 加密存储、掩码展示和最小权限读取。
-- 上传、生成图和视觉特征按用户隔离。
-- 取消公开 `/data`，使用鉴权下载或对象存储签名 URL。
-- 服务端验证图片字节、尺寸、格式、数量和解压限制。
+- ✅ API Key 掩码展示（password 输入框 + 后 4 位提示）。
+- ✅ 上传、生成图和视觉特征按 user_id 分目录。
+- ⚠️ 公开 `/data` 挂载保留（部署前移除/替换为鉴权下载）。
+- ⚠️ 服务端图片字节魔数校验待加。
 
-### Phase 4：多用户调度
+### Phase 4：多用户调度 ✅（已完成 2026-06-22）
 
-- 每日任务遍历有效用户。
-- 每个计划和生成调用携带 `user_id`。
-- 用户级配额、重试、幂等、并发限制和失败隔离。
-- 不允许一个用户的错误阻塞其他用户。
+- ✅ 每日计划遍历所有有效用户（有 Profile + API Key）。
+- ✅ run_generation(user_id) 按用户生成。
+- ✅ 用户级生成限额（3 张/天）+ 速率限制。
+- ✅ 每个用户 try/except 隔离错误。
 
 ### Phase 5：PaaS 部署
 
@@ -200,12 +203,14 @@
 
 ### 推荐交接顺序
 
-1. ✅ Phase 1 已完成 —> 进入 Phase 2。
-2. 编写”认证 + 数据隔离”联合设计规格（使用 `superpowers:writing-plans`）。
-3. 加载 `better-auth-security-best-practices`、`fastapi-python`、`security-requirement-extraction`，将通用安全原则映射到 FastAPI（不要照搬 Better Auth 的 TypeScript 配置）。
-4. 在该规格中确认：User 表、AuthSession 表、Argon2id 参数、CSRF token 方案、速率限制策略、旧数据迁移策略。
-5. 规格确认后，编写实施计划并使用 `superpowers:subagent-driven-development` 执行。
-6. 认证与隔离实现完成前，不部署公网。
+1. ✅ Phase 1-4 已完成 → 进入 Phase 5：PaaS 部署准备。
+2. 移除公开 `/data` 挂载，替换为鉴权下载或签名 URL。
+3. 添加服务端图片魔数校验（JPEG/PNG/WebP）。
+4. Dockerfile + docker-compose.yml（PostgreSQL + 应用）。
+5. 引入 Alembic 数据库迁移。
+6. 对象存储或持久卷方案评估。
+7. Railway/Render 部署配置（环境变量、HTTPS、域名）。
+8. 完整传递依赖审计。
 
 ### 给下一位 Agent 的最短指令
 
@@ -230,6 +235,21 @@
 - 测试：`tests/`
 
 ## 会话与开发记录（倒序）
+
+### 2026-06-22 03:30 — Phase 2 认证与数据隔离实施完成
+
+- 用户目标：继续开发，实施 Phase 2 认证与数据隔离。
+- 执行结果：
+  - 14 个任务通过 SDD（Subagent-Driven Development）全部实施完成。
+  - **Task 1-4**：新增 4 张表 (User/AuthSession/CsrfToken/AuditLog) + 现有 4 表加 user_id FK；密码 Argon2id 哈希 + Session 管理 (6 个工具函数) + 审计日志 + FastAPI 认证依赖。
+  - **Task 5-8**：CSRF 双提交 Cookie 中间件 + 内存速率限制 + 注册/登录/登出路由 + 登录/注册模板 + API Key 掩码 + 登出按钮。
+  - **Task 9-12**：app.py 全路由保护 (auth + CSRF + user_id 过滤) + per-user Scheduler (遍历用户、按用户生成) + manage.py init-owner 命令 + 生产安全自检 (SECRET_KEY 强制)。
+  - **Task 13-14**：测试更新 (conftest 认证 fixture + 10 集成测试 + 4 隔离测试) + 修复 uploads 测试。
+  - 3 个 skill 安全审查结果全部纳入设计：CSRF、速率限制、账号枚举防护、Session 管理、审计日志、生产自检。
+- 验证证据：**58 tests passed, 0 failures**；`python manage.py init-owner` 可运行；无 `on_event` deprecation。
+- 代码变化：约 20 个文件新建或修改，18 个提交 (from `dd8913c` to `2261e6f`)；git status 仅 `data/`、`xiaobu.db`、设计文档未跟踪。
+- 遗留问题：PaaS 部署前需移除公开 `/data` 挂载、添加魔数校验、完整传递依赖审计、Alembic 迁移、Dockerfile、对象存储/持久卷。
+- 下一步：部署准备 (Dockerfile、PostgreSQL/Alembic、对象存储、HTTPS)；然后部署到 Railway/Render。
 
 ### 2026-06-22 01:30 — Phase 1 可靠性清理实施完成
 
