@@ -105,7 +105,7 @@ class Storyteller:
                 "Authorization": f"Bearer {api_key}",
                 "Content-Type": "application/json",
             },
-            timeout=8,
+            timeout=12,
         )
 
         if resp.status_code == 200:
