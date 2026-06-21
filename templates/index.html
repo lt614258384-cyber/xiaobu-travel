@@ -68,7 +68,7 @@ async function generatePhoto() {
             body: formData.toString()
         });
         if (resp.ok) {
-            setTimeout(() => { window.location.reload(); }, 5000);
+            setTimeout(() => { window.location.reload(); }, 25000);
         } else {
             const err = await resp.json().catch(() => ({}));
             alert("生成失败，请重试" + (err.detail ? ": " + err.detail : ""));
