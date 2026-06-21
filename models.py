@@ -89,6 +89,8 @@ class ScheduledTask(Base):
 
 
 def get_engine():
+    if settings.DATABASE_URL.startswith("sqlite"):
+        return create_engine(settings.DATABASE_URL, connect_args={"check_same_thread": False})
     return create_engine(settings.DATABASE_URL)
 
 
