@@ -4,6 +4,7 @@ from pathlib import Path
 from config import settings
 import httpx
 from PIL import Image
+import base64
 
 
 class ImageGenerator(ABC):
@@ -17,6 +18,21 @@ class ImageGenerator(ABC):
 
     def _get_api_key(self) -> str:
         return self.api_key or settings.IMAGE_API_KEY
+
+    def _encode_ref_photos(self, paths: list[str]) -> list[str]:
+        """Read local image files and return base64-encoded strings."""
+        encoded = []
+        for path in paths[:3]:  # Max 3 ref images for API
+            try:
+                filepath = Path(path)
+                if not filepath.is_absolute():
+                    filepath = Path.cwd() / filepath
+                if filepath.exists():
+                    with open(filepath, "rb") as f:
+                        encoded.append(base64.b64encode(f.read()).decode("utf-8"))
+            except Exception:
+                continue
+        return encoded
 
 
 class FakeGenerator(ImageGenerator):
@@ -43,9 +59,12 @@ class TongyiImageGenerator(ImageGenerator):
             "input": {"prompt": prompt},
             "parameters": {"size": "1024*1024", "n": 1},
         }
-        # Reference photos need URLs or base64. Local paths won't work with API.
-        # Skip for now — prompt-based generation with appearance description is sufficient.
-        # TODO: add base64 encoding for local reference images.
+        # Encode reference photos as base64 for character consistency
+        if reference_photos:
+            ref_imgs = self._encode_ref_photos(reference_photos)
+            if ref_imgs:
+                payload["input"]["ref_img"] = ref_imgs[0]  # API supports one ref image
+                payload["input"]["ref_mode"] = "repaint"
 
         # Submit async task
         resp = httpx.post(self.API_URL, json=payload, headers=headers, timeout=30)
