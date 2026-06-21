@@ -15,7 +15,8 @@ class Storyteller:
         weather: str = "",
         mood: str = "",
         features: str = "",
-        recent_stories: list[str] | None = None,
+        memory_context: str = "",
+        all_stories_count: int = 0,
         api_key: str = "",
     ) -> str:
         if profile.content_preference == "image_only":
@@ -30,7 +31,8 @@ class Storyteller:
                     weather=weather,
                     mood=mood,
                     features=features,
-                    recent_stories=recent_stories or [],
+                    memory_context=memory_context,
+                    all_stories_count=all_stories_count,
                     api_key=api_key,
                 )
                 if story:
@@ -54,40 +56,43 @@ class Storyteller:
         weather: str,
         mood: str,
         features: str,
-        recent_stories: list[str],
+        memory_context: str,
+        all_stories_count: int,
         api_key: str,
     ) -> str:
         dog_name = profile.name or "小布"
         dog_desc = features if features else (profile.appearance or "一只可爱的金毛犬")
-        personality = ", ".join(profile.personality_tags) if profile.personality_tags else "温柔、忠诚、好奇"
         location_name = activity.location.name if activity.location else "一个美丽的地方"
         atmosphere = activity.location.atmosphere if activity.location else ""
         activity_name = activity.name
 
-        # Build conversation history context
-        history_context = ""
-        if recent_stories:
-            history_context = "最近几天小布的经历：\n"
-            for i, story in enumerate(recent_stories[-5:], 1):
-                history_context += f"第{i}天：{story}\n"
-            history_context += "\n请保持故事与之前的经历有自然的延续感，可以提及之前去过的地方或做过的事。\n"
-
         system_prompt = (
-            f"你是小布——一只{dog_desc}的金毛犬，正在汪星旅行。"
-            f"小布的性格：{personality}。"
+            f"你是{dog_name}——一只{dog_desc}的金毛犬，正在汪星旅行。"
             f"汪星是一个温暖、治愈、美好的平行世界，所有离世的宠物都在这里快乐地生活。"
-            f"请以小布的视角，用第一人称或温暖第三人称，写一段100-200字的旅行日记片段。"
+            f"请以{dog_name}的视角，用第一人称或温暖第三人称，写一段100-250字的旅行日记片段。"
             f"要有画面感、呼吸感，像真的狗狗在体验这个世界——闻到什么、感受到什么、想到什么。"
-            f"语言自然、温柔、有童趣，不要太煽情，不要用'主人'这个词。"
+            f"语言自然、温柔、有童趣，不要太煽情，不要用'主人'这个词，用'家人'代替。"
             f"偶尔可以提到'想念家里的味道'但不要过度悲伤，整体基调是温暖开心的。"
             f"只返回故事正文，不要加标题、引号、前缀或后缀说明。"
         )
 
+        # Build prompt with full memory as context
+        memory_section = ""
+        if memory_context:
+            memory_section = (
+                f"以下是{dog_name}从来到汪星至今的全部记忆。"
+                f"今天的故事必须基于这些经历——可以自然提及去过的地方、交到的朋友、做过的事、"
+                f"曾经的感受。不需要每条都提，但要让人感觉今天的故事和过往是连续的、真实的。"
+                f"\n\n{memory_context}\n\n"
+            )
+        else:
+            memory_section = f"这是{dog_name}来到汪星的第一天，一切刚刚开始。\n\n"
+
         user_message = (
-            f"今天小布来到了{location_name}，正在{activity_name}。"
-            f"天气{weather}，小布心情{mood}。{atmosphere}"
-            f"\n\n{history_context}"
-            f"请写一段今天的旅行日记。"
+            f"{memory_section}"
+            f"今天{dog_name}来到了{location_name}，正在{activity_name}。"
+            f"天气{weather}，心情{mood}。{atmosphere}"
+            f"\n\n请写一段今天的旅行日记（第{all_stories_count + 1}天）。"
         )
 
         resp = httpx.post(

@@ -7,6 +7,7 @@ from models import get_session, Profile, JourneyState, JourneyLog, Location, Act
 from engine.state_machine import StateMachine
 from engine.storyteller import Storyteller
 from engine.image_gen import get_image_generator
+from memory import load_memory_context, save_memory
 
 
 class Scheduler:
@@ -186,15 +187,19 @@ class Scheduler:
 
             features = self._get_features(profile, user_id)
 
-            # Fetch recent stories for LLM continuity
-            recent_logs = (
+            # Fetch all past stories for memory context
+            all_logs = (
                 sess.query(JourneyLog)
                 .filter_by(user_id=user_id)
-                .order_by(JourneyLog.generated_at.desc())
-                .limit(5)
+                .order_by(JourneyLog.generated_at.asc())
                 .all()
             )
-            recent_stories = [log.story_text for log in reversed(recent_logs) if log.story_text]
+            all_stories = [log.story_text for log in all_logs if log.story_text]
+
+            # Load or build full memory
+            memory_context = load_memory_context(user_id)
+            if not memory_context:
+                memory_context = ""  # will be built after first story
 
             prompt = self.storyteller.compose_prompt(activity, profile, weather, state.mood, features)
             api_type = "seedream" if profile.image_api_key else None
@@ -216,9 +221,13 @@ class Scheduler:
             story = self.storyteller.compose_story(
                 activity, profile,
                 weather=weather, mood=state.mood, features=features,
-                recent_stories=recent_stories,
+                memory_context=memory_context,
+                all_stories_count=len(all_stories),
                 api_key=profile.image_api_key or "",
             )
+
+            # Persist updated memory
+            save_memory(user_id, profile, features, all_stories + [story])
             new_mood = self.state_machine.update_mood(state.mood, activity.name)
 
             log_entry = JourneyLog(
