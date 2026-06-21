@@ -20,6 +20,8 @@ def build_memory(profile: Profile, features: str, all_stories: list[str]) -> str
     habits = profile.habits or "喜欢在阳光下打盹"
     appearance = features or profile.appearance or "一只可爱的狗狗"
 
+    real_memories = profile.real_life_memories or ""
+
     parts = [
         f"# {dog_name}的汪星记忆",
         "",
@@ -28,6 +30,18 @@ def build_memory(profile: Profile, features: str, all_stories: list[str]) -> str
         f"我的性格：{personality}。",
         f"我喜欢：{interests}。",
         f"我的习惯：{habits}。",
+    ]
+
+    if real_memories.strip():
+        parts += [
+            "",
+            "## 我还在家时（家人写下的真实回忆）",
+            "以下是我还在家人身边时的真实故事和回忆。汪星的故事中要自然地延续这些记忆——"
+            "比如去过的真实地方、喜欢的真实玩具、和家人做过的真实事情。",
+            real_memories.strip(),
+        ]
+
+    parts += [
         "",
         "## 我的汪星旅程",
     ]

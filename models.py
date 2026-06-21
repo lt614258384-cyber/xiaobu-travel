@@ -20,6 +20,7 @@ class Profile(Base):
     habits = Column(Text, default="")
     image_api_key = Column(String(200), default="")
     content_preference = Column(String(20), default="caption")
+    real_life_memories = Column(Text, default="")
     reference_photos = Column(JSON, default=list)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)

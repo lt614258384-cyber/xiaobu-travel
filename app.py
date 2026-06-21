@@ -74,6 +74,7 @@ async def profile_save(
     habits: str = Form(""),
     content_preference: str = Form("caption"),
     image_api_key: str = Form(""),
+    real_life_memories: str = Form(""),
     csrf_token: str = Form(None, alias="_csrf_token"),
     photos: list[UploadFile] = File([]),
 ):
@@ -96,6 +97,7 @@ async def profile_save(
     profile.habits = habits
     profile.content_preference = content_preference
     profile.image_api_key = image_api_key
+    profile.real_life_memories = real_life_memories
 
     # Upload with user-scoped directory
     existing = profile.reference_photos or []
