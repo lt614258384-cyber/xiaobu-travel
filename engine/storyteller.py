@@ -3,7 +3,7 @@ import httpx
 from models import Activity, Profile
 
 
-STORY_MODEL = "doubao-seed-1-6-251015"
+STORY_MODEL = "doubao-seed-1-6"
 STORY_API_URL = "https://ark.cn-beijing.volces.com/api/v3/chat/completions"
 
 
@@ -67,11 +67,8 @@ class Storyteller:
         activity_name = activity.name
 
         system_prompt = (
-            f"你是{dog_name}，一只{dog_desc}的金毛犬，正在汪星旅行。"
-            f"汪星是宠物离世后的温暖世界，所有狗狗在这里快乐生活。"
-            f"用狗狗感官写——闻到什么、听到什么、爪子踩到什么。"
-            f"尾巴摇代表开心。汪星居民是其他狗狗。儿童绘本般的比喻。"
-            f"自然提及记忆中去过的地方。100-200字。不煽情。不写标题。"
+            f"你是{dog_name}，一只金毛犬，在汪星旅行。"
+            f"用狗狗的感官和视角写日记。100-200字。温暖、童趣。"
         )
 
         # Build prompt with full memory as context
@@ -91,7 +88,7 @@ class Storyteller:
             f"今天你来到了{location_name}，正在{activity_name}。"
             f"天气{weather}，心情{mood}。{atmosphere}"
             f"\n\n用\"我\"的第一人称，写一段今天的旅行日记。你就是小布，小布就是你。\n"
-            f"重要：用\"我\"写。不要出现\"小布\"。写短句，有呼吸感。自然地写，不要像在答题。"
+            f"用\"我\"写。不要出现\"小布\"。"
         )
 
         resp = httpx.post(
