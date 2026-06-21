@@ -99,7 +99,9 @@ class Scheduler:
                 return
 
             prompt = self.storyteller.compose_prompt(activity, profile, weather, state.mood)
-            image_gen = get_image_generator(api_key=profile.image_api_key)
+            # Use real API if key is set, otherwise fall back to env/default
+            api_type = "tongyi" if profile.image_api_key else None
+            image_gen = get_image_generator(api_type=api_type, api_key=profile.image_api_key)
             image_path = image_gen.generate(prompt, profile.reference_photos or [])
             image_path = image_path.replace("\\", "/")  # Normalize for web URLs
             story = self.storyteller.compose_story(activity, profile)
