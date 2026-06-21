@@ -1,5 +1,6 @@
 import json
 import shutil
+from contextlib import asynccontextmanager
 from pathlib import Path
 from fastapi import FastAPI, Request, Form, UploadFile, File
 from fastapi.responses import HTMLResponse, RedirectResponse
@@ -8,19 +9,27 @@ from fastapi.staticfiles import StaticFiles
 from models import get_session, Profile, init_db, JourneyState, JourneyLog, Location
 from config import settings
 from scheduler import Scheduler
+from seed.prompt_cleanup import cleanup_activity_prompt_templates
 
-app = FastAPI(title="小布的旅行")
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    init_db()
+    cleanup_activity_prompt_templates()
+    scheduler = Scheduler()
+    scheduler.start()
+    app.state.scheduler = scheduler
+    try:
+        yield
+    finally:
+        scheduler.shutdown()
+        app.state.scheduler = None
+
+
+app = FastAPI(title="小布的旅行", lifespan=lifespan)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 app.mount("/data", StaticFiles(directory="data"), name="data")
 templates = Jinja2Templates(directory="templates")
-
-
-@app.on_event("startup")
-async def startup():
-    init_db()
-    scheduler = Scheduler()
-    scheduler.start()
-    print("Xiaobu's Travel started! Scheduler running.")
 
 
 @app.get("/profile", response_class=HTMLResponse)
