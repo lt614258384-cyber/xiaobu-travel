@@ -26,8 +26,6 @@ class Storyteller:
             f"让它出现在{activity.location.name if activity.location else '一个新的地方'}里{activity.name}，"
             f"天气{weather}，{atmosphere}"
         )
-        # Strip Ghibli/anime keywords
-        base = base.replace("吉卜力动画风格", "").replace("温暖治愈", "").replace("，吉卜力动画风格", "")
         # Warm healing semi-realistic watercolor illustration style
         base += (
             ", warm healing semi-realistic hand-drawn watercolor illustration"

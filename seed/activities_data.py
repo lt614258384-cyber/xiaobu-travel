@@ -17,7 +17,7 @@ def generate_activities():
     activities["彩虹桥"] = [
         {
             "name": "看日出",
-            "prompt_template": "{appearance} 站在彩虹桥上眺望日出的方向，{weather}的早晨，{atmosphere}，吉卜力动画风格，温暖治愈",
+            "prompt_template": "{appearance} 站在彩虹桥上眺望日出的方向，{weather}的早晨，{atmosphere}",
             "captions": [
                 "今天小布起了个大早，在彩虹桥上看到了最美的日出 🌅",
                 "彩虹桥的日出永远看不腻，小布趴在桥边看了好久～",
@@ -30,7 +30,7 @@ def generate_activities():
         },
         {
             "name": "和朋友们打招呼",
-            "prompt_template": "{appearance} 在彩虹桥上和新来的汪星朋友们打招呼，{weather}的天空下，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在彩虹桥上和新来的汪星朋友们打招呼，{weather}的天空下，{atmosphere}",
             "captions": [
                 "今天彩虹桥来了新朋友，小布热情地上去打招呼 👋",
                 "小布在桥头迎接新来的小伙伴，尾巴摇得像螺旋桨～",
@@ -41,7 +41,7 @@ def generate_activities():
         },
         {
             "name": "在桥上奔跑",
-            "prompt_template": "{appearance} 在彩虹桥上欢快地奔跑，{weather}，{atmosphere}，风吹动毛发，吉卜力动画风格",
+            "prompt_template": "{appearance} 在彩虹桥上欢快地奔跑，{weather}，{atmosphere}，风吹动毛发",
             "captions": [
                 "小布今天精力充沛，在彩虹桥上来回跑了好几趟 🏃",
                 "彩虹桥上有一道模糊的身影——那是小布在撒欢跑！",
@@ -52,7 +52,7 @@ def generate_activities():
         },
         {
             "name": "眺望人间",
-            "prompt_template": "{appearance} 趴在彩虹桥边，向下眺望远方的家，{weather}，{atmosphere}，深情而温柔，吉卜力动画风格",
+            "prompt_template": "{appearance} 趴在彩虹桥边，向下眺望远方的家，{weather}，{atmosphere}，深情而温柔",
             "captions": [
                 "小布趴在桥边，往家的方向看了好久 🏠",
                 "小布说它不怕远，因为看得见家的方向 ⭐",
@@ -67,7 +67,7 @@ def generate_activities():
     activities["阳光沙滩"] = [
         {
             "name": "追浪花",
-            "prompt_template": "{appearance} 在沙滩上追逐白色的浪花，{weather}，{atmosphere}，浪花拍打沙滩，吉卜力动画风格",
+            "prompt_template": "{appearance} 在沙滩上追逐白色的浪花，{weather}，{atmosphere}，浪花拍打沙滩",
             "captions": [
                 "小布和浪花玩了一下午，每次浪退就追、浪来就逃 😂",
                 "追浪花是沙滩上最好玩的游戏，没有之一！",
@@ -79,7 +79,7 @@ def generate_activities():
         },
         {
             "name": "挖沙坑",
-            "prompt_template": "{appearance} 在沙滩上认真地挖沙坑，{weather}，{atmosphere}，沙子飞溅，吉卜力动画风格",
+            "prompt_template": "{appearance} 在沙滩上认真地挖沙坑，{weather}，{atmosphere}，沙子飞溅",
             "captions": [
                 "小布今天挖了一个超大的沙坑，差点把自己埋进去 🕳️",
                 "沙滩工程队队长小布正在施工中，请勿打扰～",
@@ -90,7 +90,7 @@ def generate_activities():
         },
         {
             "name": "晒太阳",
-            "prompt_template": "{appearance} 懒洋洋地躺在沙滩上晒太阳，{weather}，{atmosphere}，温暖的阳光洒在身上，吉卜力动画风格",
+            "prompt_template": "{appearance} 懒洋洋地躺在沙滩上晒太阳，{weather}，{atmosphere}，温暖的阳光洒在身上",
             "captions": [
                 "小布摊成了一张毛茸茸的煎饼，舒服得不想动 ☀️",
                 "今日活动：晒太阳。任务完成度：100%",
@@ -101,7 +101,7 @@ def generate_activities():
         },
         {
             "name": "捡贝壳",
-            "prompt_template": "{appearance} 在沙滩上仔细寻找美丽的贝壳，{weather}，{atmosphere}，沙滩上散落着五彩贝壳，吉卜力动画风格",
+            "prompt_template": "{appearance} 在沙滩上仔细寻找美丽的贝壳，{weather}，{atmosphere}，沙滩上散落着五彩贝壳",
             "captions": [
                 "小布发现了一枚闪闪发光的贝壳！🐚",
                 "今天是满载而归的一天～小布的贝壳收藏又增加了",
@@ -118,7 +118,7 @@ def generate_activities():
     activities["贝壳湾"] = [
         {
             "name": "散步拾贝",
-            "prompt_template": "{appearance} 在贝壳湾的浅滩上散步，仔细寻找美丽的贝壳，{weather}，{atmosphere}，海浪轻拍沙滩，吉卜力动画风格",
+            "prompt_template": "{appearance} 在贝壳湾的浅滩上散步，仔细寻找美丽的贝壳，{weather}，{atmosphere}，海浪轻拍沙滩",
             "captions": [
                 "小布在贝壳湾发现了好多漂亮的贝壳！🐚",
                 "今天捡到了一枚像月亮一样的白色贝壳，太美了～",
@@ -131,7 +131,7 @@ def generate_activities():
         },
         {
             "name": "建沙堡",
-            "prompt_template": "{appearance} 在贝壳湾的沙滩上用贝壳装饰一座沙堡，{weather}，{atmosphere}，创意满满，吉卜力动画风格",
+            "prompt_template": "{appearance} 在贝壳湾的沙滩上用贝壳装饰一座沙堡，{weather}，{atmosphere}，创意满满",
             "captions": [
                 "小布的沙堡上插满了贝壳，成了贝壳湾最华丽的建筑！🏰",
                 "今天当了一回建筑师，虽然沙堡歪歪扭扭的但很可爱～",
@@ -145,7 +145,7 @@ def generate_activities():
         },
         {
             "name": "浅滩踩水",
-            "prompt_template": "{appearance} 在贝壳湾的浅滩上踩着清凉的海水，水花四溅，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在贝壳湾的浅滩上踩着清凉的海水，水花四溅，{weather}，{atmosphere}",
             "captions": [
                 "小布在水里跳来跳去，踩出了一朵朵水花 💦",
                 "浅滩的水刚刚没过小布的爪子，凉凉的太舒服了～",
@@ -158,7 +158,7 @@ def generate_activities():
         },
         {
             "name": "赶海探险",
-            "prompt_template": "{appearance} 退潮时在贝壳湾的礁石间赶海，发现小鱼小蟹藏在石缝里，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 退潮时在贝壳湾的礁石间赶海，发现小鱼小蟹藏在石缝里，{weather}，{atmosphere}",
             "captions": [
                 "退潮后的贝壳湾像个宝藏地图，小布每块石头都要翻一翻 🗺️",
                 "小布发现了一只寄居蟹，两个小家伙互相吓了一跳！",
@@ -175,7 +175,7 @@ def generate_activities():
     activities["灯塔礁"] = [
         {
             "name": "登塔远眺",
-            "prompt_template": "{appearance} 爬上灯塔礁的白色灯塔，从塔顶眺望大海，{weather}，{atmosphere}，海天一色，吉卜力动画风格",
+            "prompt_template": "{appearance} 爬上灯塔礁的白色灯塔，从塔顶眺望大海，{weather}，{atmosphere}，海天一色",
             "captions": [
                 "小布爬上灯塔，海天一色的风景太美了！🗼",
                 "从灯塔顶看出去，大海像一块巨大的蓝宝石～",
@@ -188,7 +188,7 @@ def generate_activities():
         },
         {
             "name": "看远方的船",
-            "prompt_template": "{appearance} 坐在灯塔礁上，用望远镜看着远方海面上的船只，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 坐在灯塔礁上，用望远镜看着远方海面上的船只，{weather}，{atmosphere}",
             "captions": [
                 "小布用灯塔的望远镜看到了一艘大帆船！⛵",
                 "远处的货轮拖着长长的白浪花，像在大海上画画～",
@@ -201,7 +201,7 @@ def generate_activities():
         },
         {
             "name": "听灯塔钟声",
-            "prompt_template": "{appearance} 坐在灯塔礁的灯塔下，聆听塔钟在整点敲响的悠远钟声，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 坐在灯塔礁的灯塔下，聆听塔钟在整点敲响的悠远钟声，{weather}，{atmosphere}",
             "captions": [
                 "灯塔的钟声回荡在海面上，小布安静地听着 🔔",
                 "每一次钟声都像在和远方的人说：一切安好～",
@@ -214,7 +214,7 @@ def generate_activities():
         },
         {
             "name": "画灯塔写生",
-            "prompt_template": "{appearance} 趴在灯塔礁的草地上，用爪子蘸着颜料画一幅灯塔的写生，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 趴在灯塔礁的草地上，用爪子蘸着颜料画一幅灯塔的写生，{weather}，{atmosphere}",
             "captions": [
                 "小布用爪子画了一座歪歪扭扭的灯塔，但配色很美 🎨",
                 "小布的画作被灯塔狗狗贴在了值班室的墙上！",
@@ -231,7 +231,7 @@ def generate_activities():
     activities["落日码头"] = [
         {
             "name": "看日落",
-            "prompt_template": "{appearance} 坐在落日码头的木栈道上，静静地看着太阳沉入海平面，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 坐在落日码头的木栈道上，静静地看着太阳沉入海平面，{weather}，{atmosphere}",
             "captions": [
                 "小布在落日码头看了一场最美的日落 🌅",
                 "太阳像一个橙色的气球慢慢沉进海里，美得让小布说不出话",
@@ -244,7 +244,7 @@ def generate_activities():
         },
         {
             "name": "钓鱼",
-            "prompt_template": "{appearance} 坐在落日码头边，学着老船长的样子放下小小的鱼线，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 坐在落日码头边，学着老船长的样子放下小小的鱼线，{weather}，{atmosphere}",
             "captions": [
                 "小布今天钓到了一条小鱼！虽然只有拇指那么大 🎣",
                 "钓鱼需要耐心，小布在练习第三个五分钟了～",
@@ -257,7 +257,7 @@ def generate_activities():
         },
         {
             "name": "栈道漫步",
-            "prompt_template": "{appearance} 在落日码头的木栈道上悠闲散步，海鸥从头顶飞过，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在落日码头的木栈道上悠闲散步，海鸥从头顶飞过，{weather}，{atmosphere}",
             "captions": [
                 "小布在栈道上慢慢地走，每一步都踩在金色的阳光上 ☀️",
                 "木栈道一直延伸到海里，小布觉得自己在海上散步～",
@@ -274,7 +274,7 @@ def generate_activities():
     activities["海风悬崖"] = [
         {
             "name": "迎风伫立",
-            "prompt_template": "{appearance} 站在海风悬崖的边缘，迎风伫立，俯瞰整片大海，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 站在海风悬崖的边缘，迎风伫立，俯瞰整片大海，{weather}，{atmosphere}",
             "captions": [
                 "海风吹得小布的耳朵飞起来，它却站得稳稳的！🌊",
                 "站在悬崖边的感觉就像在飞，小布张开爪子感受海风～",
@@ -287,7 +287,7 @@ def generate_activities():
         },
         {
             "name": "崖边野餐",
-            "prompt_template": "{appearance} 在海风悬崖的草地上铺开野餐垫，对着大海享受美食，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在海风悬崖的草地上铺开野餐垫，对着大海享受美食，{weather}，{atmosphere}",
             "captions": [
                 "小布在悬崖边吃了个三明治，海景套餐无价 🧺",
                 "悬崖野餐是海风悬崖的保留节目，小布准备了骨头饼干和鱼干～",
@@ -300,7 +300,7 @@ def generate_activities():
         },
         {
             "name": "看崖边野花",
-            "prompt_template": "{appearance} 在海风悬崖的石缝间寻找顽强生长的野花，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在海风悬崖的石缝间寻找顽强生长的野花，{weather}，{atmosphere}",
             "captions": [
                 "悬崖石缝里开着紫色的小野花，小布觉得它们好勇敢 🌸",
                 "海风这么大还能开花，小布说这些花是自己的榜样～",
@@ -313,7 +313,7 @@ def generate_activities():
         },
         {
             "name": "数船",
-            "prompt_template": "{appearance} 趴在悬崖边数着海面上经过的船只，每艘船都像一个小小的故事盒，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 趴在悬崖边数着海面上经过的船只，每艘船都像一个小小的故事盒，{weather}，{atmosphere}",
             "captions": [
                 "小布数了一下午，总共有二十七艘船经过！🚢",
                 "每艘船要去哪里呢？小布给它们编了各种各样的故事～",
@@ -330,7 +330,7 @@ def generate_activities():
     activities["珊瑚浅滩"] = [
         {
             "name": "浮潜观鱼",
-            "prompt_template": "{appearance} 在珊瑚浅滩的水面上浮潜，欣赏水下五彩的珊瑚和热带鱼，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在珊瑚浅滩的水面上浮潜，欣赏水下五彩的珊瑚和热带鱼，{weather}，{atmosphere}",
             "captions": [
                 "小布戴着特制的小潜水面罩，看到了超美的珊瑚！🐠",
                 "水下的世界太神奇了，小布差点忘了换气～",
@@ -343,7 +343,7 @@ def generate_activities():
         },
         {
             "name": "珊瑚写生",
-            "prompt_template": "{appearance} 趴在珊瑚浅滩的透明船底上，透过玻璃观察珊瑚并画下来，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 趴在珊瑚浅滩的透明船底上，透过玻璃观察珊瑚并画下来，{weather}，{atmosphere}",
             "captions": [
                 "小布隔着玻璃画珊瑚，虽然画出来像一堆彩色云朵 🎨",
                 "透过玻璃船底看珊瑚，不用沾水也能欣赏海底世界～",
@@ -356,7 +356,7 @@ def generate_activities():
         },
         {
             "name": "喂小鱼",
-            "prompt_template": "{appearance} 在珊瑚浅滩的岸边投喂五颜六色的小鱼，鱼群在水中争相跃起，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在珊瑚浅滩的岸边投喂五颜六色的小鱼，鱼群在水中争相跃起，{weather}，{atmosphere}",
             "captions": [
                 "小布一撒鱼食，彩色的小鱼就围过来了，像水下烟花 🐟",
                 "有只大胆的鱼直接从水里跳起来吃小布爪子上的食物！",
@@ -369,7 +369,7 @@ def generate_activities():
         },
         {
             "name": "海水清滩",
-            "prompt_template": "{appearance} 在珊瑚浅滩参加环保清滩活动，和小伙伴们一起清理海边的杂物，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在珊瑚浅滩参加环保清滩活动，和小伙伴们一起清理海边的杂物，{weather}，{atmosphere}",
             "captions": [
                 "小布参加了清滩行动，叼了好几块塑料片回来 🧹",
                 "保护珊瑚就是保护小丑鱼的家，小布很认真地工作～",
@@ -386,7 +386,7 @@ def generate_activities():
     activities["美人鱼湾"] = [
         {
             "name": "探索传说",
-            "prompt_template": "{appearance} 在美人鱼湾的礁石间探险，寻找传说中美人鱼的踪迹，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在美人鱼湾的礁石间探险，寻找传说中美人鱼的踪迹，{weather}，{atmosphere}",
             "captions": [
                 "小布说它在礁石后面看到了什么东西！会是人鱼吗？🧜",
                 "美人鱼湾的海水泛着神秘的蓝光，小布的好奇心爆炸了～",
@@ -399,7 +399,7 @@ def generate_activities():
         },
         {
             "name": "月光海湾",
-            "prompt_template": "{appearance} 夜晚在美人鱼湾的沙滩上等待月光洒在海面上的银色光路，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 夜晚在美人鱼湾的沙滩上等待月光洒在海面上的银色光路，{weather}，{atmosphere}",
             "captions": [
                 "月光在美人鱼湾的海面上铺了一条银色小路，小布看呆了 🌙",
                 "传说月光小路的尽头能通到另一个世界～",
@@ -412,7 +412,7 @@ def generate_activities():
         },
         {
             "name": "听人鱼故事",
-            "prompt_template": "{appearance} 坐在美人鱼湾的老海龟身边，听它讲关于美人鱼的古老传说，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 坐在美人鱼湾的老海龟身边，听它讲关于美人鱼的古老传说，{weather}，{atmosphere}",
             "captions": [
                 "老海龟的故事太好听了，小布听得入迷 🐢",
                 "原来人鱼会在暴风雨夜救落水的狗狗，小布感动极了～",
@@ -425,7 +425,7 @@ def generate_activities():
         },
         {
             "name": "吹海螺",
-            "prompt_template": "{appearance} 在美人鱼湾的礁石上吹响一个大海螺，低沉的声音在海湾中回荡，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在美人鱼湾的礁石上吹响一个大海螺，低沉的声音在海湾中回荡，{weather}，{atmosphere}",
             "captions": [
                 "小布学会吹海螺了！虽然只有一个音 🐚",
                 "海螺的声音像大海在唱歌，低沉又温柔～",
@@ -442,7 +442,7 @@ def generate_activities():
     activities["沙滩排球场"] = [
         {
             "name": "打排球",
-            "prompt_template": "{appearance} 在沙滩排球场和朋友们一起打排球，用鼻子把球顶过网，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在沙滩排球场和朋友们一起打排球，用鼻子把球顶过网，{weather}，{atmosphere}",
             "captions": [
                 "小布一个漂亮的头球！得分！🏐",
                 "沙滩排球场上今天上演了一场汪星联赛～",
@@ -455,7 +455,7 @@ def generate_activities():
         },
         {
             "name": "球技特训",
-            "prompt_template": "{appearance} 在沙滩排球场刻苦练习垫球技巧，专注而认真，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在沙滩排球场刻苦练习垫球技巧，专注而认真，{weather}，{atmosphere}",
             "captions": [
                 "小布在一个人练习垫球，已经连续垫了八个！🏐",
                 "特训中的小布最帅了，汗水在阳光下闪闪发光～",
@@ -468,7 +468,7 @@ def generate_activities():
         },
         {
             "name": "当啦啦队",
-            "prompt_template": "{appearance} 坐在沙滩排球场的观众席上，挥舞着小旗为比赛的队伍加油，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 坐在沙滩排球场的观众席上，挥舞着小旗为比赛的队伍加油，{weather}，{atmosphere}",
             "captions": [
                 "今天不打球，小布是头号啦啦队员！📣",
                 "小布的加油声比谁都大，场上球员都被鼓舞了～",
@@ -481,7 +481,7 @@ def generate_activities():
         },
         {
             "name": "赛后聚餐",
-            "prompt_template": "{appearance} 比赛后在沙滩排球场的休息区和大家一起吃水果喝水，聊天说笑，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 比赛后在沙滩排球场的休息区和大家一起吃水果喝水，聊天说笑，{weather}，{atmosphere}",
             "captions": [
                 "赛后西瓜最甜了！小布啃得满脸都是西瓜汁 🍉",
                 "赢球吃大餐，输球也吃大餐——这是小布队的宗旨～",
@@ -498,7 +498,7 @@ def generate_activities():
     activities["冲浪者海滩"] = [
         {
             "name": "学冲浪",
-            "prompt_template": "{appearance} 趴在冲浪板上，勇敢地迎着浪花冲向岸边，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 趴在冲浪板上，勇敢地迎着浪花冲向岸边，{weather}，{atmosphere}",
             "captions": [
                 "小布第一次冲浪就站起来了！虽然只坚持了三秒 😂🏄",
                 "今天的浪花特别友好，给了小布一个温柔的欢迎浪～",
@@ -511,7 +511,7 @@ def generate_activities():
         },
         {
             "name": "看冲浪比赛",
-            "prompt_template": "{appearance} 坐在沙滩上观看精彩的冲浪比赛，高手们在巨浪中穿梭，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 坐在沙滩上观看精彩的冲浪比赛，高手们在巨浪中穿梭，{weather}，{atmosphere}",
             "captions": [
                 "今天的冲浪比赛太刺激了！小布看得站起来了好几次 🏄",
                 "第一名那只边牧简直是在浪尖上跳舞！小布看呆了～",
@@ -524,7 +524,7 @@ def generate_activities():
         },
         {
             "name": "沙滩晨跑",
-            "prompt_template": "{appearance} 清晨在冲浪者海滩的长沙滩上晨跑，身后留下一串串爪印，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 清晨在冲浪者海滩的长沙滩上晨跑，身后留下一串串爪印，{weather}，{atmosphere}",
             "captions": [
                 "清晨的冲浪者海滩是小布的运动场 🏃",
                 "日出时在沙滩上跑步，每一步都踩在曙光里～",
@@ -537,7 +537,7 @@ def generate_activities():
         },
         {
             "name": "堆沙滩堡垒",
-            "prompt_template": "{appearance} 在冲浪者海滩用沙子堆一座可以抵御海浪的堡垒，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在冲浪者海滩用沙子堆一座可以抵御海浪的堡垒，{weather}，{atmosphere}",
             "captions": [
                 "小布堆了一座海浪防御工事，准备和海浪对决！🏰",
                 "沙墙第一波就塌了，但小布哈哈大笑说再来～",
@@ -554,7 +554,7 @@ def generate_activities():
     activities["海边露营地"] = [
         {
             "name": "篝火看星",
-            "prompt_template": "{appearance} 夜晚坐在露营地的篝火旁，仰头看着满天的星星，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 夜晚坐在露营地的篝火旁，仰头看着满天的星星，{weather}，{atmosphere}",
             "captions": [
                 "篝火和星空，小布的露营之夜太完美了 🔥⭐",
                 "小布在篝火旁烤棉花糖，烤得金黄酥脆～",
@@ -567,7 +567,7 @@ def generate_activities():
         },
         {
             "name": "搭帐篷",
-            "prompt_template": "{appearance} 在海边露营地认真地搭帐篷，海风吹得帐篷布啪啪响，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在海边露营地认真地搭帐篷，海风吹得帐篷布啪啪响，{weather}，{atmosphere}",
             "captions": [
                 "小布学会了自己搭帐篷！虽然多出了两根杆子不知道放哪 ⛺",
                 "帐篷搭好了，歪是歪了点但不会塌，小布很满意～",
@@ -580,7 +580,7 @@ def generate_activities():
         },
         {
             "name": "晨间赶海",
-            "prompt_template": "{appearance} 清晨在海边露营地醒来，趁着退潮赶去海滩捡拾海味，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 清晨在海边露营地醒来，趁着退潮赶去海滩捡拾海味，{weather}，{atmosphere}",
             "captions": [
                 "小布天不亮就醒了，提着小桶去赶海 🪣",
                 "清晨退潮的海滩上全是宝藏！小布捡到了海星和海胆～",
@@ -593,7 +593,7 @@ def generate_activities():
         },
         {
             "name": "海浪助眠",
-            "prompt_template": "{appearance} 夜晚在帐篷里听着海浪声入睡，星光透过帐篷的纱窗洒进来，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 夜晚在帐篷里听着海浪声入睡，星光透过帐篷的纱窗洒进来，{weather}，{atmosphere}",
             "captions": [
                 "海浪声是最好的白噪音，小布听着听着就睡着了 💤",
                 "帐篷的小纱窗能看到星星，小布数着星星进入梦乡～",
@@ -610,7 +610,7 @@ def generate_activities():
     activities["海鸥灯塔"] = [
         {
             "name": "听钟观鸟",
-            "prompt_template": "{appearance} 在海鸥灯塔下聆听塔钟的声音，看着成群的海鸥在晨雾中飞舞，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在海鸥灯塔下聆听塔钟的声音，看着成群的海鸥在晨雾中飞舞，{weather}，{atmosphere}",
             "captions": [
                 "海鸥灯塔的钟声回荡在晨雾中，小布听入迷了 🔔",
                 "成百上千只海鸥围着灯塔飞，像白色的漩涡～",
@@ -623,7 +623,7 @@ def generate_activities():
         },
         {
             "name": "和海鸥做朋友",
-            "prompt_template": "{appearance} 在海鸥灯塔的观鸟平台上，小心翼翼地递饼干屑给一只海鸥，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在海鸥灯塔的观鸟平台上，小心翼翼地递饼干屑给一只海鸥，{weather}，{atmosphere}",
             "captions": [
                 "有只海鸥愿意从小布爪子上吃东西了！好大的信任 💕",
                 "小布的海鸥朋友叫小白，因为它翅膀上的羽毛特别白～",
@@ -636,7 +636,7 @@ def generate_activities():
         },
         {
             "name": "画灯塔",
-            "prompt_template": "{appearance} 趴在灯塔旁的草地上，画一幅海鸥灯塔的素描，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 趴在灯塔旁的草地上，画一幅海鸥灯塔的素描，{weather}，{atmosphere}",
             "captions": [
                 "小布的灯塔素描里画满了海鸥——各种各样的海鸥 🎨",
                 "今天画的海鸥灯塔，小布打算寄给远方的家人～",
@@ -649,7 +649,7 @@ def generate_activities():
         },
         {
             "name": "等待远方的信",
-            "prompt_template": "{appearance} 坐在海鸥灯塔的阳台上，看海鸥带着信件从远方飞来，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 坐在海鸥灯塔的阳台上，看海鸥带着信件从远方飞来，{weather}，{atmosphere}",
             "captions": [
                 "海鸥信使带来了远方的信！虽然不是给小布的，但还是很开心看大家收信 ✉️",
                 "总有一天会有海鸥叼着一封信说：小布，这是你的～",
@@ -670,7 +670,7 @@ def generate_activities():
     activities["花海草原"] = [
         {
             "name": "花海漫步",
-            "prompt_template": "{appearance} 漫步在无边无际的花海草原中，蝴蝶在身旁飞舞，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 漫步在无边无际的花海草原中，蝴蝶在身旁飞舞，{weather}，{atmosphere}",
             "captions": [
                 "小布在花海里跑了一圈，沾了一身花瓣 🌸",
                 "今天的风里有薰衣草和野菊的味道，太好闻了～",
@@ -683,7 +683,7 @@ def generate_activities():
         },
         {
             "name": "编花环",
-            "prompt_template": "{appearance} 在花海草原用各色野花编一个花环，动作虽然笨拙但非常认真，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在花海草原用各色野花编一个花环，动作虽然笨拙但非常认真，{weather}，{atmosphere}",
             "captions": [
                 "小布用花编了一个圈——姑且算是花环吧 🌼",
                 "虽然歪歪扭扭的，但小布说这是限量版设计～",
@@ -696,7 +696,7 @@ def generate_activities():
         },
         {
             "name": "追蝴蝶",
-            "prompt_template": "{appearance} 在花海草原追逐一只蓝色的小蝴蝶，在花丛间跳跃穿梭，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在花海草原追逐一只蓝色的小蝴蝶，在花丛间跳跃穿梭，{weather}，{atmosphere}",
             "captions": [
                 "花海里蝴蝶太多了，小布追完这只追那只，忙得团团转 🦋",
                 "有只蝴蝶停在小布的尾巴尖上，小布转着圈想看清楚～",
@@ -709,7 +709,7 @@ def generate_activities():
         },
         {
             "name": "花海午睡",
-            "prompt_template": "{appearance} 在花海草原的柔软花丛中睡一个午觉，花瓣偶尔飘落在身上，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在花海草原的柔软花丛中睡一个午觉，花瓣偶尔飘落在身上，{weather}，{atmosphere}",
             "captions": [
                 "花丛里太软太香了，小布忍不住打了个盹 💤",
                 "睡醒后发现自己被花瓣盖了一层，像穿了花被子～",
@@ -726,7 +726,7 @@ def generate_activities():
     activities["薰衣草田"] = [
         {
             "name": "闻香小憩",
-            "prompt_template": "{appearance} 躺在薰衣草田间，被淡淡的薰衣草香气包围，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 躺在薰衣草田间，被淡淡的薰衣草香气包围，{weather}，{atmosphere}",
             "captions": [
                 "薰衣草的香气好舒服，小布差点睡着了 💤",
                 "紫色的薰衣草田像一张巨大的软床～",
@@ -739,7 +739,7 @@ def generate_activities():
         },
         {
             "name": "做香包",
-            "prompt_template": "{appearance} 在薰衣草田里收集薰衣草花穗，准备做一个小香包，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在薰衣草田里收集薰衣草花穗，准备做一个小香包，{weather}，{atmosphere}",
             "captions": [
                 "小布摘了一小捆薰衣草，准备做成香包放在枕头下 💐",
                 "薰衣草香包能帮助睡眠，小布打算做一些送给朋友们～",
@@ -752,7 +752,7 @@ def generate_activities():
         },
         {
             "name": "紫色摄影",
-            "prompt_template": "{appearance} 在薰衣草田里用一台小相机拍摄紫色的花海，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在薰衣草田里用一台小相机拍摄紫色的花海，{weather}，{atmosphere}",
             "captions": [
                 "小布拍了好多薰衣草田的照片，每一张都像明信片 📷",
                 "紫色的花田加上金黄色的太阳，大自然是最好的调色师～",
@@ -765,7 +765,7 @@ def generate_activities():
         },
         {
             "name": "夕阳薰衣草",
-            "prompt_template": "{appearance} 傍晚坐在薰衣草田的山坡上，看夕阳把紫色花田染成金色，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 傍晚坐在薰衣草田的山坡上，看夕阳把紫色花田染成金色，{weather}，{atmosphere}",
             "captions": [
                 "夕阳下的薰衣草田是金色的！小布从没见过这么神奇的颜色变化 🌅",
                 "紫色的花田被夕阳染成了金色，但香味还是一样好闻～",
@@ -782,7 +782,7 @@ def generate_activities():
     activities["金色麦田"] = [
         {
             "name": "麦浪奔跑",
-            "prompt_template": "{appearance} 在金色麦田中奔跑，麦浪在风中起伏如同海洋，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在金色麦田中奔跑，麦浪在风中起伏如同海洋，{weather}，{atmosphere}",
             "captions": [
                 "小布跑过的地方，麦浪分出了一条小路 🌾",
                 "在麦田里跑步的感觉像是在金色的海面上冲浪～",
@@ -795,7 +795,7 @@ def generate_activities():
         },
         {
             "name": "听麦浪的声音",
-            "prompt_template": "{appearance} 安静地坐在金色麦田中央，闭着眼睛听风吹麦浪的声音，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 安静地坐在金色麦田中央，闭着眼睛听风吹麦浪的声音，{weather}，{atmosphere}",
             "captions": [
                 "风穿过麦田的声音像大海，小布听入迷了 🌾",
                 "闭上眼睛才发现，麦田里有好多种声音～",
@@ -808,7 +808,7 @@ def generate_activities():
         },
         {
             "name": "拾麦穗",
-            "prompt_template": "{appearance} 在收割后的金色麦田里拾取遗落的麦穗，小心翼翼地用嘴叼起来，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在收割后的金色麦田里拾取遗落的麦穗，小心翼翼地用嘴叼起来，{weather}，{atmosphere}",
             "captions": [
                 "收割后的麦田里还有不少麦穗，小布捡了一小捆 🌾",
                 "小布说要爱惜粮食，每一粒麦子都很珍贵～",
@@ -821,7 +821,7 @@ def generate_activities():
         },
         {
             "name": "稻草人朋友",
-            "prompt_template": "{appearance} 在金色麦田里和稻草人聊天，把自己的围巾借给稻草人披上，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在金色麦田里和稻草人聊天，把自己的围巾借给稻草人披上，{weather}，{atmosphere}",
             "captions": [
                 "小布把自己的小围巾给了稻草人，说天冷了别着凉 🧣",
                 "稻草人虽然不会说话，但小布觉得它什么都懂～",
@@ -838,7 +838,7 @@ def generate_activities():
     activities["蒲公英丘陵"] = [
         {
             "name": "吹蒲公英",
-            "prompt_template": "{appearance} 站在蒲公英丘陵上，轻轻一吹，漫天的蒲公英飞舞，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 站在蒲公英丘陵上，轻轻一吹，漫天的蒲公英飞舞，{weather}，{atmosphere}",
             "captions": [
                 "小布吹了一大口气，蒲公英飞满了整个天空～",
                 "蒲公英的种子像无数小伞兵，飘向四面八方 ☁️",
@@ -851,7 +851,7 @@ def generate_activities():
         },
         {
             "name": "许愿蒲公英",
-            "prompt_template": "{appearance} 在蒲公英丘陵对着飞舞的蒲公英许下心愿，闭上眼睛很虔诚，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在蒲公英丘陵对着飞舞的蒲公英许下心愿，闭上眼睛很虔诚，{weather}，{atmosphere}",
             "captions": [
                 "小布对着蒲公英许了愿——希望家人平安快乐 ⭐",
                 "蒲公英请把我的心愿带到远方吧～",
@@ -864,7 +864,7 @@ def generate_activities():
         },
         {
             "name": "蒲公英日记",
-            "prompt_template": "{appearance} 坐在蒲公英丘陵上写日记，蒲公英偶尔飘落在纸页上，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 坐在蒲公英丘陵上写日记，蒲公英偶尔飘落在纸页上，{weather}，{atmosphere}",
             "captions": [
                 "小布在蒲公英丘陵上写日记，一朵蒲公英落在了本子上 📖",
                 "今天写的五页日记里夹了三朵蒲公英～",
@@ -877,7 +877,7 @@ def generate_activities():
         },
         {
             "name": "蒲公英茶",
-            "prompt_template": "{appearance} 在蒲公英丘陵采摘新鲜的蒲公英叶，准备回去泡一杯蒲公英茶，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在蒲公英丘陵采摘新鲜的蒲公英叶，准备回去泡一杯蒲公英茶，{weather}，{atmosphere}",
             "captions": [
                 "小布采了一小把蒲公英叶子，准备泡一杯清香的花草茶 🍵",
                 "蒲公英茶有点微苦但很清爽，小布爱上了这个味道～",
@@ -894,7 +894,7 @@ def generate_activities():
     activities["樱花坡道"] = [
         {
             "name": "赏花漫步",
-            "prompt_template": "{appearance} 走在樱花盛开的坡道上，粉色的花瓣如雨般飘落，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 走在樱花盛开的坡道上，粉色的花瓣如雨般飘落，{weather}，{atmosphere}",
             "captions": [
                 "樱花落在小布的鼻尖上，它打了个喷嚏，太可爱了！🌸",
                 "整个坡道都变成了粉色的隧道，小布慢慢地走慢慢地看～",
@@ -907,7 +907,7 @@ def generate_activities():
         },
         {
             "name": "樱花野餐",
-            "prompt_template": "{appearance} 在樱花坡道的树下铺开餐布，和朋友们一起享受樱花野餐，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在樱花坡道的树下铺开餐布，和朋友们一起享受樱花野餐，{weather}，{atmosphere}",
             "captions": [
                 "小布在樱花树下开了个野餐会，花瓣偶尔飘进杯子里 🧺",
                 "樱花野餐的菜单：花生酱三明治、草莓、还有樱花果冻～",
@@ -920,7 +920,7 @@ def generate_activities():
         },
         {
             "name": "收集花瓣",
-            "prompt_template": "{appearance} 在樱花坡道上收集飘落的樱花花瓣，小心翼翼地放进小袋子里，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在樱花坡道上收集飘落的樱花花瓣，小心翼翼地放进小袋子里，{weather}，{atmosphere}",
             "captions": [
                 "小布收集了一小袋樱花花瓣，准备做成书签 🌸",
                 "捡花瓣看着很轻松，其实特别考验耐心～",
@@ -937,7 +937,7 @@ def generate_activities():
     activities["蝴蝶谷"] = [
         {
             "name": "追蝴蝶",
-            "prompt_template": "{appearance} 在蝴蝶谷中追逐飞舞的蝴蝶群，成千上万只蝴蝶在身边翩跹，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在蝴蝶谷中追逐飞舞的蝴蝶群，成千上万只蝴蝶在身边翩跹，{weather}，{atmosphere}",
             "captions": [
                 "蝴蝶谷的蝴蝶太多了，小布不知道该追哪一只！🦋",
                 "一群蓝蝴蝶从小布头顶飞过，像是飞行的花瓣～",
@@ -950,7 +950,7 @@ def generate_activities():
         },
         {
             "name": "蝶停鼻尖",
-            "prompt_template": "{appearance} 安静地蹲在蝴蝶谷中，一只蝴蝶轻轻停在鼻尖上，屏住呼吸不敢动，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 安静地蹲在蝴蝶谷中，一只蝴蝶轻轻停在鼻尖上，屏住呼吸不敢动，{weather}，{atmosphere}",
             "captions": [
                 "有只蝴蝶停在了小布的鼻尖上！它好紧张好开心 😮",
                 "蝴蝶在鼻尖停了三秒，小布连气都不敢喘～",
@@ -963,7 +963,7 @@ def generate_activities():
         },
         {
             "name": "蝴蝶认养",
-            "prompt_template": "{appearance} 在蝴蝶谷的蝴蝶认养区认养一只蝴蝶，认真地填写认养卡片，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在蝴蝶谷的蝴蝶认养区认养一只蝴蝶，认真地填写认养卡片，{weather}，{atmosphere}",
             "captions": [
                 "小布认养了一只翅膀上有月亮花纹的蝴蝶！🦋",
                 "给蝴蝶取名叫月牙，因为它翅膀上的花纹像弯月～",
@@ -976,7 +976,7 @@ def generate_activities():
         },
         {
             "name": "蝴蝶绘本",
-            "prompt_template": "{appearance} 在蝴蝶谷的草地上对照着蝴蝶图鉴画蝴蝶，一边观察一边画，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在蝴蝶谷的草地上对照着蝴蝶图鉴画蝴蝶，一边观察一边画，{weather}，{atmosphere}",
             "captions": [
                 "小布在画蝴蝶图鉴，已经画了十八种不同的蝴蝶 📖",
                 "蝴蝶飞太快了，小布的画风从写实变成了印象派 🎨",
@@ -993,7 +993,7 @@ def generate_activities():
     activities["蜂蜜农场"] = [
         {
             "name": "品尝蜂蜜",
-            "prompt_template": "{appearance} 在蜂蜜农场参观蜂箱，品尝最新鲜的蜂蜜，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在蜂蜜农场参观蜂箱，品尝最新鲜的蜂蜜，{weather}，{atmosphere}",
             "captions": [
                 "小布尝了一口刚采的蜂蜜，甜得眼睛都眯起来了 🍯",
                 "不同花源的蜂蜜味道不一样！小布今天尝了三种～",
@@ -1006,7 +1006,7 @@ def generate_activities():
         },
         {
             "name": "学养蜂",
-            "prompt_template": "{appearance} 在蜂蜜农场穿上小防蜂服学习养蜂知识，认真听农场主讲解，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在蜂蜜农场穿上小防蜂服学习养蜂知识，认真听农场主讲解，{weather}，{atmosphere}",
             "captions": [
                 "小布穿上了防蜂服，像个小宇航员 👩‍🚀",
                 "原来蜜蜂的世界这么有秩序，小布学到了好多新知识～",
@@ -1019,7 +1019,7 @@ def generate_activities():
         },
         {
             "name": "蜜蜂的舞蹈",
-            "prompt_template": "{appearance} 蹲在蜂箱前观察蜜蜂回巢后跳的八字舞，好奇地歪着头，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 蹲在蜂箱前观察蜜蜂回巢后跳的八字舞，好奇地歪着头，{weather}，{atmosphere}",
             "captions": [
                 "小布在观察蜜蜂跳舞！原来它们在用舞蹈传递消息 🐝",
                 "蜜蜂的八字舞是一种语言，小布试图解读但没成功～",
@@ -1036,7 +1036,7 @@ def generate_activities():
     activities["草莓采摘园"] = [
         {
             "name": "采草莓",
-            "prompt_template": "{appearance} 在草莓采摘园里小心翼翼地用嘴采摘熟透的草莓，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在草莓采摘园里小心翼翼地用嘴采摘熟透的草莓，{weather}，{atmosphere}",
             "captions": [
                 "小布采了一篮子草莓，但路上偷吃了好几个 🍓",
                 "草莓红得像小灯笼，藏在绿叶下等着被发现～",
@@ -1049,7 +1049,7 @@ def generate_activities():
         },
         {
             "name": "做草莓酱",
-            "prompt_template": "{appearance} 在草莓采摘园的小厨房里学习制作草莓酱，锅里咕嘟咕嘟冒着粉色的泡泡，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在草莓采摘园的小厨房里学习制作草莓酱，锅里咕嘟咕嘟冒着粉色的泡泡，{weather}，{atmosphere}",
             "captions": [
                 "小布第一次尝试做草莓酱，厨房里飘满了甜味 🍓",
                 "草莓在锅里咕嘟咕嘟地煮，颜色越来越深～",
@@ -1062,7 +1062,7 @@ def generate_activities():
         },
         {
             "name": "草莓甜点",
-            "prompt_template": "{appearance} 在草莓采摘园的甜品角享受一份新鲜的草莓奶油蛋糕，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在草莓采摘园的甜品角享受一份新鲜的草莓奶油蛋糕，{weather}，{atmosphere}",
             "captions": [
                 "采摘园的新鲜草莓蛋糕太好吃了！小布舔光了盘子 🍰",
                 "草莓配奶油是世界上最完美的组合，小布盖章认证～",
@@ -1079,7 +1079,7 @@ def generate_activities():
     activities["风吹麦浪"] = [
         {
             "name": "木屋小憩",
-            "prompt_template": "{appearance} 在麦田中央的小木屋旁休息，看着风车缓缓转动，麦浪翻涌，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在麦田中央的小木屋旁休息，看着风车缓缓转动，麦浪翻涌，{weather}，{atmosphere}",
             "captions": [
                 "风车转呀转，小布的眼睛也跟着转 😵",
                 "小木屋是麦田里最舒服的休息站，小布在这喝了杯麦茶～",
@@ -1092,7 +1092,7 @@ def generate_activities():
         },
         {
             "name": "风车写生",
-            "prompt_template": "{appearance} 在麦浪边支起小画架，画远处的风车和金黄的麦田，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在麦浪边支起小画架，画远处的风车和金黄的麦田，{weather}，{atmosphere}",
             "captions": [
                 "小布画的风车有四片叶子，每一片的角度都不太一样 🎨",
                 "在麦浪边画风车，画着画着就忘了时间～",
@@ -1105,7 +1105,7 @@ def generate_activities():
         },
         {
             "name": "麦田小径骑行",
-            "prompt_template": "{appearance} 在风吹麦浪的小径上慢悠悠地骑着小车，麦穗在两旁轻轻摇摆，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在风吹麦浪的小径上慢悠悠地骑着小车，麦穗在两旁轻轻摇摆，{weather}，{atmosphere}",
             "captions": [
                 "小布骑着四轮小车在麦田小径上兜风，耳朵飞起来了 🚲",
                 "麦田间的骑行道平坦又安静，是原野上最好的骑行路线～",
@@ -1122,7 +1122,7 @@ def generate_activities():
     activities["三叶草草原"] = [
         {
             "name": "找四叶草",
-            "prompt_template": "{appearance} 在三叶草草原上仔细寻找幸运四叶草，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在三叶草草原上仔细寻找幸运四叶草，{weather}，{atmosphere}",
             "captions": [
                 "小布找到了！一株四叶草！今天一定超幸运 🍀",
                 "在无数三叶草中找到那株四叶的，比中彩票还激动～",
@@ -1135,7 +1135,7 @@ def generate_activities():
         },
         {
             "name": "草地打滚",
-            "prompt_template": "{appearance} 在三叶草草原的柔软草地上尽情打滚，草叶沾满了毛发，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在三叶草草原的柔软草地上尽情打滚，草叶沾满了毛发，{weather}，{atmosphere}",
             "captions": [
                 "小布在草地上打滚，从坡顶一直滚到坡底 🌿",
                 "滚完之后身上全是草汁和花瓣，看起来像个小野人～",
@@ -1148,7 +1148,7 @@ def generate_activities():
         },
         {
             "name": "幸运草标本",
-            "prompt_template": "{appearance} 在三叶草草原挑选最漂亮的幸运草做成标本，小心翼翼地处理每一片叶子，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在三叶草草原挑选最漂亮的幸运草做成标本，小心翼翼地处理每一片叶子，{weather}，{atmosphere}",
             "captions": [
                 "小布做了好多三叶草标本，每一片都压得整整齐齐 🍀",
                 "做标本是个安静治愈的过程，小布很喜欢～",
@@ -1161,7 +1161,7 @@ def generate_activities():
         },
         {
             "name": "和小兔子野餐",
-            "prompt_template": "{appearance} 在三叶草草原上和路过的小兔子一起野餐，分享胡萝卜和幸运草饼干，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在三叶草草原上和路过的小兔子一起野餐，分享胡萝卜和幸运草饼干，{weather}，{atmosphere}",
             "captions": [
                 "小布和一只小兔子成了午餐搭档，分享了各自的零食 🐰",
                 "兔子的胡萝卜脆甜脆甜的，小布的饼干也很受欢迎～",
@@ -1178,7 +1178,7 @@ def generate_activities():
     activities["水果庄园"] = [
         {
             "name": "逛果园",
-            "prompt_template": "{appearance} 在水果庄园的果树间穿行，各种水果的香气混合在一起，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在水果庄园的果树间穿行，各种水果的香气混合在一起，{weather}，{atmosphere}",
             "captions": [
                 "小布从苹果树下走到桃子树下，每种水果都想闻一闻 🍎🍑",
                 "水果庄园的果香浓得化不开，像掉进了果酱罐子～",
@@ -1191,7 +1191,7 @@ def generate_activities():
         },
         {
             "name": "摘苹果",
-            "prompt_template": "{appearance} 在水果庄园踮着脚尖尝试摘树枝上最低的那颗苹果，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在水果庄园踮着脚尖尝试摘树枝上最低的那颗苹果，{weather}，{atmosphere}",
             "captions": [
                 "小布跳了好多次终于摘到一个苹果！虽然是最低的那颗 🍎",
                 "苹果树对小短腿不太友好，但小布有办法——助跑加跳跃！",
@@ -1204,7 +1204,7 @@ def generate_activities():
         },
         {
             "name": "水果拼盘",
-            "prompt_template": "{appearance} 在水果庄园的休息区制作缤纷的水果拼盘，各种颜色的水果组成美丽的图案，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在水果庄园的休息区制作缤纷的水果拼盘，各种颜色的水果组成美丽的图案，{weather}，{atmosphere}",
             "captions": [
                 "小布摆了一个花朵造型的水果拼盘，不舍得吃了 🍉",
                 "红色的苹果、黄色的桃子、紫色的葡萄，像调色盘一样～",
@@ -1217,7 +1217,7 @@ def generate_activities():
         },
         {
             "name": "喝鲜榨果汁",
-            "prompt_template": "{appearance} 在水果庄园的果汁吧喝一杯现榨的混合果汁，清凉甜美，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在水果庄园的果汁吧喝一杯现榨的混合果汁，清凉甜美，{weather}，{atmosphere}",
             "captions": [
                 "现榨的苹果胡萝卜汁太好喝了，小布一口气喝了半杯 🥤",
                 "果汁吧的狗狗老板说这是今天的特调——阳光混合果汁～",
@@ -1234,7 +1234,7 @@ def generate_activities():
     activities["稻草人农场"] = [
         {
             "name": "拜访动物",
-            "prompt_template": "{appearance} 在稻草人农场和可爱的小动物们打招呼，稻草人微笑着守望，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在稻草人农场和可爱的小动物们打招呼，稻草人微笑着守望，{weather}，{atmosphere}",
             "captions": [
                 "小布和农场的小兔子成了好朋友！🐰",
                 "稻草人农场的动物们都很友好，小鸭还会跟着小布走～",
@@ -1247,7 +1247,7 @@ def generate_activities():
         },
         {
             "name": "帮忙喂鸡",
-            "prompt_template": "{appearance} 在稻草人农场帮忙撒谷物喂鸡，小鸡们围在脚边叽叽喳喳，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在稻草人农场帮忙撒谷物喂鸡，小鸡们围在脚边叽叽喳喳，{weather}，{atmosphere}",
             "captions": [
                 "小布当了一天农场志愿者，主要工作——撒谷物 🐔",
                 "小鸡们太热情了，差点把小布挤倒～",
@@ -1260,7 +1260,7 @@ def generate_activities():
         },
         {
             "name": "追逐小鸭",
-            "prompt_template": "{appearance} 在稻草人农场的池塘边和一群小鸭子追逐玩耍，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在稻草人农场的池塘边和一群小鸭子追逐玩耍，{weather}，{atmosphere}",
             "captions": [
                 "小布和小鸭们展开了一场追逐赛，胜负难分 🦆",
                 "小鸭们排成一排游泳，小布在岸边跟着跑～",
@@ -1281,7 +1281,7 @@ def generate_activities():
     activities["云朵山"] = [
         {
             "name": "摸云朵",
-            "prompt_template": "{appearance} 站在云朵山的山顶，伸出爪子去触碰环绕的云朵，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 站在云朵山的山顶，伸出爪子去触碰环绕的云朵，{weather}，{atmosphere}",
             "captions": [
                 "云朵山上的云真的可以摸到！软软的像棉花糖 ☁️",
                 "小布把爪子伸进一朵云里，感觉凉凉的湿湿的～",
@@ -1294,7 +1294,7 @@ def generate_activities():
         },
         {
             "name": "云海日出",
-            "prompt_template": "{appearance} 清晨在云朵山顶看日出，云海在脚下翻涌，太阳从云层中升起，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 清晨在云朵山顶看日出，云海在脚下翻涌，太阳从云层中升起，{weather}，{atmosphere}",
             "captions": [
                 "小布天没亮就爬起来看云海日出，太值了！🌅",
                 "太阳从云海里跳出，把云朵染成了粉金色～",
@@ -1307,7 +1307,7 @@ def generate_activities():
         },
         {
             "name": "云中穿行",
-            "prompt_template": "{appearance} 在云朵山的登山小径上穿行，云雾在身边缭绕，忽浓忽淡，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在云朵山的登山小径上穿行，云雾在身边缭绕，忽浓忽淡，{weather}，{atmosphere}",
             "captions": [
                 "云雾突然散开的瞬间，小布看到了山脚下的大海！⛰️",
                 "在山间云雾里走路像在梦里，一切都朦朦胧胧的～",
@@ -1320,7 +1320,7 @@ def generate_activities():
         },
         {
             "name": "躺在云上",
-            "prompt_template": "{appearance} 在云朵山顶一片特别厚的云朵上躺着，软软的像天床，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在云朵山顶一片特别厚的云朵上躺着，软软的像天床，{weather}，{atmosphere}",
             "captions": [
                 "小布找到了一片能躺的云，像天国的床垫 ☁️",
                 "躺在云上是什么感觉？小布说——比最软的沙发还要软～",
@@ -1337,7 +1337,7 @@ def generate_activities():
     activities["星空峰"] = [
         {
             "name": "数星星",
-            "prompt_template": "{appearance} 夜晚趴在星空峰顶，仰头数着天上的星星，银河横跨天际，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 夜晚趴在星空峰顶，仰头数着天上的星星，银河横跨天际，{weather}，{atmosphere}",
             "captions": [
                 "小布数到第37颗星星就数乱了，但没关系～⭐",
                 "星空峰上的银河像一条发光的河流，小布看了一晚上～",
@@ -1350,7 +1350,7 @@ def generate_activities():
         },
         {
             "name": "等流星雨",
-            "prompt_template": "{appearance} 在星空峰等待流星雨，当流星划过时快速许愿，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在星空峰等待流星雨，当流星划过时快速许愿，{weather}，{atmosphere}",
             "captions": [
                 "小布看到了三颗流星！许了三个愿望！💫",
                 "流星雨之夜，星空峰上挤满了来许愿的狗狗～",
@@ -1363,7 +1363,7 @@ def generate_activities():
         },
         {
             "name": "夜营观星",
-            "prompt_template": "{appearance} 在星空峰搭帐篷过夜，透过帐篷的天窗看星星，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在星空峰搭帐篷过夜，透过帐篷的天窗看星星，{weather}，{atmosphere}",
             "captions": [
                 "小布在星空峰露营，帐篷顶上能看到星星 ⛺",
                 "星星透过帐篷纱窗看进来，像在对小布眨眼睛～",
@@ -1380,7 +1380,7 @@ def generate_activities():
     activities["枫叶岭"] = [
         {
             "name": "踏叶赏秋",
-            "prompt_template": "{appearance} 走在枫叶岭铺满红叶的小径上，满山红枫如火焰般绚烂，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 走在枫叶岭铺满红叶的小径上，满山红枫如火焰般绚烂，{weather}，{atmosphere}",
             "captions": [
                 "小布在枫叶堆里打了个滚，沾了一身红叶 🍁",
                 "枫叶岭的秋天是大自然最浓烈的调色盘～",
@@ -1393,7 +1393,7 @@ def generate_activities():
         },
         {
             "name": "收集枫叶",
-            "prompt_template": "{appearance} 在枫叶岭挑选最红的枫叶夹进标本册里，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在枫叶岭挑选最红的枫叶夹进标本册里，{weather}，{atmosphere}",
             "captions": [
                 "小布收集了十片不同红色的枫叶，从浅红到深红 🍁",
                 "每一片枫叶的纹路都不一样，像大自然的指纹～",
@@ -1406,7 +1406,7 @@ def generate_activities():
         },
         {
             "name": "秋日写生",
-            "prompt_template": "{appearance} 在枫叶岭的观景台上支起画架，画下满山的秋色，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在枫叶岭的观景台上支起画架，画下满山的秋色，{weather}，{atmosphere}",
             "captions": [
                 "小布画了一幅枫叶岭的秋色图，满纸的红橙黄 🎨",
                 "站在高处画画视野太好了，小布画得停不下来～",
@@ -1423,7 +1423,7 @@ def generate_activities():
     activities["温泉山谷"] = [
         {
             "name": "泡温泉",
-            "prompt_template": "{appearance} 舒服地泡在温泉山谷的天然温泉中，蒸汽袅袅升起，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 舒服地泡在温泉山谷的天然温泉中，蒸汽袅袅升起，{weather}，{atmosphere}",
             "captions": [
                 "小布泡在温泉里，表情舒服得像融化了一样 ♨️",
                 "温泉水刚刚好的温度，小布说这是最接近幸福的温度～",
@@ -1436,7 +1436,7 @@ def generate_activities():
         },
         {
             "name": "蒸汽冥想",
-            "prompt_template": "{appearance} 在温泉山谷的蒸汽中闭着眼睛冥想，水汽在鼻尖凝成水珠，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在温泉山谷的蒸汽中闭着眼睛冥想，水汽在鼻尖凝成水珠，{weather}，{atmosphere}",
             "captions": [
                 "小布在温泉蒸汽里学冥想，坚持了三分钟后……睡着了 💤",
                 "蒸汽缭绕中闭上眼睛，全世界只剩下水声和自己～",
@@ -1449,7 +1449,7 @@ def generate_activities():
         },
         {
             "name": "山谷溪流",
-            "prompt_template": "{appearance} 在温泉山谷的溪流边踩水，热泉和冷溪交汇的地方蒸汽弥漫，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在温泉山谷的溪流边踩水，热泉和冷溪交汇的地方蒸汽弥漫，{weather}，{atmosphere}",
             "captions": [
                 "小布在山谷溪流里踩水，一边是热的一边是凉的！♨️",
                 "温泉和冷水溪交汇的地方形成了天然的温度阶梯～",
@@ -1462,7 +1462,7 @@ def generate_activities():
         },
         {
             "name": "交换故事",
-            "prompt_template": "{appearance} 泡完温泉后在休息区和同样泡完澡的狗狗们喝茶聊天，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 泡完温泉后在休息区和同样泡完澡的狗狗们喝茶聊天，{weather}，{atmosphere}",
             "captions": [
                 "温泉休息区的热茶和泡温泉是绝配 🍵",
                 "和小伙伴们交换了一下午的故事，每个故事都很有趣～",
@@ -1479,7 +1479,7 @@ def generate_activities():
     activities["竹林小径"] = [
         {
             "name": "竹间穿行",
-            "prompt_template": "{appearance} 在竹林小径中穿行，阳光透过竹叶洒下斑驳的光影，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在竹林小径中穿行，阳光透过竹叶洒下斑驳的光影，{weather}，{atmosphere}",
             "captions": [
                 "风一吹，竹林沙沙响，像在给小布唱歌 🎋",
                 "阳光穿过层层竹叶，在地面上画出一万个光斑～",
@@ -1492,7 +1492,7 @@ def generate_activities():
         },
         {
             "name": "听竹涛",
-            "prompt_template": "{appearance} 坐在竹林小径的石凳上，闭上眼睛听风吹竹林的涛声，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 坐在竹林小径的石凳上，闭上眼睛听风吹竹林的涛声，{weather}，{atmosphere}",
             "captions": [
                 "竹林的涛声和海浪不一样，但一样好听 🎋",
                 "小布闭眼听了十分钟竹子音乐，觉得心静下来了～",
@@ -1505,7 +1505,7 @@ def generate_activities():
         },
         {
             "name": "寻竹笋",
-            "prompt_template": "{appearance} 在竹林小径旁寻找刚刚冒出地面的小竹笋，用鼻子贴着地面嗅，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在竹林小径旁寻找刚刚冒出地面的小竹笋，用鼻子贴着地面嗅，{weather}，{atmosphere}",
             "captions": [
                 "小布找到了三根小竹笋！每一根都裹着毛茸茸的壳 🎍",
                 "找竹笋讲究眼尖心细，小布今天的学习成绩是满分～",
@@ -1522,7 +1522,7 @@ def generate_activities():
     activities["松果林"] = [
         {
             "name": "收集松果",
-            "prompt_template": "{appearance} 在松果林里收集散落在地上的松果，松鼠在树上好奇地张望，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在松果林里收集散落在地上的松果，松鼠在树上好奇地张望，{weather}，{atmosphere}",
             "captions": [
                 "小布捡了一堆松果，松鼠们都惊呆了 🐿️",
                 "今天的松果收集量破了记录——二十八个！",
@@ -1535,7 +1535,7 @@ def generate_activities():
         },
         {
             "name": "和松鼠交易",
-            "prompt_template": "{appearance} 在松果林用捡到的松子和松鼠交换坚果，用鼻子把松子推过去，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在松果林用捡到的松子和松鼠交换坚果，用鼻子把松子推过去，{weather}，{atmosphere}",
             "captions": [
                 "小布用松子跟松鼠换了两颗核桃，这生意太划算了！🥜",
                 "松鼠是松果林最好的导游，小布用一个松果换了一次向导服务～",
@@ -1548,7 +1548,7 @@ def generate_activities():
         },
         {
             "name": "松林吊床",
-            "prompt_template": "{appearance} 在两棵松树之间挂上吊床，躺在上面看着松枝间的天空，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在两棵松树之间挂上吊床，躺在上面看着松枝间的天空，{weather}，{atmosphere}",
             "captions": [
                 "小布在松林里挂了个吊床，摇啊摇的快成一只松果了 🌲",
                 "躺在吊床上看松树梢，天空被切成了一小片一小片～",
@@ -1565,7 +1565,7 @@ def generate_activities():
     activities["回声峡谷"] = [
         {
             "name": "喊话听回声",
-            "prompt_template": "{appearance} 站在回声峡谷边缘，对着峡谷大喊，聆听回荡的回声，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 站在回声峡谷边缘，对着峡谷大喊，聆听回荡的回声，{weather}，{atmosphere}",
             "captions": [
                 "汪汪——汪汪——汪——小布的回声在峡谷里回荡了好久 📢",
                 "峡谷的回声太好玩了，小布换了五六种叫声试～",
@@ -1578,7 +1578,7 @@ def generate_activities():
         },
         {
             "name": "对峡谷说心事",
-            "prompt_template": "{appearance} 安静地坐在回声峡谷边，对着空谷轻轻说出心里的话，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 安静地坐在回声峡谷边，对着空谷轻轻说出心里的话，{weather}，{atmosphere}",
             "captions": [
                 "小布对着峡谷说了心里话，峡谷把它变成了回声送回来 💭",
                 "把思念喊给峡谷听，峡谷会帮你保管这些话～",
@@ -1591,7 +1591,7 @@ def generate_activities():
         },
         {
             "name": "峡谷探险",
-            "prompt_template": "{appearance} 沿着回声峡谷的步道向谷底探险，两侧岩壁像巨大的书本展开，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 沿着回声峡谷的步道向谷底探险，两侧岩壁像巨大的书本展开，{weather}，{atmosphere}",
             "captions": [
                 "小布沿着峡谷步道走到了谷底，岩壁上画满了古老的图案 🪨",
                 "峡谷底部的光线和山顶完全不一样，幽蓝幽蓝的～",
@@ -1608,7 +1608,7 @@ def generate_activities():
     activities["瀑布溪"] = [
         {
             "name": "观瀑戏水",
-            "prompt_template": "{appearance} 站在瀑布溪旁，看着飞流直下的瀑布，水雾中彩虹若隐若现，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 站在瀑布溪旁，看着飞流直下的瀑布，水雾中彩虹若隐若现，{weather}，{atmosphere}",
             "captions": [
                 "瀑布溅起的水雾里有彩虹！小布看呆了 🌈",
                 "站在瀑布旁边水雾打在脸上凉凉的，太提神了～",
@@ -1621,7 +1621,7 @@ def generate_activities():
         },
         {
             "name": "瀑布冥想",
-            "prompt_template": "{appearance} 坐在瀑布溪旁的大石头上，闭眼聆听瀑布轰鸣的声音，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 坐在瀑布溪旁的大石头上，闭眼聆听瀑布轰鸣的声音，{weather}，{atmosphere}",
             "captions": [
                 "在瀑布声中冥想有种说不出的感觉——什么都听不清但什么都放空了 💭",
                 "瀑布的白噪音是世界上最有效的安神曲～",
@@ -1634,7 +1634,7 @@ def generate_activities():
         },
         {
             "name": "浅溪踩水",
-            "prompt_template": "{appearance} 在瀑布溪下游的浅溪中踩水玩耍，清凉的溪水没过爪子，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在瀑布溪下游的浅溪中踩水玩耍，清凉的溪水没过爪子，{weather}，{atmosphere}",
             "captions": [
                 "瀑布下游的溪水又清又凉，小布踩得不亦乐乎 💦",
                 "溪水里有光滑的鹅卵石和漂亮的水纹，小布玩了一下午～",
@@ -1651,7 +1651,7 @@ def generate_activities():
     activities["彩虹山涧"] = [
         {
             "name": "雨后寻虹",
-            "prompt_template": "{appearance} 雨后在彩虹山涧等待彩虹出现，水珠在阳光下晶莹剔透，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 雨后在彩虹山涧等待彩虹出现，水珠在阳光下晶莹剔透，{weather}，{atmosphere}",
             "captions": [
                 "彩虹跨过了整个山涧，小布觉得这是最好的礼物 🌈",
                 "雨后的山涧空气都是甜丝丝的，彩虹在山谷间架起一座桥～",
@@ -1664,7 +1664,7 @@ def generate_activities():
         },
         {
             "name": "山涧戏水",
-            "prompt_template": "{appearance} 在彩虹山涧的清澈溪水中玩耍，水花在阳光下折射出七彩光芒，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在彩虹山涧的清澈溪水中玩耍，水花在阳光下折射出七彩光芒，{weather}，{atmosphere}",
             "captions": [
                 "山涧的水清澈见底，被太阳照得像液态的水晶 💎",
                 "小布在水里看到了一群彩色的小石头，每一颗都像宝石～",
@@ -1677,7 +1677,7 @@ def generate_activities():
         },
         {
             "name": "彩虹日记",
-            "prompt_template": "{appearance} 坐在彩虹山涧旁的石头上，把今天看到的彩虹画在日记本上，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 坐在彩虹山涧旁的石头上，把今天看到的彩虹画在日记本上，{weather}，{atmosphere}",
             "captions": [
                 "小布在彩虹出现的时候飞快地画，赶在彩虹消失前画完了 🌈",
                 "彩虹日记里记录了很多次的彩虹，每次颜色都不一样～",
@@ -1694,7 +1694,7 @@ def generate_activities():
     activities["石头小屋"] = [
         {
             "name": "烤火取暖",
-            "prompt_template": "{appearance} 在石头小屋的壁炉前烤火，炊烟袅袅升起，锅里煮着热汤，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在石头小屋的壁炉前烤火，炊烟袅袅升起，锅里煮着热汤，{weather}，{atmosphere}",
             "captions": [
                 "壁炉的火好暖和，小布窝在旁边不想动了 🔥",
                 "石头小屋里飘着热汤的香味，是最温暖的山间角落～",
@@ -1707,7 +1707,7 @@ def generate_activities():
         },
         {
             "name": "煮石头汤",
-            "prompt_template": "{appearance} 在石头小屋的厨房里和朋友们一起煮传说中的石头汤，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在石头小屋的厨房里和朋友们一起煮传说中的石头汤，{weather}，{atmosphere}",
             "captions": [
                 "小布和朋友们煮了一大锅石头汤，每人加了一点食材 🍲",
                 "石头汤的秘密不在于石头，而在于每个人分享的那一点～",
@@ -1720,7 +1720,7 @@ def generate_activities():
         },
         {
             "name": "打盹的午后",
-            "prompt_template": "{appearance} 在石头小屋的软垫子上打盹，火光在眼皮上跳动，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在石头小屋的软垫子上打盹，火光在眼皮上跳动，{weather}，{atmosphere}",
             "captions": [
                 "吃饱了汤在壁炉前打盹，小布的呼噜声好可爱 💤",
                 "雨滴打在石头屋顶上的声音是最舒服的催眠曲～",
@@ -1737,7 +1737,7 @@ def generate_activities():
     activities["云端瞭望台"] = [
         {
             "name": "俯瞰汪星",
-            "prompt_template": "{appearance} 站在云端瞭望台上，云朵在脚下环绕，可以俯瞰整个汪星，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 站在云端瞭望台上，云朵在脚下环绕，可以俯瞰整个汪星，{weather}，{atmosphere}",
             "captions": [
                 "从云端瞭望台看下去，整个汪星都在小布脚下！🏔️",
                 "云朵在脚下飘，小布觉得自己站在世界之巅～",
@@ -1750,7 +1750,7 @@ def generate_activities():
         },
         {
             "name": "画全景图",
-            "prompt_template": "{appearance} 在云端瞭望台摊开画纸，试图画出整个汪星的全景，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在云端瞭望台摊开画纸，试图画出整个汪星的全景，{weather}，{atmosphere}",
             "captions": [
                 "小布在瞭望台上画了一幅汪星全景图，虽然有点抽象 🎨",
                 "从最高处往下画，每个地方都变成了小小的色块～",
@@ -1763,7 +1763,7 @@ def generate_activities():
         },
         {
             "name": "等日出",
-            "prompt_template": "{appearance} 天没亮就来到云端瞭望台，裹着小毯子等待第一缕阳光，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 天没亮就来到云端瞭望台，裹着小毯子等待第一缕阳光，{weather}，{atmosphere}",
             "captions": [
                 "小布凌晨四点就爬起来等日出，看到后觉得值了 🌅",
                 "从最高处看日出和在沙滩上看完全不一样～",
@@ -1780,7 +1780,7 @@ def generate_activities():
     activities["幽兰谷"] = [
         {
             "name": "寻兰闻香",
-            "prompt_template": "{appearance} 在幽兰谷中寻找静静绽放的兰花，幽香在薄雾中弥漫，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在幽兰谷中寻找静静绽放的兰花，幽香在薄雾中弥漫，{weather}，{atmosphere}",
             "captions": [
                 "幽兰谷的香气淡淡的，小布闭着眼睛慢慢闻 🌺",
                 "在石缝里找到一株开着白色小花的兰花，好素雅～",
@@ -1793,7 +1793,7 @@ def generate_activities():
         },
         {
             "name": "幽谷晨雾",
-            "prompt_template": "{appearance} 清晨在幽兰谷的薄雾中散步，兰花在雾气中若隐若现，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 清晨在幽兰谷的薄雾中散步，兰花在雾气中若隐若现，{weather}，{atmosphere}",
             "captions": [
                 "晨雾里的幽兰谷像仙境，兰花在雾中影影绰绰 🌫️",
                 "小布在晨雾里走，每一步都像踩在云上～",
@@ -1806,7 +1806,7 @@ def generate_activities():
         },
         {
             "name": "兰花画谱",
-            "prompt_template": "{appearance} 在幽兰谷的石桌旁对着兰花画植物图鉴，每一笔都很细腻，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在幽兰谷的石桌旁对着兰花画植物图鉴，每一笔都很细腻，{weather}，{atmosphere}",
             "captions": [
                 "小布在画兰花图鉴，已经画了八种不同品种的兰花 🎨",
                 "兰花的花瓣好难画，小布改了又改～",
@@ -1819,7 +1819,7 @@ def generate_activities():
         },
         {
             "name": "听谷中寂静",
-            "prompt_template": "{appearance} 抱着膝盖坐在幽兰谷的大石头上，聆听山谷里最纯粹的安静，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 抱着膝盖坐在幽兰谷的大石头上，聆听山谷里最纯粹的安静，{weather}，{atmosphere}",
             "captions": [
                 "幽兰谷安静得能听到花瓣落地的声音 🌸",
                 "小布发现真正的寂静其实是有声音的——是心跳和呼吸～",
@@ -1840,7 +1840,7 @@ def generate_activities():
     activities["森林探险"] = [
         {
             "name": "密林探秘",
-            "prompt_template": "{appearance} 在森林探险区沿着未知的小径深入密林，光影斑驳，充满冒险气息，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在森林探险区沿着未知的小径深入密林，光影斑驳，充满冒险气息，{weather}，{atmosphere}",
             "captions": [
                 "小布在森林里发现了一条没人走过的小路！🌲",
                 "密林深处总能找到惊喜，今天是一个小瀑布～",
@@ -1853,7 +1853,7 @@ def generate_activities():
         },
         {
             "name": "林中寻宝",
-            "prompt_template": "{appearance} 在森林探险区根据藏宝图寻找森林精灵留下的宝藏，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在森林探险区根据藏宝图寻找森林精灵留下的宝藏，{weather}，{atmosphere}",
             "captions": [
                 "小布按着藏宝图找到了一个小木盒！里面是手工饼干 🍪",
                 "森林寻宝是最刺激的探险游戏，小布是今天的寻宝冠军～",
@@ -1866,7 +1866,7 @@ def generate_activities():
         },
         {
             "name": "绘制探险地图",
-            "prompt_template": "{appearance} 在森林探险区探索后，在日记本上绘制一张手绘探险地图，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在森林探险区探索后，在日记本上绘制一张手绘探险地图，{weather}，{atmosphere}",
             "captions": [
                 "小布画了一张森林探险地图，标注了所有发现！🗺️",
                 "地图上有秘密瀑布、蘑菇丛、还有一棵像大象的树～",
@@ -1883,7 +1883,7 @@ def generate_activities():
     activities["蘑菇村"] = [
         {
             "name": "参观蘑菇屋",
-            "prompt_template": "{appearance} 在蘑菇村里参观五颜六色的蘑菇小屋，小精灵在门后探头探脑，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在蘑菇村里参观五颜六色的蘑菇小屋，小精灵在门后探头探脑，{weather}，{atmosphere}",
             "captions": [
                 "蘑菇村的每一朵蘑菇都是一间小房子！太可爱了 🍄",
                 "红色蘑菇是面包店，蓝色蘑菇是书店，黄色蘑菇是茶馆～",
@@ -1896,7 +1896,7 @@ def generate_activities():
         },
         {
             "name": "蘑菇茶会",
-            "prompt_template": "{appearance} 在蘑菇村参加小精灵们举办的蘑菇茶会，小茶杯里飘着菌菇的清香，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在蘑菇村参加小精灵们举办的蘑菇茶会，小茶杯里飘着菌菇的清香，{weather}，{atmosphere}",
             "captions": [
                 "小布被邀请参加蘑菇精灵的茶会！茶杯只有指甲盖那么大 🍵",
                 "蘑菇茶的味道很特别——鲜鲜的、暖暖的，小布没喝过这种味道～",
@@ -1909,7 +1909,7 @@ def generate_activities():
         },
         {
             "name": "种蘑菇",
-            "prompt_template": "{appearance} 在蘑菇村学习如何培育蘑菇，小精灵手把手教小布，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在蘑菇村学习如何培育蘑菇，小精灵手把手教小布，{weather}，{atmosphere}",
             "captions": [
                 "小布学会了种蘑菇！在朽木上播下了蘑菇孢子 🍄",
                 "种蘑菇需要耐心和细心，小布两种都学到了～",
@@ -1926,7 +1926,7 @@ def generate_activities():
     activities["树洞图书馆"] = [
         {
             "name": "安静读书",
-            "prompt_template": "{appearance} 在树洞图书馆里安静地翻看一本图画书，温暖的灯光洒在书页上，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在树洞图书馆里安静地翻看一本图画书，温暖的灯光洒在书页上，{weather}，{atmosphere}",
             "captions": [
                 "小布在树洞图书馆找到了一本讲狗狗探险的故事书 📚",
                 "树洞里安静极了，只有翻书的声音和外面的鸟叫～",
@@ -1939,7 +1939,7 @@ def generate_activities():
         },
         {
             "name": "借一本新书",
-            "prompt_template": "{appearance} 在树洞图书馆的书架间认真挑选，用鼻子抽出一本从没看过的书，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在树洞图书馆的书架间认真挑选，用鼻子抽出一本从没看过的书，{weather}，{atmosphere}",
             "captions": [
                 "小布今天借了一本关于星空的绘本，因为昨晚的星星太美了 📖",
                 "选书的过程也是一种享受，小布在书架间逛了半小时～",
@@ -1952,7 +1952,7 @@ def generate_activities():
         },
         {
             "name": "参加读书会",
-            "prompt_template": "{appearance} 在树洞图书馆参加读书会，听其他狗狗分享阅读心得，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在树洞图书馆参加读书会，听其他狗狗分享阅读心得，{weather}，{atmosphere}",
             "captions": [
                 "小布第一次在读书会上发言，虽然紧张但说得不错 📚",
                 "听大家讨论同一本书的不同理解，小布觉得阅读变得更有厚度了～",
@@ -1969,7 +1969,7 @@ def generate_activities():
     activities["萤火虫森林"] = [
         {
             "name": "夜赏萤火",
-            "prompt_template": "{appearance} 夜晚在萤火虫森林中，被成千上万只萤火虫的光点包围，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 夜晚在萤火虫森林中，被成千上万只萤火虫的光点包围，{weather}，{atmosphere}",
             "captions": [
                 "萤火虫把小布周围的森林变成了星空！✨",
                 "小布伸出手掌，一只萤火虫轻轻落在上面～",
@@ -1982,7 +1982,7 @@ def generate_activities():
         },
         {
             "name": "萤火许愿灯",
-            "prompt_template": "{appearance} 在萤火虫森林放飞一盏小小的萤火许愿灯，光点慢慢升向树冠，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在萤火虫森林放飞一盏小小的萤火许愿灯，光点慢慢升向树冠，{weather}，{atmosphere}",
             "captions": [
                 "小布的许愿灯和萤火虫们一起飞向了森林上空 🏮",
                 "许愿灯上升的时候小布闭着眼睛许了三个愿望～",
@@ -1995,7 +1995,7 @@ def generate_activities():
         },
         {
             "name": "拍摄萤火",
-            "prompt_template": "{appearance} 在萤火虫森林用特别的相机拍摄萤火虫的光轨，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在萤火虫森林用特别的相机拍摄萤火虫的光轨，{weather}，{atmosphere}",
             "captions": [
                 "小布拍到了萤火虫的飞行光轨！像金色的丝带 📷",
                 "长曝光拍摄让萤火虫的光变成了流动的河流～",
@@ -2012,7 +2012,7 @@ def generate_activities():
     activities["橡果广场"] = [
         {
             "name": "参加聚会",
-            "prompt_template": "{appearance} 在橡果广场参加森林居民的聚会，巨大的橡树下热闹非凡，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在橡果广场参加森林居民的聚会，巨大的橡树下热闹非凡，{weather}，{atmosphere}",
             "captions": [
                 "橡果广场今天有聚会，小布认识了好多森林里的新朋友！🐾",
                 "兔子带来了胡萝卜蛋糕，松鼠搬来了坚果拼盘～",
@@ -2025,7 +2025,7 @@ def generate_activities():
         },
         {
             "name": "捡橡果",
-            "prompt_template": "{appearance} 在橡果广场上收集从老橡树上掉落的橡果，饱满的橡果闪着棕色的光泽，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在橡果广场上收集从老橡树上掉落的橡果，饱满的橡果闪着棕色的光泽，{weather}，{atmosphere}",
             "captions": [
                 "小布捡了一帽子橡果，每个都圆滚滚的很可爱 🌰",
                 "老橡树今天掉了几十颗橡果，小布帮松鼠一起收拾～",
@@ -2038,7 +2038,7 @@ def generate_activities():
         },
         {
             "name": "树下的故事会",
-            "prompt_template": "{appearance} 坐在老橡树下听森林最老的乌龟讲古老的森林传说，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 坐在老橡树下听森林最老的乌龟讲古老的森林传说，{weather}，{atmosphere}",
             "captions": [
                 "老乌龟讲了一个关于会说话的树的传说，小布听得入迷 🐢",
                 "故事会结束后小布在树下想了很久关于勇气和友谊的事～",
@@ -2055,7 +2055,7 @@ def generate_activities():
     activities["树懒吊桥"] = [
         {
             "name": "走吊桥",
-            "prompt_template": "{appearance} 小心翼翼地走在树懒吊桥上，桥身轻轻摇晃，树冠景色尽收眼底，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 小心翼翼地走在树懒吊桥上，桥身轻轻摇晃，树冠景色尽收眼底，{weather}，{atmosphere}",
             "captions": [
                 "吊桥晃晃悠悠的，小布走得小心又认真 🌉",
                 "从吊桥上看出去的树冠像一片绿色的海洋～",
@@ -2068,7 +2068,7 @@ def generate_activities():
         },
         {
             "name": "吊桥上的日出",
-            "prompt_template": "{appearance} 清晨站在吊桥上看着太阳从树冠之间升起，晨光穿过层层树叶，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 清晨站在吊桥上看着太阳从树冠之间升起，晨光穿过层层树叶，{weather}，{atmosphere}",
             "captions": [
                 "小布在吊桥上看了日出，晨光把树叶染成了金色 🌅",
                 "清晨的吊桥上没有人，只有小布和早起的鸟～",
@@ -2081,7 +2081,7 @@ def generate_activities():
         },
         {
             "name": "树上观鸟",
-            "prompt_template": "{appearance} 在吊桥上用望远镜观察树冠层的鸟类，看到平时在地面上看不到的鸟，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在吊桥上用望远镜观察树冠层的鸟类，看到平时在地面上看不到的鸟，{weather}，{atmosphere}",
             "captions": [
                 "小布在树冠高度看到了一种从没见过的彩色小鸟！🐦",
                 "从空中看鸟窝和在树下看完全不一样～",
@@ -2098,7 +2098,7 @@ def generate_activities():
     activities["松鼠果园"] = [
         {
             "name": "帮松鼠收果子",
-            "prompt_template": "{appearance} 在松鼠果园帮忙收集成熟的水果，松鼠们在树枝间忙碌地跳来跳去，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在松鼠果园帮忙收集成熟的水果，松鼠们在树枝间忙碌地跳来跳去，{weather}，{atmosphere}",
             "captions": [
                 "小布当了一天果园志愿者，松鼠们送了它一大袋核桃 🥜",
                 "在树下接松鼠扔下来的果子，配合超默契！",
@@ -2111,7 +2111,7 @@ def generate_activities():
         },
         {
             "name": "品尝鲜果",
-            "prompt_template": "{appearance} 在松鼠果园里品尝刚从树上摘下来的新鲜水蜜桃，果汁顺着嘴角流下来，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在松鼠果园里品尝刚从树上摘下来的新鲜水蜜桃，果汁顺着嘴角流下来，{weather}，{atmosphere}",
             "captions": [
                 "刚摘的水蜜桃太甜了，小布连吃两个 🍑",
                 "树熟的果子就是不一样，味道比街上买的浓郁十倍～",
@@ -2124,7 +2124,7 @@ def generate_activities():
         },
         {
             "name": "松鼠杂技秀",
-            "prompt_template": "{appearance} 坐在松鼠果园里观看松鼠们在树枝间表演高超的杂技，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 坐在松鼠果园里观看松鼠们在树枝间表演高超的杂技，{weather}，{atmosphere}",
             "captions": [
                 "松鼠们表演了三连翻跳，小布鼓掌鼓得爪子都红了 🐿️",
                 "松鼠在树枝间飞来飞去的样子像在表演空中芭蕾～",
@@ -2141,7 +2141,7 @@ def generate_activities():
     activities["藤蔓迷宫"] = [
         {
             "name": "闯迷宫",
-            "prompt_template": "{appearance} 在藤蔓迷宫中探险寻路，绿色的藤蔓交织成高墙，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在藤蔓迷宫中探险寻路，绿色的藤蔓交织成高墙，{weather}，{atmosphere}",
             "captions": [
                 "小布在迷宫里迷路了三次，但每次都很开心！🌿",
                 "藤蔓迷宫里的每条死胡同都有惊喜——野花、蘑菇、或者小虫子～",
@@ -2154,7 +2154,7 @@ def generate_activities():
         },
         {
             "name": "藤蔓隧道",
-            "prompt_template": "{appearance} 在藤蔓迷宫中发现了一条隐秘的藤蔓隧道，弯着腰钻进去探索，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在藤蔓迷宫中发现了一条隐秘的藤蔓隧道，弯着腰钻进去探索，{weather}，{atmosphere}",
             "captions": [
                 "小布发现迷宫里的秘密隧道，钻进去后发现了一个小花园！🌺",
                 "藤蔓隧道好窄，小布匍匐前进～",
@@ -2167,7 +2167,7 @@ def generate_activities():
         },
         {
             "name": "迷宫比赛",
-            "prompt_template": "{appearance} 在藤蔓迷宫参加每周举行的迷宫竞速赛，紧张又刺激，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在藤蔓迷宫参加每周举行的迷宫竞速赛，紧张又刺激，{weather}，{atmosphere}",
             "captions": [
                 "小布参加了迷宫竞速赛，得了第三名！🥉",
                 "迷宫比赛最难的在于——你在跑，迷宫也在长～",
@@ -2184,7 +2184,7 @@ def generate_activities():
     activities["迷雾森林"] = [
         {
             "name": "晨雾漫步",
-            "prompt_template": "{appearance} 清晨在迷雾森林中漫步，薄雾弥漫，晨光穿透雾气洒下，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 清晨在迷雾森林中漫步，薄雾弥漫，晨光穿透雾气洒下，{weather}，{atmosphere}",
             "captions": [
                 "晨雾中的森林像仙境一样，小布走路都放轻了脚步 🌫️",
                 "雾里的树看起来像巨人的影子，神秘又安全～",
@@ -2197,7 +2197,7 @@ def generate_activities():
         },
         {
             "name": "寻找雾中精灵",
-            "prompt_template": "{appearance} 在迷雾森林中寻找传说中只在浓雾天出现的雾中精灵，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在迷雾森林中寻找传说中只在浓雾天出现的雾中精灵，{weather}，{atmosphere}",
             "captions": [
                 "小布好像看到雾里有个小小的影子飘过！会是雾中精灵吗？🧚",
                 "雾中精灵的传说是小布最喜欢的故事之一～",
@@ -2210,7 +2210,7 @@ def generate_activities():
         },
         {
             "name": "迷雾摄影",
-            "prompt_template": "{appearance} 在迷雾森林拍摄雾气中的树影，每张照片都像一幅水墨画，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在迷雾森林拍摄雾气中的树影，每张照片都像一幅水墨画，{weather}，{atmosphere}",
             "captions": [
                 "小布拍的雾中森林照美得像国画 📷",
                 "雾气把森林的颜色都柔化了，只剩下深深浅浅的灰～",
@@ -2227,7 +2227,7 @@ def generate_activities():
     activities["巨人树屋"] = [
         {
             "name": "爬树屋",
-            "prompt_template": "{appearance} 沿着木梯盘旋而上，探索巨人树上的树屋群落，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 沿着木梯盘旋而上，探索巨人树上的树屋群落，{weather}，{atmosphere}",
             "captions": [
                 "小布一层一层地爬上了巨人树屋，每一层都有新发现！🏡",
                 "树屋最顶层有个阳台，可以看到整片森林的树冠～",
@@ -2240,7 +2240,7 @@ def generate_activities():
         },
         {
             "name": "树屋午后",
-            "prompt_template": "{appearance} 在巨人树屋的树冠阳台上喝下午茶，阳光从枝叶间洒下，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在巨人树屋的树冠阳台上喝下午茶，阳光从枝叶间洒下，{weather}，{atmosphere}",
             "captions": [
                 "小布在树冠阳台上喝下午茶，眼前是270度森林全景 🍵",
                 "树叶在头顶沙沙响，茶杯在手边冒着热气～",
@@ -2253,7 +2253,7 @@ def generate_activities():
         },
         {
             "name": "树屋日记",
-            "prompt_template": "{appearance} 在巨人树屋的阳台上写日记，记录下从树冠上看森林的独特视角，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在巨人树屋的阳台上写日记，记录下从树冠上看森林的独特视角，{weather}，{atmosphere}",
             "captions": [
                 "小布在树冠阳台上写的日记带着树叶的香气 📖",
                 "从树冠角度写日记，思路都开阔了～",
@@ -2270,7 +2270,7 @@ def generate_activities():
     activities["浆果丛林"] = [
         {
             "name": "采浆果",
-            "prompt_template": "{appearance} 在浆果丛林中采摘五颜六色的浆果，果香四溢，小动物们在灌木中觅食，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在浆果丛林中采摘五颜六色的浆果，果香四溢，小动物们在灌木中觅食，{weather}，{atmosphere}",
             "captions": [
                 "小布小心翼翼地采了一小堆浆果，各种颜色都有！🫐",
                 "蓝莓最好摘，黑莓最难——因为刺太多了～",
@@ -2283,7 +2283,7 @@ def generate_activities():
         },
         {
             "name": "做浆果果酱",
-            "prompt_template": "{appearance} 回到树屋里把采摘的浆果熬成果酱，粉色和紫色的泡泡在锅子里翻滚，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 回到树屋里把采摘的浆果熬成果酱，粉色和紫色的泡泡在锅子里翻滚，{weather}，{atmosphere}",
             "captions": [
                 "浆果酱熬好了！颜色美得像宝石 💎",
                 "小布把浆果酱装进了小罐子，准备送给朋友们～",
@@ -2296,7 +2296,7 @@ def generate_activities():
         },
         {
             "name": "浆果派对",
-            "prompt_template": "{appearance} 在浆果丛林和朋友们一起举办浆果派对，各种浆果点心摆满了野餐桌，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在浆果丛林和朋友们一起举办浆果派对，各种浆果点心摆满了野餐桌，{weather}，{atmosphere}",
             "captions": [
                 "浆果派对上最受欢迎的是浆果蛋糕！🍰",
                 "小布带来的浆果酱被大家一扫而空～",
@@ -2309,7 +2309,7 @@ def generate_activities():
         },
         {
             "name": "寻宝浆果王",
-            "prompt_template": "{appearance} 在浆果丛林中寻找传说中的浆果王——一颗最大的金色覆盆子，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在浆果丛林中寻找传说中的浆果王——一颗最大的金色覆盆子，{weather}，{atmosphere}",
             "captions": [
                 "丛林传说中有一颗金色的覆盆子，小布找了一整个下午 🌟",
                 "虽然没找到金色的，但发现了从没见过的大紫莓～",
@@ -2326,7 +2326,7 @@ def generate_activities():
     activities["森林音乐厅"] = [
         {
             "name": "听自然音乐会",
-            "prompt_template": "{appearance} 坐在森林音乐厅的树荫下，聆听鸟儿和风声组成的自然乐章，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 坐在森林音乐厅的树荫下，聆听鸟儿和风声组成的自然乐章，{weather}，{atmosphere}",
             "captions": [
                 "森林里的音乐会不需要排练，每一刻都是独一无二的 🎵",
                 "画眉鸟唱主旋律、风打节拍、溪流弹贝斯～",
@@ -2339,7 +2339,7 @@ def generate_activities():
         },
         {
             "name": "学唱歌",
-            "prompt_template": "{appearance} 在森林音乐厅跟着小鸟学唱歌，虽然有点跑调但非常认真投入，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在森林音乐厅跟着小鸟学唱歌，虽然有点跑调但非常认真投入，{weather}，{atmosphere}",
             "captions": [
                 "小布在学百灵鸟唱歌，虽然不太像但百灵鸟说勇气可嘉 🎤",
                 "小布版的鸟歌更像狗狗RAP，别有一番风味～",
@@ -2352,7 +2352,7 @@ def generate_activities():
         },
         {
             "name": "踩落叶节拍",
-            "prompt_template": "{appearance} 在森林音乐厅的地面上踩落叶，根据落叶的沙沙声创造自然的节拍，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在森林音乐厅的地面上踩落叶，根据落叶的沙沙声创造自然的节拍，{weather}，{atmosphere}",
             "captions": [
                 "小布用落叶的沙沙声打拍子，声音脆脆的很好听 🍂",
                 "踩落叶的声音层次很丰富——干叶子脆、湿叶子闷～",
@@ -2373,7 +2373,7 @@ def generate_activities():
     activities["汪星小镇"] = [
         {
             "name": "逛街散步",
-            "prompt_template": "{appearance} 在汪星小镇的街道上悠闲散步，彩色房屋沿街排列，邻里们友好地打招呼，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在汪星小镇的街道上悠闲散步，彩色房屋沿街排列，邻里们友好地打招呼，{weather}，{atmosphere}",
             "captions": [
                 "小布走在回家的路上，和每一个邻居都摇了摇尾巴 👋",
                 "小镇的每条路小布都认识，但每次走都有新发现～",
@@ -2386,7 +2386,7 @@ def generate_activities():
         },
         {
             "name": "寄明信片",
-            "prompt_template": "{appearance} 在汪星小镇的邮局寄一张自己画的明信片给远方的朋友，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在汪星小镇的邮局寄一张自己画的明信片给远方的朋友，{weather}，{atmosphere}",
             "captions": [
                 "小布寄了一张手绘明信片给山地区的朋友 📮",
                 "邮局的鸽子邮递员说保证三天内送到～",
@@ -2399,7 +2399,7 @@ def generate_activities():
         },
         {
             "name": "小镇早起",
-            "prompt_template": "{appearance} 清晨在汪星小镇安静的石板路上散步，整个小镇还没有醒来，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 清晨在汪星小镇安静的石板路上散步，整个小镇还没有醒来，{weather}，{atmosphere}",
             "captions": [
                 "清晨的小镇安静得像一幅油画 🏘️",
                 "小布是镇上最早起的狗狗之一，见证了小镇苏醒的过程～",
@@ -2416,7 +2416,7 @@ def generate_activities():
     activities["美食街"] = [
         {
             "name": "品尝美食",
-            "prompt_template": "{appearance} 在美食街上品尝各种美味，香气从各个餐厅飘出来，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在美食街上品尝各种美味，香气从各个餐厅飘出来，{weather}，{atmosphere}",
             "captions": [
                 "小布从街头吃到街尾，肚子圆滚滚的 🍖",
                 "美食街上今天有特别活动——所有小吃半价！",
@@ -2429,7 +2429,7 @@ def generate_activities():
         },
         {
             "name": "学做菜",
-            "prompt_template": "{appearance} 在美食街报名参加了一堂狗狗烹饪课，学习如何制作烤鸡胸肉，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在美食街报名参加了一堂狗狗烹饪课，学习如何制作烤鸡胸肉，{weather}，{atmosphere}",
             "captions": [
                 "小布学会了做烤鸡胸肉！虽然有点焦但能吃 🍳",
                 "烹饪老师夸小布调味的手感很好～",
@@ -2442,7 +2442,7 @@ def generate_activities():
         },
         {
             "name": "帮朋友带外卖",
-            "prompt_template": "{appearance} 在美食街帮生病不能出门的朋友打包好吃的，用嘴叼着外卖袋小心翼翼地走路，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在美食街帮生病不能出门的朋友打包好吃的，用嘴叼着外卖袋小心翼翼地走路，{weather}，{atmosphere}",
             "captions": [
                 "小布给感冒的朋友打包了一份热骨头汤 🍲",
                 "外卖员小布上线——使命必达，汤一滴没洒！",
@@ -2459,7 +2459,7 @@ def generate_activities():
     activities["中央公园"] = [
         {
             "name": "草坪玩耍",
-            "prompt_template": "{appearance} 在中央公园的大草坪上和朋友们追逐玩耍，喷泉水花在阳光下闪烁，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在中央公园的大草坪上和朋友们追逐玩耍，喷泉水花在阳光下闪烁，{weather}，{atmosphere}",
             "captions": [
                 "中央公园的大草坪是小布最喜欢打滚的地方 🌿",
                 "今天在草坪上玩了飞盘、拔河、还有捉迷藏！",
@@ -2472,7 +2472,7 @@ def generate_activities():
         },
         {
             "name": "喂鸽子",
-            "prompt_template": "{appearance} 在中央公园的喷泉边喂鸽子，鸽子们围在小布的脚边等待，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在中央公园的喷泉边喂鸽子，鸽子们围在小布的脚边等待，{weather}，{atmosphere}",
             "captions": [
                 "鸽子们已经认识小布了，一看到它就跑过来 🕊️",
                 "喂鸽子的正确姿势：蹲下来，伸爪子，不要突然站起来～",
@@ -2485,7 +2485,7 @@ def generate_activities():
         },
         {
             "name": "草地读书",
-            "prompt_template": "{appearance} 在中央公园的树荫下铺开毯子，趴着读一本从图书馆借来的书，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在中央公园的树荫下铺开毯子，趴着读一本从图书馆借来的书，{weather}，{atmosphere}",
             "captions": [
                 "小布在公园树下读了半本书，被风吹落的叶子当了书签 🌿",
                 "户外阅读的最佳地点——中央公园第三棵梧桐树下～",
@@ -2502,7 +2502,7 @@ def generate_activities():
     activities["喷泉广场"] = [
         {
             "name": "看喷泉",
-            "prompt_template": "{appearance} 坐在喷泉广场的台阶上，看着喷泉水柱在空中变幻，鸽子在周围飞舞，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 坐在喷泉广场的台阶上，看着喷泉水柱在空中变幻，鸽子在周围飞舞，{weather}，{atmosphere}",
             "captions": [
                 "喷泉的水柱忽高忽低，小布的头也跟着上下摆动 ⛲",
                 "今天的喷泉秀特别加入了彩虹灯光效果～",
@@ -2515,7 +2515,7 @@ def generate_activities():
         },
         {
             "name": "抛硬币许愿",
-            "prompt_template": "{appearance} 在喷泉广场的水池边抛一枚硬币许愿，硬币在空中翻转落入水中，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在喷泉广场的水池边抛一枚硬币许愿，硬币在空中翻转落入水中，{weather}，{atmosphere}",
             "captions": [
                 "小布用鼻子把硬币推进了喷泉池里 ⛲",
                 "许愿池的传统：硬币落水的声音越清脆，愿望越容易实现～",
@@ -2528,7 +2528,7 @@ def generate_activities():
         },
         {
             "name": "广场写生",
-            "prompt_template": "{appearance} 在喷泉广场支起小画架，画下喷泉和周围的热闹景象，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在喷泉广场支起小画架，画下喷泉和周围的热闹景象，{weather}，{atmosphere}",
             "captions": [
                 "小布画了喷泉广场的全景，画面里有喷泉、鸽子和来来往往的狗狗 🎨",
                 "广场是练习画人物速写的好地方～",
@@ -2545,7 +2545,7 @@ def generate_activities():
     activities["狗狗咖啡馆"] = [
         {
             "name": "喝下午茶",
-            "prompt_template": "{appearance} 在狗狗咖啡馆的舒适沙发上享受下午茶，咖啡香气和骨头饼干的香味混合，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在狗狗咖啡馆的舒适沙发上享受下午茶，咖啡香气和骨头饼干的香味混合，{weather}，{atmosphere}",
             "captions": [
                 "小布点了一杯爪布奇诺和一份骨头饼干，完美的下午 ☕",
                 "咖啡馆靠窗的位置是小布的专座，阳光刚好洒在桌上～",
@@ -2558,7 +2558,7 @@ def generate_activities():
         },
         {
             "name": "和朋友聊天",
-            "prompt_template": "{appearance} 在狗狗咖啡馆和好久不见的朋友约了次下午茶聊天，笑声不断，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在狗狗咖啡馆和好久不见的朋友约了次下午茶聊天，笑声不断，{weather}，{atmosphere}",
             "captions": [
                 "小布在咖啡馆和山区的朋友碰面了，聊了一下午 ☕",
                 "好朋友哪怕好久没见，坐下来第一句话就接上了～",
@@ -2571,7 +2571,7 @@ def generate_activities():
         },
         {
             "name": "写旅行笔记",
-            "prompt_template": "{appearance} 在狗狗咖啡馆的安静角落整理旅行笔记，把最近去过的景点回忆一遍，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在狗狗咖啡馆的安静角落整理旅行笔记，把最近去过的景点回忆一遍，{weather}，{atmosphere}",
             "captions": [
                 "小布在咖啡馆整理了一下午的旅行笔记 📝",
                 "翻看之前的笔记发现已经去了三十二个地方了！",
@@ -2588,7 +2588,7 @@ def generate_activities():
     activities["玩具商店"] = [
         {
             "name": "挑玩具",
-            "prompt_template": "{appearance} 在玩具商店里兴奋地挑选新玩具，货架上摆满了飞盘、球球和毛绒玩偶，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在玩具商店里兴奋地挑选新玩具，货架上摆满了飞盘、球球和毛绒玩偶，{weather}，{atmosphere}",
             "captions": [
                 "玩具太多了，小布每个都想咬一下试试！🎾",
                 "最后选了一个会叫的橡胶鸡和一个发光的飞盘～",
@@ -2601,7 +2601,7 @@ def generate_activities():
         },
         {
             "name": "体验新玩具",
-            "prompt_template": "{appearance} 在玩具商店的体验区试玩各种新到的玩具，兴奋得尾巴甩来甩去，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在玩具商店的体验区试玩各种新到的玩具，兴奋得尾巴甩来甩去，{weather}，{atmosphere}",
             "captions": [
                 "小布在体验区把所有新玩具都试了一遍 🎮",
                 "玩具店的体验区是最好的地方——免费玩，不用买～",
@@ -2614,7 +2614,7 @@ def generate_activities():
         },
         {
             "name": "给朋友买礼物",
-            "prompt_template": "{appearance} 在玩具商店认真地为即将过生日的好朋友挑选礼物，选了又选改了又改，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在玩具商店认真地为即将过生日的好朋友挑选礼物，选了又选改了又改，{weather}，{atmosphere}",
             "captions": [
                 "小布花了好久给金毛选生日礼物 🎁",
                 "选来选去最终挑了一个黄色的网球发射器～",
@@ -2631,7 +2631,7 @@ def generate_activities():
     activities["面包工坊"] = [
         {
             "name": "等面包出炉",
-            "prompt_template": "{appearance} 坐在面包工坊外面，等待新鲜面包出炉，面粉的香气飘满街道，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 坐在面包工坊外面，等待新鲜面包出炉，面粉的香气飘满街道，{weather}，{atmosphere}",
             "captions": [
                 "面包出炉的那一刻，小布的眼睛亮了！🍞",
                 "刚出炉的面包外酥里软，烫得小布左右换爪子～",
@@ -2644,7 +2644,7 @@ def generate_activities():
         },
         {
             "name": "学做面包",
-            "prompt_template": "{appearance} 在面包工坊穿上小围裙学习揉面团，面粉弄得满脸都是，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在面包工坊穿上小围裙学习揉面团，面粉弄得满脸都是，{weather}，{atmosphere}",
             "captions": [
                 "小布揉面团揉得满脸雪白，像只面粉小精灵 👨‍🍳",
                 "自己揉的面团烤出来的面包特别有嚼劲～",
@@ -2657,7 +2657,7 @@ def generate_activities():
         },
         {
             "name": "面包试吃日",
-            "prompt_template": "{appearance} 在面包工坊每周的试吃日上品尝各种新研发的面包口味，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在面包工坊每周的试吃日上品尝各种新研发的面包口味，{weather}，{atmosphere}",
             "captions": [
                 "今天是面包工坊的新品试吃日！小布尝了五种新面包 🍞",
                 "抹茶味狗狗面包是今天的最佳新品，小布投了它一票～",
@@ -2674,7 +2674,7 @@ def generate_activities():
     activities["冰淇淋车"] = [
         {
             "name": "买冰淇淋",
-            "prompt_template": "{appearance} 在冰淇淋车前排队，期待着美味的狗狗冰淇淋，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在冰淇淋车前排队，期待着美味的狗狗冰淇淋，{weather}，{atmosphere}",
             "captions": [
                 "今天的冰淇淋是花生酱口味的，小布的最爱！🍦",
                 "排队的时候小布就一直在想——今天要单球还是双球？",
@@ -2687,7 +2687,7 @@ def generate_activities():
         },
         {
             "name": "分享冰淇淋",
-            "prompt_template": "{appearance} 在冰淇淋车旁和偶遇的朋友分享冰淇淋，你一口我一口，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在冰淇淋车旁和偶遇的朋友分享冰淇淋，你一口我一口，{weather}，{atmosphere}",
             "captions": [
                 "小布和朋友分享了一个超大号的香蕉味冰淇淋 🍦",
                 "分享的时候发现香蕉味比花生酱味更好吃！",
@@ -2700,7 +2700,7 @@ def generate_activities():
         },
         {
             "name": "做冰淇淋",
-            "prompt_template": "{appearance} 在冰淇淋车的迷你工坊里亲手做一份属于自己的狗狗冰淇淋，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在冰淇淋车的迷你工坊里亲手做一份属于自己的狗狗冰淇淋，{weather}，{atmosphere}",
             "captions": [
                 "小布自己做了一份蓝莓酸奶冰淇淋！🍦",
                 "选择配料的时候手抖加多了蓝莓，但意外地好吃～",
@@ -2717,7 +2717,7 @@ def generate_activities():
     activities["周末集市"] = [
         {
             "name": "逛集市",
-            "prompt_template": "{appearance} 在热闹的周末集市上逛来逛去，各个摊位摆满了新鲜水果和手工艺品，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在热闹的周末集市上逛来逛去，各个摊位摆满了新鲜水果和手工艺品，{weather}，{atmosphere}",
             "captions": [
                 "小布在集市上买了新鲜草莓和一条手工围巾 🧣",
                 "周末集市每次都有新摊位，今天发现了一个卖手工香皂的～",
@@ -2730,7 +2730,7 @@ def generate_activities():
         },
         {
             "name": "卖自己的手作",
-            "prompt_template": "{appearance} 在周末集市摆了一个小摊位，出售自己做的蒲公英茶和浆果酱，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在周末集市摆了一个小摊位，出售自己做的蒲公英茶和浆果酱，{weather}，{atmosphere}",
             "captions": [
                 "小布第一次摆摊！卖了五罐果酱和三包蒲公英茶 🏪",
                 "摆摊比想象中难——怎么吆喝、怎么介绍都很讲究～",
@@ -2743,7 +2743,7 @@ def generate_activities():
         },
         {
             "name": "集市美食",
-            "prompt_template": "{appearance} 在周末集市的熟食区品尝各种现做的小吃，煎炒烹炸的香气弥漫，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在周末集市的熟食区品尝各种现做的小吃，煎炒烹炸的香气弥漫，{weather}，{atmosphere}",
             "captions": [
                 "小布在集市熟食区吃了个烤肉卷饼 🌯",
                 "集市现做的食物有一种特别的生命力，热腾腾的～",
@@ -2760,7 +2760,7 @@ def generate_activities():
     activities["电影院"] = [
         {
             "name": "看电影",
-            "prompt_template": "{appearance} 坐在电影院的舒适座椅上，抱着爆米花看一部经典的狗狗电影，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 坐在电影院的舒适座椅上，抱着爆米花看一部经典的狗狗电影，{weather}，{atmosphere}",
             "captions": [
                 "电影放到感人片段，小布的眼睛湿湿的 🎬",
                 "这周的经典回顾展放了《忠犬八公》，全场都在抽泣～",
@@ -2773,7 +2773,7 @@ def generate_activities():
         },
         {
             "name": "看动画短片节",
-            "prompt_template": "{appearance} 在电影院参加汪星动画短片节，看了十部来自不同创作者的作品，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在电影院参加汪星动画短片节，看了十部来自不同创作者的作品，{weather}，{atmosphere}",
             "captions": [
                 "小布一口气看了十部动画短片！🎬",
                 "最喜欢那部叫《雨天的朋友》的短片，温暖又治愈～",
@@ -2786,7 +2786,7 @@ def generate_activities():
         },
         {
             "name": "约朋友看电影",
-            "prompt_template": "{appearance} 约了一群朋友去电影院看喜剧，大家的笑声此起彼伏，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 约了一群朋友去电影院看喜剧，大家的笑声此起彼伏，{weather}，{atmosphere}",
             "captions": [
                 "小布和四个朋友一起看了喜剧片，笑得腮帮子疼 😂",
                 "几个人一起看电影的感觉和独自看完全不同～",
@@ -2803,7 +2803,7 @@ def generate_activities():
     activities["书店角落"] = [
         {
             "name": "安静阅读",
-            "prompt_template": "{appearance} 窝在书店角落的柔软靠垫里，安静地翻看一本新书，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 窝在书店角落的柔软靠垫里，安静地翻看一本新书，{weather}，{atmosphere}",
             "captions": [
                 "书店角落是小布的秘密基地，没人打扰 📖",
                 "今天在书店发现了一本讲星空摄影的书，看了两小时～",
@@ -2816,7 +2816,7 @@ def generate_activities():
         },
         {
             "name": "挑选新书",
-            "prompt_template": "{appearance} 在书店里仔细挑选下一本要读的书，用鼻子在书架上轻轻拨弄，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在书店里仔细挑选下一本要读的书，用鼻子在书架上轻轻拨弄，{weather}，{atmosphere}",
             "captions": [
                 "小布在书店里逛了好久，最后挑了一本关于旅行的小书 📚",
                 "选书的过程就像寻宝，你永远不知道下一次抽出来的是什么～",
@@ -2829,7 +2829,7 @@ def generate_activities():
         },
         {
             "name": "参加读书沙龙",
-            "prompt_template": "{appearance} 在书店参加每周的读书沙龙，和陌生的狗狗们讨论同一本书，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在书店参加每周的读书沙龙，和陌生的狗狗们讨论同一本书，{weather}，{atmosphere}",
             "captions": [
                 "小布参加了书店的读书沙龙，讨论了一本关于星空的绘本 📖",
                 "大家对同一本书有完全不同的理解，但都很有道理～",
@@ -2846,7 +2846,7 @@ def generate_activities():
     activities["友谊桥"] = [
         {
             "name": "挂友谊锁",
-            "prompt_template": "{appearance} 在友谊桥上认真地把自己写好的友谊锁挂上栏杆，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在友谊桥上认真地把自己写好的友谊锁挂上栏杆，{weather}，{atmosphere}",
             "captions": [
                 "小布挂上了友谊锁，纪念和好朋友们的友情 🔒",
                 "锁上刻了十个名字——小布把每个朋友都刻上去了～",
@@ -2859,7 +2859,7 @@ def generate_activities():
         },
         {
             "name": "桥上午后",
-            "prompt_template": "{appearance} 坐在友谊桥的栏杆边，看着小河流水，回想在汪星认识的所有朋友，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 坐在友谊桥的栏杆边，看着小河流水，回想在汪星认识的所有朋友，{weather}，{atmosphere}",
             "captions": [
                 "小布在友谊桥上坐了一下午，看着河水慢慢流 🌉",
                 "友谊桥的风景让人特别容易想起朋友～",
@@ -2872,7 +2872,7 @@ def generate_activities():
         },
         {
             "name": "桥上偶遇",
-            "prompt_template": "{appearance} 在友谊桥上偶遇了好久不见的旧友，惊喜地摇着尾巴跑过去，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在友谊桥上偶遇了好久不见的旧友，惊喜地摇着尾巴跑过去，{weather}，{atmosphere}",
             "captions": [
                 "小布在友谊桥上遇到了两个月没见的旧友！🐕",
                 "偶遇比约好的见面更让人开心～",
@@ -2885,7 +2885,7 @@ def generate_activities():
         },
         {
             "name": "写祝福卡片",
-            "prompt_template": "{appearance} 在友谊桥上写祝福卡片，然后绑在桥栏杆上让风吹过，{weather}，{atmosphere}，吉卜力动画风格",
+            "prompt_template": "{appearance} 在友谊桥上写祝福卡片，然后绑在桥栏杆上让风吹过，{weather}，{atmosphere}",
             "captions": [
                 "小布写了三张祝福卡片绑在桥上，每张都是给不同的人 💌",
                 "卡片上写着：愿读到这张卡片的你，今天有一个温暖的瞬间～",
