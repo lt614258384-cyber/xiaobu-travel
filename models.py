@@ -1,6 +1,6 @@
 from datetime import datetime
 from sqlalchemy import (
-    create_engine, Column, Integer, String, Text, DateTime, ForeignKey, JSON
+    Boolean, create_engine, Column, Integer, String, Text, DateTime, ForeignKey, JSON
 )
 from sqlalchemy.orm import declarative_base, relationship, Session
 from config import settings
@@ -23,6 +23,7 @@ class Profile(Base):
     reference_photos = Column(JSON, default=list)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=True, unique=True)
 
 
 class Region(Base):
@@ -65,6 +66,7 @@ class JourneyState(Base):
     last_activity_id = Column(Integer, ForeignKey("activities.id"), nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
 
 
 class JourneyLog(Base):
@@ -77,6 +79,7 @@ class JourneyLog(Base):
     weather = Column(String(50), default="晴")
     mood = Column(String(50), default="开心")
     generated_at = Column(DateTime, default=datetime.utcnow)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
 
 
 class ScheduledTask(Base):
@@ -87,6 +90,48 @@ class ScheduledTask(Base):
     status = Column(String(20), default="pending")
     retry_count = Column(Integer, default=0)
     journey_log_id = Column(Integer, ForeignKey("journey_log.id"), nullable=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+
+
+class User(Base):
+    __tablename__ = "users"
+    id = Column(Integer, primary_key=True)
+    email = Column(String(200), unique=True, nullable=False, index=True)
+    password_hash = Column(String(255), nullable=False)
+    pet_name = Column(String(100), nullable=False, default="")
+    is_admin = Column(Boolean, default=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+
+class AuthSession(Base):
+    __tablename__ = "auth_sessions"
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    token_hash = Column(String(64), nullable=False, unique=True)
+    expires_at = Column(DateTime, nullable=False)
+    remember_me = Column(Boolean, default=False)
+    user_agent = Column(Text, default="")
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+
+class CsrfToken(Base):
+    __tablename__ = "csrf_tokens"
+    id = Column(Integer, primary_key=True)
+    session_id = Column(Integer, ForeignKey("auth_sessions.id"), nullable=False)
+    token_hash = Column(String(64), nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    expires_at = Column(DateTime, nullable=False)
+
+
+class AuditLog(Base):
+    __tablename__ = "audit_log"
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+    event = Column(String(50), nullable=False, index=True)
+    ip_address = Column(String(45), default="")
+    user_agent = Column(Text, default="")
+    details = Column(JSON, default=dict)
+    created_at = Column(DateTime, default=datetime.utcnow)
 
 
 def get_engine():
