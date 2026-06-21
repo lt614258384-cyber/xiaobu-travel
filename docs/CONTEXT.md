@@ -32,7 +32,7 @@
 
 - **生图模型**：`doubao-seedream-4-5-251128`（Seedream 4.5，2048x2048）
 - **视觉模型**：`doubao-1-5-vision-pro-32k-250115`（分析小布照片提取特征，只调一次已缓存）
-- **故事模型**：`doubao-seed-1-6`（豆包 Seed 1.6，根据上下文生成连贯叙事，超时 20s 回落模板）
+- **故事模型**：`doubao-seed-1-8-251228`（Seed 1.8，256K上下文；后处理替换"小布"→"我"保证第一人称）
 - **API 端点**：火山引擎 `https://ark.cn-beijing.volces.com/api/v3/`
 - **API Key**：存在 Profile 表的 `image_api_key` 字段（网页档案页输入）
 - **图片风格**：半写实手绘水彩插画风，彩铅+透明水彩，温暖治愈，儿童绘本感
