@@ -22,7 +22,6 @@ def test_verify_password_constant_time_for_wrong_length():
     assert verify_password("short", hashed) is False
 
 
-import time
 from session_utils import (
     generate_session_token,
     hash_token,
@@ -143,3 +142,22 @@ def test_delete_all_user_sessions(tmp_path, monkeypatch):
     delete_all_user_sessions(user_id)
     assert validate_session(t1) is None
     assert validate_session(t2) is None
+
+
+def test_extend_session_noop_when_far_from_expiry(tmp_path, monkeypatch):
+    """extend_session returns None when more than 24h remain even if remember_me=True"""
+    from config import settings
+    monkeypatch.setattr(settings, "DATABASE_URL", f"sqlite:///{tmp_path / 'test.db'}")
+    from models import init_db, User, get_session
+    init_db()
+    sess = get_session()
+    user = User(email="far@test.com", password_hash="...", pet_name="FarDog")
+    sess.add(user)
+    sess.commit()
+    user_id = user.id
+    sess.close()
+
+    token, auth_session = create_session(user_id, True, "test-ua")
+    # Session was just created with 7-day expiry, so extend should return None
+    result = extend_session(auth_session)
+    assert result is None

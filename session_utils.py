@@ -49,9 +49,13 @@ def validate_session(token: str) -> "AuthSession | None":
         if auth_session is None:
             return None
         if auth_session.expires_at.replace(tzinfo=timezone.utc) < _utcnow():
-            sess.query(CsrfToken).filter_by(session_id=auth_session.id).delete()
-            sess.delete(auth_session)
-            sess.commit()
+            try:
+                sess.query(CsrfToken).filter_by(session_id=auth_session.id).delete()
+                sess.delete(auth_session)
+                sess.commit()
+            except Exception:
+                sess.rollback()
+                raise
             return None
         return auth_session
     finally:
