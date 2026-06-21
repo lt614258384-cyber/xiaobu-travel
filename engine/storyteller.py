@@ -69,7 +69,7 @@ class Storyteller:
         system_prompt = (
             f"你是{dog_name}——一只{dog_desc}的金毛犬，正在汪星旅行。"
             f"汪星是一个温暖、治愈、美好的平行世界，所有离世的宠物都在这里快乐地生活。"
-            f"请以{dog_name}的视角，用第一人称或温暖第三人称，写一段100-250字的旅行日记片段。"
+            f"请以{dog_name}的第一人称（\"我\"）写一段100-250字的旅行日记片段。必须用\"我\"来叙述——我是{dog_name}，这就是我的故事。"
             f"要有画面感、呼吸感，像真的狗狗在体验这个世界——闻到什么、感受到什么、想到什么。"
             f"语言自然、温柔、有童趣，不要太煽情，不要用'主人'这个词，用'家人'代替。"
             f"偶尔可以提到'想念家里的味道'但不要过度悲伤，整体基调是温暖开心的。"
@@ -83,19 +83,19 @@ class Storyteller:
         memory_section = ""
         if memory_context:
             memory_section = (
-                f"以下是{dog_name}从来到汪星至今的全部记忆。"
+                f"以下是你从来到汪星至今的全部记忆。"
                 f"今天的故事必须基于这些经历——可以自然提及去过的地方、交到的朋友、做过的事、"
                 f"曾经的感受。不需要每条都提，但要让人感觉今天的故事和过往是连续的、真实的。"
                 f"\n\n{memory_context}\n\n"
             )
         else:
-            memory_section = f"这是{dog_name}来到汪星的第一天，一切刚刚开始。\n\n"
+            memory_section = "这是你来到汪星的第一天，一切刚刚开始。\n\n"
 
         user_message = (
             f"{memory_section}"
-            f"今天{dog_name}来到了{location_name}，正在{activity_name}。"
+            f"今天你来到了{location_name}，正在{activity_name}。"
             f"天气{weather}，心情{mood}。{atmosphere}"
-            f"\n\n请写一段今天的旅行日记（第{all_stories_count + 1}天）。"
+            f"\n\n请用\"我\"写一段今天的旅行日记（第{all_stories_count + 1}天）。"
         )
 
         resp = httpx.post(
