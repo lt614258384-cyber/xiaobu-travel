@@ -14,13 +14,15 @@ class Storyteller:
             return ""
         return random.choice(pool)
 
-    def compose_prompt(self, activity: Activity, profile: Profile, weather: str, mood: str) -> str:
+    def compose_prompt(self, activity: Activity, profile: Profile, weather: str, mood: str, features: str = "") -> str:
         atmosphere = activity.location.atmosphere if activity.location else ""
-        appearance = profile.appearance or "一只可爱的狗狗"
 
-        # Prompt optimized for character consistency with reference images
+        # Use vision-extracted features if available, otherwise fall back to appearance
+        dog_desc = features if features else (profile.appearance or "一只可爱的狗狗")
+
+        # Prompt with vision-extracted detailed features
         base = (
-            f"保持参考图中狗狗的品种、毛色、体型、五官完全不变，"
+            f"{dog_desc}。"
             f"让它出现在{activity.location.name if activity.location else '一个新的地方'}里{activity.name}，"
             f"天气{weather}，{atmosphere}"
         )

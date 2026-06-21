@@ -1,5 +1,7 @@
 import random
 from datetime import datetime, time, timedelta
+from pathlib import Path
+import httpx
 from apscheduler.schedulers.background import BackgroundScheduler
 from models import get_session, Profile, JourneyState, JourneyLog, Location, Activity, ScheduledTask
 from engine.state_machine import StateMachine
@@ -76,6 +78,56 @@ class Scheduler:
                 return chosen
         return [time(10, 0)]
 
+    def _get_features(self, profile: "Profile") -> str:
+        """Extract detailed dog features from reference photos via vision model. Cached."""
+        import base64, io, json
+        from pathlib import Path
+        from PIL import Image
+
+        cache_file = Path("data/xiaobu_features.txt")
+        if cache_file.exists():
+            return cache_file.read_text(encoding="utf-8").strip()
+
+        if not profile.reference_photos or not profile.image_api_key:
+            return ""
+
+        try:
+            photos_b64 = []
+            for path in profile.reference_photos[:3]:
+                fp = Path(path)
+                if not fp.is_absolute():
+                    fp = Path.cwd() / fp
+                if fp.exists():
+                    img = Image.open(fp).convert("RGB")
+                    w, h = img.size
+                    ratio = 800 / max(w, h)
+                    img = img.resize((int(w * ratio), int(h * ratio)), Image.LANCZOS)
+                    buf = io.BytesIO()
+                    img.save(buf, format="JPEG", quality=80)
+                    photos_b64.append(base64.b64encode(buf.getvalue()).decode())
+
+            content = [{"type": "text", "text": "请非常详细地描述照片中这只狗的外貌特征。逐项列出：耳朵形状/颜色/大小/位置、头型比例、眼睛颜色/大小/间距/眼神、鼻子颜色/形状、嘴巴特征、毛色分布/纹理/长度、体型、尾巴形状/毛量、独特的白色斑块或标记。用中文，约200字。"}]
+            for b64 in photos_b64:
+                content.append({"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{b64}"}})
+
+            resp = httpx.post(
+                "https://ark.cn-beijing.volces.com/api/v3/chat/completions",
+                json={
+                    "model": "doubao-1-5-vision-pro-32k-250115",
+                    "messages": [{"role": "user", "content": content}],
+                    "max_tokens": 500,
+                },
+                headers={"Authorization": f"Bearer {profile.image_api_key}", "Content-Type": "application/json"},
+                timeout=60,
+            )
+            if resp.status_code == 200:
+                features = resp.json()["choices"][0]["message"]["content"]
+                cache_file.write_text(features, encoding="utf-8")
+                return features
+        except Exception as e:
+            print(f"Vision analysis failed: {e}")
+        return ""
+
     def run_generation(self):
         session = get_session()
         try:
@@ -98,7 +150,10 @@ class Scheduler:
                 session.close()
                 return
 
-            prompt = self.storyteller.compose_prompt(activity, profile, weather, state.mood)
+            # Extract dog features via vision model (cached after first run)
+            features = self._get_features(profile)
+
+            prompt = self.storyteller.compose_prompt(activity, profile, weather, state.mood, features)
             # Use Seedream if key is set, otherwise fall back to env/default
             api_type = "seedream" if profile.image_api_key else None
             image_gen = get_image_generator(api_type=api_type, api_key=profile.image_api_key)
