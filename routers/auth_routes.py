@@ -117,7 +117,7 @@ async def login(
         key="__Host-csrf",
         value=csrf_raw,
         httponly=False,  # Must be readable by JS/forms
-        secure=False,  # Production: True
+        secure=True,
         samesite="lax",
         path="/",
         max_age=86400,

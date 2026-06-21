@@ -14,7 +14,7 @@ def _set_session_cookie(response: RedirectResponse, token: str, max_age: int | N
         key=SESSION_COOKIE_NAME,
         value=token,
         httponly=True,
-        secure=False,  # Set True in production via config
+        secure=True,
         samesite="lax",
         path="/",
         max_age=max_age,
