@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="form-page">
+    <h2>📋 小布的档案</h2>
+    <form id="profile-form" action="/profile" method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+            <label>名字</label>
+            <input type="text" name="name" value="{{ profile.name if profile else '小布' }}" required>
+        </div>
+        <div class="form-group">
+            <label>品种</label>
+            <input type="text" name="breed" value="{{ profile.breed if profile else '' }}" placeholder="例如：柯基">
+        </div>
+        <div class="form-group">
+            <label>年龄（岁）</label>
+            <input type="number" name="age" min="0" max="30" value="{{ profile.age if profile else 0 }}">
+        </div>
+        <div class="form-group">
+            <label>外貌描述</label>
+            <textarea name="appearance" placeholder="例如：奶油色短毛柯基，耳朵大而直立，背上有一块心形白斑...">{{ profile.appearance if profile else '' }}</textarea>
+            <p style="font-size:0.8rem;color:var(--color-text-light);margin-top:4px;">越详细越好，AI 会根据描述生成小布在汪星的照片</p>
+        </div>
+        <div class="form-group">
+            <label>性格标签（可多选）</label>
+            <div class="tag-group" data-multi="true">
+                {% for tag in ['活泼','亲人','贪吃','安静','勇敢','温柔','好奇','粘人','独立','精力旺盛','胆小','聪明'] %}
+                <span class="tag {% if profile and tag in profile.personality_tags %}selected{% endif %}">{{ tag }}</span>
+                {% endfor %}
+            </div>
+            <input type="hidden" name="personality_tags" class="tag-value" value='{{ profile.personality_tags | tojson if profile else "[]" }}'>
+        </div>
+        <div class="form-group">
+            <label>兴趣爱好（可多选）</label>
+            <div class="tag-group" data-multi="true">
+                {% for tag in ['散步','追球','游泳','挖洞','晒太阳','结交新朋友','追尾巴','吃零食','坐车兜风','爬山','追鸟','打盹'] %}
+                <span class="tag {% if profile and tag in profile.interests %}selected{% endif %}">{{ tag }}</span>
+                {% endfor %}
+            </div>
+            <input type="hidden" name="interests" class="tag-value" value='{{ profile.interests | tojson if profile else "[]" }}'>
+        </div>
+        <div class="form-group">
+            <label>生活习惯</label>
+            <textarea name="habits" placeholder="例如：每天早上要出门散步，喜欢在沙发角落睡觉...">{{ profile.habits if profile else '' }}</textarea>
+        </div>
+        <div class="form-group">
+            <label>内容偏好</label>
+            <select name="content_preference">
+                <option value="caption" {% if profile and profile.content_preference == 'caption' %}selected{% endif %}>🖼️ 图片 + 简短文字</option>
+                <option value="story" {% if profile and profile.content_preference == 'story' %}selected{% endif %}>📖 图片 + 完整故事</option>
+                <option value="image_only" {% if profile and profile.content_preference == 'image_only' %}selected{% endif %}>🖼️ 只要图片</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>小布的照片（最多 10 张）</label>
+            <div class="upload-zone" id="upload-zone">
+                <p class="hint">📷 点击或拖拽上传照片</p>
+                <p class="hint" style="font-size:0.8rem;" id="photo-count">0/10</p>
+            </div>
+            <input type="file" id="photo-input" accept="image/*" multiple style="display:none;">
+            <div class="photo-previews" id="photo-previews">
+                {% if profile and profile.reference_photos %}
+                {% for photo in profile.reference_photos %}
+                <div class="photo-preview-wrapper"><img src="/{{ photo }}" class="photo-preview" alt="小布"></div>
+                {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-submit">💾 保存档案</button>
+    </form>
+</div>
+{% endblock %}
