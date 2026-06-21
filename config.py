@@ -7,7 +7,7 @@ load_dotenv()
 
 @dataclass
 class Settings:
-    DATABASE_URL: str = os.getenv("DATABASE_URL", "postgresql://localhost:5432/xiaobu")
+    DATABASE_URL: str = os.getenv("DATABASE_URL", "sqlite:///xiaobu.db")
     IMAGE_API_KEY: str = os.getenv("IMAGE_API_KEY", "")
     IMAGE_API_TYPE: str = os.getenv("IMAGE_API_TYPE", "tongyi")
     UPLOAD_DIR: Path = field(default_factory=lambda: Path("data/uploads"))

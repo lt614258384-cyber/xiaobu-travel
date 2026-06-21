@@ -58,7 +58,7 @@ class StateMachine:
         return weights
 
     def select_activity(self, location: Location, profile: Profile = None) -> Activity:
-        if not location.activities:
+        if location is None or not location.activities:
             return None
         return random.choice(list(location.activities))
 
