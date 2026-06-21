@@ -196,7 +196,7 @@ async def generate_now(request: Request, current_user: User = Depends(get_curren
         raise HTTPException(status_code=403, detail="CSRF validation failed")
 
     # Rate limit check
-    if not check_user_rate_limit(current_user.id, "generate", 3, 86400):
+    if not check_user_rate_limit(current_user.id, "generate", 10, 86400):
         raise HTTPException(status_code=429, detail="今天生成次数已达上限")
 
     log_event("generate.requested", user_id=current_user.id,
