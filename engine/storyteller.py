@@ -3,8 +3,8 @@ import httpx
 from models import Activity, Profile
 
 
-STORY_MODEL = "deepseek-v4-pro"
-STORY_API_URL = "https://api.deepseek.com/v1/chat/completions"
+STORY_MODEL = "ep-20260622031722-sdjgh"
+STORY_API_URL = "https://ark.cn-beijing.volces.com/api/v3/chat/completions"
 
 
 class Storyteller:
