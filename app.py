@@ -20,7 +20,7 @@ async def startup():
     init_db()
     scheduler = Scheduler()
     scheduler.start()
-    print("🐾 小布的旅行开始啦！Scheduler started.")
+    print("Xiaobu's Travel started! Scheduler running.")
 
 
 @app.get("/profile", response_class=HTMLResponse)
@@ -42,6 +42,7 @@ async def profile_save(
     interests: str = Form("[]"),
     habits: str = Form(""),
     content_preference: str = Form("caption"),
+    image_api_key: str = Form(""),
     photos: list[UploadFile] = File([]),
 ):
     session = get_session()
@@ -58,6 +59,7 @@ async def profile_save(
     profile.interests = json.loads(interests) if interests else []
     profile.habits = habits
     profile.content_preference = content_preference
+    profile.image_api_key = image_api_key
 
     existing = profile.reference_photos or []
     photo_paths = list(existing)

@@ -18,6 +18,7 @@ class Profile(Base):
     personality_tags = Column(JSON, default=list)
     interests = Column(JSON, default=list)
     habits = Column(Text, default="")
+    image_api_key = Column(String(200), default="")
     content_preference = Column(String(20), default="caption")
     reference_photos = Column(JSON, default=list)
     created_at = Column(DateTime, default=datetime.utcnow)

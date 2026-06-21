@@ -7,10 +7,16 @@ from PIL import Image
 
 
 class ImageGenerator(ABC):
+    def __init__(self):
+        self.api_key = None
+
     @abstractmethod
     def generate(self, prompt: str, reference_photos: list[str]) -> str:
         """Generate an image. Returns the path to the saved image file."""
         ...
+
+    def _get_api_key(self) -> str:
+        return self.api_key or settings.IMAGE_API_KEY
 
 
 class FakeGenerator(ImageGenerator):
@@ -27,7 +33,7 @@ class TongyiImageGenerator(ImageGenerator):
 
     def generate(self, prompt: str, reference_photos: list[str]) -> str:
         headers = {
-            "Authorization": f"Bearer {settings.IMAGE_API_KEY}",
+            "Authorization": f"Bearer {self._get_api_key()}",
             "Content-Type": "application/json",
         }
         payload = {
@@ -57,7 +63,7 @@ class OpenAIImageGenerator(ImageGenerator):
 
     def generate(self, prompt: str, reference_photos: list[str]) -> str:
         headers = {
-            "Authorization": f"Bearer {settings.IMAGE_API_KEY}",
+            "Authorization": f"Bearer {self._get_api_key()}",
             "Content-Type": "application/json",
         }
         payload = {
@@ -87,9 +93,12 @@ GENERATORS = {
 }
 
 
-def get_image_generator(api_type: str = None) -> ImageGenerator:
+def get_image_generator(api_type: str = None, api_key: str = None) -> ImageGenerator:
     api_type = api_type or settings.IMAGE_API_TYPE
     cls = GENERATORS.get(api_type)
     if cls is None:
         raise ValueError(f"Unknown image API type: {api_type}. Available: {list(GENERATORS.keys())}")
-    return cls()
+    gen = cls()
+    if api_key:
+        gen.api_key = api_key
+    return gen

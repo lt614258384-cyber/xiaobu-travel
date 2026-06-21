@@ -77,14 +77,14 @@ class Scheduler:
                 session.flush()
 
             weather = self.state_machine.roll_weather()
-            next_location = self.state_machine.select_next_location(state, profile)
+            next_location = self.state_machine.select_next_location(state, profile, session)
             activity = self.state_machine.select_activity(next_location, profile)
             if not activity:
                 session.close()
                 return
 
             prompt = self.storyteller.compose_prompt(activity, profile, weather, state.mood)
-            image_gen = get_image_generator()
+            image_gen = get_image_generator(api_key=profile.image_api_key)
             image_path = image_gen.generate(prompt, profile.reference_photos or [])
             story = self.storyteller.compose_story(activity, profile)
             new_mood = self.state_machine.update_mood(state.mood, activity.name)

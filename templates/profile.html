@@ -51,6 +51,13 @@
             </select>
         </div>
         <div class="form-group">
+            <label>图片生成 API Key</label>
+            <input type="text" name="image_api_key" value="{{ profile.image_api_key if profile else '' }}" placeholder="粘贴从阿里云获取的通义万相 API Key (sk-开头)">
+            <p style="font-size:0.8rem;color:var(--color-text-light);margin-top:4px;">
+                去 <a href="https://dashscope.aliyun.com/" target="_blank">dashscope.aliyun.com</a> 创建 API-KEY，粘贴到这里即可
+            </p>
+        </div>
+        <div class="form-group">
             <label>小布的照片（最多 10 张）</label>
             <div class="upload-zone" id="upload-zone">
                 <p class="hint">📷 点击或拖拽上传照片</p>
