@@ -236,6 +236,21 @@
 
 ## 会话与开发记录（倒序）
 
+### 2026-06-22 03:45 — LLM 叙事生成
+
+- 用户目标：用 LLM 替代模板故事，让叙事更有呼吸感、生活感和连续性。
+- 执行结果：
+  - `engine/storyteller.py` 新增 `_generate_story_llm()` 方法，调用火山引擎 `doubao-seed-1-6` 模型。
+  - `compose_story()` 优先走 LLM，超时 20s 自动回落模板兜底。
+  - LLM 上下文：狗外貌特征 + 性格标签 + 当前地点/活动/天气/心情 + 最近 5 条故事（连续性）。
+  - System Prompt：小布视角第一/第三人称、汪星世界观、温暖不煽情、不出现"主人"。
+  - `scheduler.py` 中 `run_generation` 传入 `recent_stories`、`features`、`weather`、`mood`、`api_key`。
+  - 修复：Cookie `Secure` 属性、图片用户目录路径、CSRF 前端注入、LLM 超时调优。
+- 验证证据：LLM 生成的故事跨多条记录保持连续性（贝壳湾→灯塔礁→彩色小镇→邮筒明信片），模板回落正常。
+- 代码变化：提交 `425c874`-`238c12b`；58 tests passed。
+- 遗留问题：`doubao-seed-1-6` 响应 15-20s，可后续切更快模型（如 doubao-seed-2.0-mini 出正式版后）。
+- 下一步：Phase 5 部署准备。
+
 ### 2026-06-22 03:30 — Phase 2 认证与数据隔离实施完成
 
 - 用户目标：继续开发，实施 Phase 2 认证与数据隔离。
