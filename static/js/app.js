@@ -61,11 +61,22 @@ function updateHiddenInput(group) {
     input.value = JSON.stringify(Array.from(group.querySelectorAll(".tag.selected")).map(t => t.textContent.trim()));
 }
 
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    return '';
+}
+
 function initProfileForm() {
     const form = document.getElementById("profile-form");
     if (!form) return;
     form.addEventListener("submit", async e => {
         e.preventDefault();
+        // Inject CSRF token from cookie
+        const csrf = getCookie('__Host-csrf');
+        const csrfInput = document.getElementById('csrf-token');
+        if (csrfInput) csrfInput.value = csrf;
         // Sync tag values
         document.querySelectorAll(".tag-value").forEach(inp => {
             const selected = Array.from(inp.previousElementSibling.querySelectorAll(".tag.selected")).map(t => t.textContent.trim());

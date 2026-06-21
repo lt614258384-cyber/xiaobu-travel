@@ -47,17 +47,31 @@
 {% endif %}
 
 <script>
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    return '';
+}
+
 async function generatePhoto() {
     const btn = document.getElementById("generate-btn");
     btn.textContent = "⏳ 生成中...";
     btn.disabled = true;
     try {
-        const resp = await fetch("/generate", { method: "POST" });
+        const csrf = getCookie('__Host-csrf');
+        const formData = new URLSearchParams();
+        formData.append('_csrf_token', csrf);
+        const resp = await fetch("/generate", {
+            method: "POST",
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: formData.toString()
+        });
         if (resp.ok) {
-            // Wait a moment then reload to show the new photo
             setTimeout(() => { window.location.reload(); }, 5000);
         } else {
-            alert("生成失败，请重试");
+            const err = await resp.json().catch(() => ({}));
+            alert("生成失败，请重试" + (err.detail ? ": " + err.detail : ""));
             btn.textContent = "✨ 生成新照片";
             btn.disabled = false;
         }

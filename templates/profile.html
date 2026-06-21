@@ -3,6 +3,7 @@
 <div class="form-page">
     <h2>📋 小布的档案</h2>
     <form id="profile-form" action="/profile" method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="_csrf_token" id="csrf-token" value="">
         <div class="form-group">
             <label>名字</label>
             <input type="text" name="name" value="{{ profile.name if profile else '小布' }}" required>
