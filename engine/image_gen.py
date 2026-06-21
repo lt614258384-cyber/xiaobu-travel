@@ -65,10 +65,11 @@ class TongyiImageGenerator(ImageGenerator):
             "Content-Type": "application/json",
             "X-DashScope-Async": "enable",
         }
+        # Use Qwen Image model for better quality
         payload = {
-            "model": "wanx-v1",
+            "model": "qwen-image-max",
             "input": {"prompt": prompt},
-            "parameters": {"size": "1024*1024", "n": 1},
+            "parameters": {"negative_prompt": "低质量, 模糊, 变形, 丑陋, 水印, 文字"},
         }
         # Encode reference photos as base64 for character consistency
         if reference_photos:
