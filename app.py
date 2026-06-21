@@ -76,7 +76,17 @@ async def profile_save(
 
     profile.reference_photos = photo_paths[:settings.MAX_REFERENCE_PHOTOS]
     session.commit()
+
+    # If this is the first profile and no photos exist, trigger generation
+    log_count = session.query(JourneyLog).count()
     session.close()
+    if log_count == 0:
+        import threading
+        def gen_first():
+            Scheduler().run_generation()
+        t = threading.Thread(target=gen_first, daemon=True)
+        t.start()
+
     return RedirectResponse(url="/profile", status_code=303)
 
 

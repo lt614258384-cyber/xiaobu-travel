@@ -20,6 +20,21 @@ class Scheduler:
     def start(self):
         self._aps.add_job(self.plan_today, trigger="cron", hour=0, minute=1, id="plan_today", replace_existing=True)
         self._aps.start()
+        self._first_generation_if_empty()
+
+    def _first_generation_if_empty(self):
+        """Generate the first photo immediately if no journey logs exist yet."""
+        import threading
+        def gen():
+            import time
+            time.sleep(2)  # Wait for server to fully start
+            session = get_session()
+            log_count = session.query(JourneyLog).count()
+            session.close()
+            if log_count == 0:
+                self.run_generation()
+        t = threading.Thread(target=gen, daemon=True)
+        t.start()
 
     def plan_today(self):
         session = get_session()
