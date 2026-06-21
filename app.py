@@ -7,11 +7,20 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from models import get_session, Profile, init_db, JourneyState, JourneyLog, Location
 from config import settings
+from scheduler import Scheduler
 
 app = FastAPI(title="小布的旅行")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 app.mount("/data", StaticFiles(directory="data"), name="data")
 templates = Jinja2Templates(directory="templates")
+
+
+@app.on_event("startup")
+async def startup():
+    init_db()
+    scheduler = Scheduler()
+    scheduler.start()
+    print("🐾 小布的旅行开始啦！Scheduler started.")
 
 
 @app.get("/profile", response_class=HTMLResponse)
