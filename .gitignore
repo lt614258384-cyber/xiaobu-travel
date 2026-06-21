@@ -10,5 +10,11 @@ data/generated/*
 !data/uploads/.gitkeep
 !data/generated/.gitkeep
 
+# Database files
+*.db
+
+# Feature cache
+data/features/
+
 # Secrets
 .env
