@@ -39,7 +39,7 @@ class ImageGenerator(ABC):
                     import io
                     buf = io.BytesIO()
                     img.save(buf, format="JPEG", quality=75)
-                    encoded.append(base64.b64encode(buf.getvalue()).decode("utf-8"))
+                    encoded.append("data:image/jpeg;base64," + base64.b64encode(buf.getvalue()).decode("utf-8"))
             except Exception as e:
                 print(f"  (skipped ref photo {path}: {e})")
                 continue
