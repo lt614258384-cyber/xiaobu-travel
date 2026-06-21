@@ -26,7 +26,7 @@ def build_memory(profile: Profile, features: str, all_stories: list[str]) -> str
         f"# {dog_name}的汪星记忆",
         "",
         "## 我是谁",
-        f"我叫{dog_name}。{appearance}",
+        f"我是{dog_name}，{appearance}",
         f"我的性格：{personality}。",
         f"我喜欢：{interests}。",
         f"我的习惯：{habits}。",
