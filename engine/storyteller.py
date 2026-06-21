@@ -24,6 +24,22 @@ class Storyteller:
         )
         # Strip Ghibli/anime keywords from template (we append realistic style below)
         base = base.replace("吉卜力动画风格", "").replace("温暖治愈", "").replace("，吉卜力动画风格", "")
-        # Realistic photography style
-        base += ", photorealistic, hyperrealistic, 8k, detailed fur texture, natural lighting, professional pet portrait photography, shallow depth of field, warm and soft atmosphere"
+        # Warm healing semi-realistic watercolor illustration style
+        base += (
+            ", warm healing semi-realistic hand-drawn watercolor illustration"
+            ", delicate colored pencil line art with transparent watercolor and light gouache"
+            ", natural paper texture and subtle brush grain"
+            ", golden retriever with fluffy layered fur, gentle cute expression"
+            ", facial features realistic and recognizable, natural proportions"
+            ", soft Japanese animation influenced beautification, no exaggerated anime eyes"
+            ", low saturation warm tones, soft natural lighting"
+            ", fresh blue-green and golden-yellow palette"
+            ", summer sunlight atmosphere, cozy companionship feel"
+            ", detailed but soft-edged background"
+            ", elegant children's picture book style, travel watercolor aesthetic"
+            ", clean, airy, gentle, emotional"
+            ", avoid: photorealism, 3D render, oily skin, thick comic lines, exaggerated big eyes"
+            ", avoid: plastic texture, harsh saturation, sharp shadows, stiff poses"
+            ", avoid: deformed face, extra fingers, blurry face, text, watermark"
+        )
         return base

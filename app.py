@@ -117,3 +117,14 @@ async def index(request: Request):
     return templates.TemplateResponse(request, "index.html", {
         "request": request, "state": state, "location": location, "logs": enriched,
     })
+
+
+@app.post("/generate")
+async def generate_now():
+    """Manually trigger a new photo generation."""
+    import threading
+    def gen():
+        Scheduler().run_generation()
+    t = threading.Thread(target=gen, daemon=True)
+    t.start()
+    return {"status": "ok", "message": "Generation started"}
