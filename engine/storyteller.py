@@ -16,9 +16,12 @@ class Storyteller:
 
     def compose_prompt(self, activity: Activity, profile: Profile, weather: str, mood: str) -> str:
         atmosphere = activity.location.atmosphere if activity.location else ""
-        return activity.prompt_template.format(
+        base = activity.prompt_template.format(
             appearance=profile.appearance or "一只可爱的狗狗",
             weather=weather,
             mood=mood,
             atmosphere=atmosphere,
         )
+        # Add quality/style keywords for better generation
+        base += ", high quality, 4k, detailed fur, soft warm lighting, Studio Ghibli animation style, cute pet photography"
+        return base

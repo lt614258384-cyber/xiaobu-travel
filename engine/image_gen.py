@@ -67,9 +67,9 @@ class TongyiImageGenerator(ImageGenerator):
         }
         # Use Qwen Image model for better quality
         payload = {
-            "model": "qwen-image-max",
+            "model": "qwen-image-plus",
             "input": {"prompt": prompt},
-            "parameters": {"negative_prompt": "低质量, 模糊, 变形, 丑陋, 水印, 文字"},
+            "parameters": {"size": "1024*1024"},
         }
         # Encode reference photos as base64 for character consistency
         if reference_photos:

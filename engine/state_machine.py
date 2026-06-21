@@ -14,23 +14,30 @@ class StateMachine:
         options, weights = zip(*self.WEATHER_WEIGHTS)
         return random.choices(options, weights=weights, k=1)[0]
 
-    def select_next_location(self, state: JourneyState, profile: Profile = None) -> Location:
-        session = get_session()
+    def select_next_location(self, state: JourneyState, profile: Profile = None, session=None) -> Location:
+        close_session = False
+        if session is None:
+            session = get_session()
+            close_session = True
+
         current_loc = session.get(Location, state.current_location_id)
         if not current_loc or not current_loc.adjacent_locations:
-            session.close()
+            if close_session:
+                session.close()
             return current_loc
 
         adj_ids = current_loc.adjacent_locations
         adj_locations = [session.get(Location, lid) for lid in adj_ids]
         adj_locations = [loc for loc in adj_locations if loc is not None]
         if not adj_locations:
-            session.close()
+            if close_session:
+                session.close()
             return current_loc
 
         weights = self._calculate_weights(adj_locations, profile)
         chosen = random.choices(adj_locations, weights=weights, k=1)[0]
-        session.close()
+        if close_session:
+            session.close()
         return chosen
 
     def _calculate_weights(self, locations: list[Location], profile: Profile = None) -> list[float]:
