@@ -128,6 +128,11 @@ class Scheduler:
             print(f"Vision analysis failed: {e}")
         return ""
 
+    def shutdown(self) -> None:
+        if not self._aps.running:
+            return
+        self._aps.shutdown(wait=False)
+
     def run_generation(self):
         session = get_session()
         try:

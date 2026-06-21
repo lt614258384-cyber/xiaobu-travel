@@ -4,6 +4,24 @@ from scheduler import Scheduler
 
 
 class TestScheduler:
+    def test_shutdown_stops_running_scheduler_without_waiting(self):
+        scheduler = Scheduler()
+        scheduler._aps = MagicMock()
+        scheduler._aps.running = True
+
+        scheduler.shutdown()
+
+        scheduler._aps.shutdown.assert_called_once_with(wait=False)
+
+    def test_shutdown_is_safe_when_scheduler_is_not_running(self):
+        scheduler = Scheduler()
+        scheduler._aps = MagicMock()
+        scheduler._aps.running = False
+
+        scheduler.shutdown()
+
+        scheduler._aps.shutdown.assert_not_called()
+
     def test_generate_daily_times_count(self):
         for _ in range(50):
             times = Scheduler._generate_daily_times()
