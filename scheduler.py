@@ -27,34 +27,61 @@ class Scheduler:
     def _first_generation_if_empty(self):
         """Generate the first photo immediately if no journey logs exist yet."""
         import threading
+        from models import User
         def gen():
             import time
             time.sleep(2)  # Wait for server to fully start
             session = get_session()
             log_count = session.query(JourneyLog).count()
-            session.close()
             if log_count == 0:
-                self.run_generation()
+                users = session.query(User).all()
+                for user in users:
+                    profile = session.query(Profile).filter_by(user_id=user.id).first()
+                    if profile and profile.image_api_key:
+                        self.run_generation(user.id)
+            session.close()
         t = threading.Thread(target=gen, daemon=True)
         t.start()
 
     def plan_today(self):
-        session = get_session()
-        pending = session.query(ScheduledTask).filter_by(status="pending").all()
+        sess = get_session()
+        # Cancel old pending tasks
+        pending = sess.query(ScheduledTask).filter_by(status="pending").all()
         for task in pending:
             task.status = "cancelled"
-        session.commit()
+        sess.commit()
 
-        times = self._generate_daily_times()
+        # Get all users with API keys
+        from models import User
+        users = sess.query(User).all()
         now = datetime.now()
-        for t in times:
-            scheduled_dt = datetime(now.year, now.month, now.day, t.hour, t.minute)
-            task = ScheduledTask(scheduled_at=scheduled_dt, status="pending")
-            session.add(task)
-            session.flush()
-            self._aps.add_job(self.run_generation, trigger="date", run_date=scheduled_dt, id=f"gen_{task.id}", replace_existing=True)
-        session.commit()
-        session.close()
+
+        for user in users:
+            # Check user has profile and API key
+            profile = sess.query(Profile).filter_by(user_id=user.id).first()
+            if not profile or not profile.image_api_key:
+                continue
+
+            times = self._generate_daily_times()
+            for t in times:
+                scheduled_dt = datetime(now.year, now.month, now.day, t.hour, t.minute)
+                task = ScheduledTask(
+                    user_id=user.id,
+                    scheduled_at=scheduled_dt,
+                    status="pending",
+                )
+                sess.add(task)
+                sess.flush()
+                self._aps.add_job(
+                    self.run_generation,
+                    args=[user.id],
+                    trigger="date",
+                    run_date=scheduled_dt,
+                    id=f"gen_{task.id}",
+                    replace_existing=True,
+                )
+        sess.commit()
+        sess.close()
 
     @staticmethod
     def _generate_daily_times() -> list[time]:
@@ -78,13 +105,15 @@ class Scheduler:
                 return chosen
         return [time(10, 0)]
 
-    def _get_features(self, profile: "Profile") -> str:
+    def _get_features(self, profile: "Profile", user_id: int) -> str:
         """Extract detailed dog features from reference photos via vision model. Cached."""
         import base64, io, json
         from pathlib import Path
         from PIL import Image
 
-        cache_file = Path("data/xiaobu_features.txt")
+        cache_dir = Path("data/features")
+        cache_dir.mkdir(parents=True, exist_ok=True)
+        cache_file = cache_dir / f"{user_id}_features.txt"
         if cache_file.exists():
             return cache_file.read_text(encoding="utf-8").strip()
 
@@ -133,47 +162,46 @@ class Scheduler:
             return
         self._aps.shutdown(wait=False)
 
-    def run_generation(self):
-        session = get_session()
+    def run_generation(self, user_id: int):
+        sess = get_session()
         try:
-            profile = session.query(Profile).first()
+            profile = sess.query(Profile).filter_by(user_id=user_id).first()
             if not profile:
-                session.close()
+                sess.close()
                 return
 
-            state = session.query(JourneyState).first()
+            state = sess.query(JourneyState).filter_by(user_id=user_id).first()
             if not state:
-                rainbow = session.query(Location).filter_by(name="彩虹桥").first()
-                state = JourneyState(current_location_id=rainbow.id if rainbow else None)
-                session.add(state)
-                session.flush()
+                rainbow = sess.query(Location).filter_by(name="彩虹桥").first()
+                state = JourneyState(user_id=user_id, current_location_id=rainbow.id if rainbow else None)
+                sess.add(state)
+                sess.flush()
 
             weather = self.state_machine.roll_weather()
-            next_location = self.state_machine.select_next_location(state, profile, session)
+            next_location = self.state_machine.select_next_location(state, profile, sess)
             activity = self.state_machine.select_activity(next_location, profile)
             if not activity:
-                session.close()
+                sess.close()
                 return
 
-            # Extract dog features via vision model (cached after first run)
-            features = self._get_features(profile)
+            features = self._get_features(profile, user_id)
 
             prompt = self.storyteller.compose_prompt(activity, profile, weather, state.mood, features)
-            # Use Seedream if key is set, otherwise fall back to env/default
             api_type = "seedream" if profile.image_api_key else None
             image_gen = get_image_generator(api_type=api_type, api_key=profile.image_api_key)
             image_path = image_gen.generate(prompt, profile.reference_photos or [])
-            image_path = image_path.replace("\\", "/")  # Normalize for web URLs
+            image_path = image_path.replace("\\", "/")
             story = self.storyteller.compose_story(activity, profile)
             new_mood = self.state_machine.update_mood(state.mood, activity.name)
 
             log_entry = JourneyLog(
+                user_id=user_id,
                 location_id=next_location.id, activity_id=activity.id,
                 story_text=story, image_path=image_path,
                 weather=weather, mood=new_mood, generated_at=datetime.now(),
             )
-            session.add(log_entry)
-            session.flush()
+            sess.add(log_entry)
+            sess.flush()
 
             state.current_location_id = next_location.id
             state.mood = new_mood
@@ -181,9 +209,9 @@ class Scheduler:
             state.weather_today = weather
             state.last_activity_id = activity.id
 
-            session.commit()
-        except Exception as e:
-            session.rollback()
+            sess.commit()
+        except Exception:
+            sess.rollback()
             raise
         finally:
-            session.close()
+            sess.close()
