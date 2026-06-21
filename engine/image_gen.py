@@ -22,7 +22,7 @@ class ImageGenerator(ABC):
     def _encode_ref_photos(self, paths: list[str]) -> list[str]:
         """Read local image files, resize to max 512px, return base64 strings."""
         encoded = []
-        for path in paths[:3]:
+        for path in paths[:10]:
             try:
                 filepath = Path(path)
                 if not filepath.is_absolute():
