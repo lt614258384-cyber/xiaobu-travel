@@ -43,8 +43,9 @@ class TongyiImageGenerator(ImageGenerator):
             "input": {"prompt": prompt},
             "parameters": {"size": "1024*1024", "n": 1},
         }
-        if reference_photos:
-            payload["input"]["ref_img"] = reference_photos[0]
+        # Reference photos need URLs or base64. Local paths won't work with API.
+        # Skip for now — prompt-based generation with appearance description is sufficient.
+        # TODO: add base64 encoding for local reference images.
 
         # Submit async task
         resp = httpx.post(self.API_URL, json=payload, headers=headers, timeout=30)
