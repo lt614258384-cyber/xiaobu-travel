@@ -85,15 +85,22 @@ python run.py
 
 > 需要火山引擎 API Key（在网页 /profile 输入）。如无 Key，设 `IMAGE_API_TYPE=fake` 用测试模式（产橙色方块）。
 
+## 已完成的可靠性改进（2026-06-22）
+
+1. ✅ **FastAPI startup** — `@app.on_event("startup")` 已迁移为 lifespan，Scheduler 生命周期由 lifespan 管理
+2. ✅ **上传文件名** — 中文文件名改为 UUID+安全扩展名（`.jpg/.jpeg/.png/.webp`）
+3. ✅ **Prompt 模板** — 203 个种子数据和已有数据库中的"吉卜力动画风格""温暖治愈"已清除
+4. ✅ **Scheduler 安全关闭** — 新增 `shutdown()` 方法，lifespan 退出时自动调用
+5. ✅ **依赖升级** — Pillow 10.4.0→12.2.0, Jinja2 3.1.4→3.1.6, python-multipart 0.0.12→0.0.32, 补充 python-dotenv
+6. ✅ **测试隔离** — 默认数据库改为 SQLite，conftest 隔离测试数据库，修复空数据库后台线程异常
+
 ## 已知问题 & 未来方向
 
 1. **角色一致性不够**——Seedream 参考图机制无法精确复刻小布五官。讨论了 LoRA 方案（Replicate 付费、Civitai 免费、Colab 免费）但未执行
-2. **图片格式**——Windows 反斜杠路径已转为 `/`，但 `data/uploads/` 下照片文件名含中文可能有编码问题
-3. **数据库**——当前 SQLite，生产需要切 PostgreSQL
-4. **FastAPI startup**——用了已弃用的 `@app.on_event("startup")`，应改为 lifespan
-5. **推送通知**——MVP 无推送，用户需主动打开网页查看
-6. **Seedream 5.0**——模型列表里有 `doubao-seedream-5-0-260128`，未测试
-7. **种子数据 Prompt 模板**——203 个活动的 `prompt_template` 仍含"吉卜力动画风格"，compose_prompt 中用字符串替换去掉了，但不优雅
+2. **数据库**——当前 SQLite，生产需要切 PostgreSQL
+3. **推送通知**——MVP 无推送，用户需主动打开网页查看
+4. **Seedream 5.0**——模型列表里有 `doubao-seedream-5-0-260128`，未测试
+5. **PaaS 磁盘不持久**——`data/uploads`、`data/generated` 需对象存储或持久卷
 
 ## 关键设计决策
 
