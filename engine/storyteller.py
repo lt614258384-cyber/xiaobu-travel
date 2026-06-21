@@ -22,6 +22,8 @@ class Storyteller:
             mood=mood,
             atmosphere=atmosphere,
         )
-        # Add quality/style keywords for better generation
-        base += ", high quality, 4k, detailed fur, soft warm lighting, Studio Ghibli animation style, cute pet photography"
+        # Strip Ghibli/anime keywords from template (we append realistic style below)
+        base = base.replace("吉卜力动画风格", "").replace("温暖治愈", "").replace("，吉卜力动画风格", "")
+        # Realistic photography style
+        base += ", photorealistic, hyperrealistic, 8k, detailed fur texture, natural lighting, professional pet portrait photography, shallow depth of field, warm and soft atmosphere"
         return base
