@@ -25,6 +25,7 @@ async def lifespan(app: FastAPI):
     scheduler = Scheduler()
     scheduler.start()
     app.state.scheduler = scheduler
+    settings.check_production_safety()
     try:
         yield
     finally:
