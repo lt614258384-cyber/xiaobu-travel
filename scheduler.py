@@ -186,12 +186,27 @@ class Scheduler:
 
             features = self._get_features(profile, user_id)
 
+            # Fetch recent stories for LLM continuity
+            recent_logs = (
+                sess.query(JourneyLog)
+                .filter_by(user_id=user_id)
+                .order_by(JourneyLog.generated_at.desc())
+                .limit(5)
+                .all()
+            )
+            recent_stories = [log.story_text for log in reversed(recent_logs) if log.story_text]
+
             prompt = self.storyteller.compose_prompt(activity, profile, weather, state.mood, features)
             api_type = "seedream" if profile.image_api_key else None
             image_gen = get_image_generator(api_type=api_type, api_key=profile.image_api_key)
             image_path = image_gen.generate(prompt, profile.reference_photos or [])
             image_path = image_path.replace("\\", "/")
-            story = self.storyteller.compose_story(activity, profile)
+            story = self.storyteller.compose_story(
+                activity, profile,
+                weather=weather, mood=state.mood, features=features,
+                recent_stories=recent_stories,
+                api_key=profile.image_api_key or "",
+            )
             new_mood = self.state_machine.update_mood(state.mood, activity.name)
 
             log_entry = JourneyLog(
