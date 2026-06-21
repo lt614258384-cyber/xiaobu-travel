@@ -20,17 +20,28 @@ class ImageGenerator(ABC):
         return self.api_key or settings.IMAGE_API_KEY
 
     def _encode_ref_photos(self, paths: list[str]) -> list[str]:
-        """Read local image files and return base64-encoded strings."""
+        """Read local image files, resize to max 512px, return base64 strings."""
         encoded = []
-        for path in paths[:3]:  # Max 3 ref images for API
+        for path in paths[:3]:
             try:
                 filepath = Path(path)
                 if not filepath.is_absolute():
                     filepath = Path.cwd() / filepath
                 if filepath.exists():
-                    with open(filepath, "rb") as f:
-                        encoded.append(base64.b64encode(f.read()).decode("utf-8"))
-            except Exception:
+                    img = Image.open(filepath)
+                    img = img.convert("RGB")
+                    # Resize to max 512px on longest side
+                    w, h = img.size
+                    if max(w, h) > 512:
+                        ratio = 512 / max(w, h)
+                        img = img.resize((int(w * ratio), int(h * ratio)), Image.LANCZOS)
+                    # Save to bytes
+                    import io
+                    buf = io.BytesIO()
+                    img.save(buf, format="JPEG", quality=75)
+                    encoded.append(base64.b64encode(buf.getvalue()).decode("utf-8"))
+            except Exception as e:
+                print(f"  (skipped ref photo {path}: {e})")
                 continue
         return encoded
 
@@ -63,8 +74,7 @@ class TongyiImageGenerator(ImageGenerator):
         if reference_photos:
             ref_imgs = self._encode_ref_photos(reference_photos)
             if ref_imgs:
-                payload["input"]["ref_img"] = ref_imgs[0]  # API supports one ref image
-                payload["input"]["ref_mode"] = "repaint"
+                payload["input"]["ref_img"] = ref_imgs[0]
 
         # Submit async task
         resp = httpx.post(self.API_URL, json=payload, headers=headers, timeout=30)
