@@ -72,7 +72,7 @@ async def profile_save(
             filepath = settings.UPLOAD_DIR / filename
             with open(filepath, "wb") as f:
                 shutil.copyfileobj(photo.file, f)
-            photo_paths.append(str(filepath.relative_to(Path.cwd())))
+            photo_paths.append(str(Path("data/uploads") / filename))
 
     profile.reference_photos = photo_paths[:settings.MAX_REFERENCE_PHOTOS]
     session.commit()
