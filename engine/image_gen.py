@@ -140,8 +140,47 @@ class OpenAIImageGenerator(ImageGenerator):
         return str(output_path)
 
 
+class SeedreamGenerator(ImageGenerator):
+    """Seedream 4.5 via Volcano Engine (火山引擎) — best for character consistency."""
+    API_URL = "https://ark.cn-beijing.volces.com/api/v3/images/generations"
+
+    def generate(self, prompt: str, reference_photos: list[str]) -> str:
+        headers = {
+            "Authorization": f"Bearer {self._get_api_key()}",
+            "Content-Type": "application/json",
+        }
+        payload = {
+            "model": "doubao-seedream-4-5-251128",
+            "prompt": prompt,
+            "size": "2048x2048",
+            "watermark": False,
+            "response_format": "b64_json",
+        }
+
+        # Seedream supports up to 10 reference images (URLs required)
+        # Encode local photos as base64 data URLs
+        if reference_photos:
+            ref_imgs = self._encode_ref_photos(reference_photos)
+            if ref_imgs:
+                payload["reference_images"] = ref_imgs
+
+        resp = httpx.post(self.API_URL, json=payload, headers=headers, timeout=120)
+        resp.raise_for_status()
+        data = resp.json()
+
+        # Extract image from response
+        img_data = data["data"][0]["b64_json"]
+        img_bytes = base64.b64decode(img_data)
+
+        ts = int(time.time() * 1000)
+        output_path = settings.GENERATED_DIR / f"xiaobu_{ts}.png"
+        output_path.write_bytes(img_bytes)
+        return str(output_path)
+
+
 GENERATORS = {
     "tongyi": TongyiImageGenerator,
+    "seedream": SeedreamGenerator,
     "openai": OpenAIImageGenerator,
     "fake": FakeGenerator,
 }
