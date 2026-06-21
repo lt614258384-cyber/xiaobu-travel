@@ -19,9 +19,6 @@ class Storyteller:
         all_stories_count: int = 0,
         api_key: str = "",
     ) -> str:
-        if profile.content_preference == "image_only":
-            return ""
-
         # Try LLM story generation if API key is available
         if api_key:
             try:
@@ -41,10 +38,7 @@ class Storyteller:
                 print(f"LLM story generation failed, falling back to template: {e}")
 
         # Fall back to template-based story
-        if profile.content_preference == "story":
-            pool = activity.stories or activity.captions or []
-        else:
-            pool = activity.captions or activity.stories or []
+        pool = activity.stories or activity.captions or []
         if not pool:
             return ""
         return random.choice(pool)

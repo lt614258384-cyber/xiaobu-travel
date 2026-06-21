@@ -44,14 +44,6 @@
             <textarea name="habits" placeholder="例如：每天早上要出门散步，喜欢在沙发角落睡觉...">{{ profile.habits if profile else '' }}</textarea>
         </div>
         <div class="form-group">
-            <label>内容偏好</label>
-            <select name="content_preference">
-                <option value="caption" {% if profile and profile.content_preference == 'caption' %}selected{% endif %}>🖼️ 图片 + 简短文字</option>
-                <option value="story" {% if profile and profile.content_preference == 'story' %}selected{% endif %}>📖 图片 + 完整故事</option>
-                <option value="image_only" {% if profile and profile.content_preference == 'image_only' %}selected{% endif %}>🖼️ 只要图片</option>
-            </select>
-        </div>
-        <div class="form-group">
             <label>图片生成 API Key</label>
             <input type="password" name="image_api_key" id="image_api_key"
                    value="{{ profile.image_api_key if profile else '' }}"
