@@ -2,15 +2,20 @@ import json
 import shutil
 from contextlib import asynccontextmanager
 from pathlib import Path
-from fastapi import FastAPI, Request, Form, UploadFile, File
+from fastapi import FastAPI, Request, Form, UploadFile, File, Depends, HTTPException, status
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
-from models import get_session, Profile, init_db, JourneyState, JourneyLog, Location
+from models import get_session, Profile, init_db, JourneyState, JourneyLog, Location, User
 from config import settings
 from scheduler import Scheduler
 from seed.prompt_cleanup import cleanup_activity_prompt_templates
 from uploads import make_reference_photo_filename, make_reference_photo_web_path
+from middleware.auth import get_current_user, SESSION_COOKIE_NAME
+from middleware.csrf import verify_csrf, generate_csrf_token
+from middleware.rate_limit import check_user_rate_limit
+from routers.auth_routes import router as auth_router
+from audit import log_event
 
 
 @asynccontextmanager
@@ -29,21 +34,36 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="小布的旅行", lifespan=lifespan)
 app.mount("/static", StaticFiles(directory="static"), name="static")
+# WARNING: /data is no longer mounted publicly — see file serving task
 app.mount("/data", StaticFiles(directory="data"), name="data")
 templates = Jinja2Templates(directory="templates")
 
+# Register auth routes
+app.include_router(auth_router)
+
+
+def _csrf_check(request: Request):
+    """Dependency that verifies CSRF token for state-changing requests."""
+    if request.method in ("GET", "HEAD", "OPTIONS"):
+        return
+    form_token = None
+    # Will be extracted from form data in the route handler
+    # We verify in each POST route
+    return
+
 
 @app.get("/profile", response_class=HTMLResponse)
-async def profile_page(request: Request):
-    session = get_session()
-    profile = session.query(Profile).first()
-    session.close()
-    return templates.TemplateResponse(request, "profile.html", {"profile": profile})
+async def profile_page(request: Request, current_user: User = Depends(get_current_user)):
+    sess = get_session()
+    profile = sess.query(Profile).filter_by(user_id=current_user.id).first()
+    sess.close()
+    return templates.TemplateResponse(request, "profile.html", {"profile": profile, "user": current_user})
 
 
 @app.post("/profile")
 async def profile_save(
     request: Request,
+    current_user: User = Depends(get_current_user),
     name: str = Form("小布"),
     breed: str = Form(""),
     age: int = Form(0),
@@ -53,13 +73,18 @@ async def profile_save(
     habits: str = Form(""),
     content_preference: str = Form("caption"),
     image_api_key: str = Form(""),
+    csrf_token: str = Form(None, alias="_csrf_token"),
     photos: list[UploadFile] = File([]),
 ):
-    session = get_session()
-    profile = session.query(Profile).first()
+    # CSRF check
+    if not verify_csrf(request, csrf_token or ""):
+        raise HTTPException(status_code=403, detail="CSRF validation failed")
+
+    sess = get_session()
+    profile = sess.query(Profile).filter_by(user_id=current_user.id).first()
     if not profile:
-        profile = Profile()
-        session.add(profile)
+        profile = Profile(user_id=current_user.id)
+        sess.add(profile)
 
     profile.name = name
     profile.breed = breed
@@ -71,6 +96,7 @@ async def profile_save(
     profile.content_preference = content_preference
     profile.image_api_key = image_api_key
 
+    # Upload with user-scoped directory
     existing = profile.reference_photos or []
     photo_paths = list(existing)
     for photo in photos:
@@ -78,21 +104,22 @@ async def profile_save(
             if len(photo_paths) >= settings.MAX_REFERENCE_PHOTOS:
                 break
             filename = make_reference_photo_filename(photo.filename)
-            filepath = settings.UPLOAD_DIR / filename
+            user_upload_dir = settings.UPLOAD_DIR / str(current_user.id)
+            user_upload_dir.mkdir(parents=True, exist_ok=True)
+            filepath = user_upload_dir / filename
             with open(filepath, "wb") as file_handle:
                 shutil.copyfileobj(photo.file, file_handle)
-            photo_paths.append(make_reference_photo_web_path(filename))
+            photo_paths.append(f"data/uploads/{current_user.id}/{filename}")
 
     profile.reference_photos = photo_paths[:settings.MAX_REFERENCE_PHOTOS]
-    session.commit()
+    sess.commit()
 
-    # If this is the first profile and no photos exist, trigger generation
-    log_count = session.query(JourneyLog).count()
-    session.close()
+    log_count = sess.query(JourneyLog).filter_by(user_id=current_user.id).count()
+    sess.close()
     if log_count == 0:
         import threading
         def gen_first():
-            Scheduler().run_generation()
+            Scheduler().run_generation(current_user.id)
         t = threading.Thread(target=gen_first, daemon=True)
         t.start()
 
@@ -100,20 +127,20 @@ async def profile_save(
 
 
 @app.get("/", response_class=HTMLResponse)
-async def index(request: Request):
-    session = get_session()
-    state = session.query(JourneyState).first()
-    logs = session.query(JourneyLog).order_by(JourneyLog.generated_at.desc()).all()
+async def index(request: Request, current_user: User = Depends(get_current_user)):
+    sess = get_session()
+    state = sess.query(JourneyState).filter_by(user_id=current_user.id).first()
+    logs = sess.query(JourneyLog).filter_by(user_id=current_user.id).order_by(JourneyLog.generated_at.desc()).all()
 
     location = None
     if state and state.current_location_id:
-        location = session.query(Location).get(state.current_location_id)
+        location = sess.query(Location).get(state.current_location_id)
 
     enriched = []
     for log in logs:
         loc_name = ""
         if log.location_id:
-            loc = session.query(Location).get(log.location_id)
+            loc = sess.query(Location).get(log.location_id)
             loc_name = loc.name if loc else ""
         enriched.append({
             "id": log.id, "location_name": loc_name,
@@ -122,18 +149,30 @@ async def index(request: Request):
             "generated_at": log.generated_at,
         })
 
-    session.close()
+    sess.close()
     return templates.TemplateResponse(request, "index.html", {
-        "request": request, "state": state, "location": location, "logs": enriched,
+        "request": request, "state": state, "location": location, "logs": enriched, "user": current_user,
     })
 
 
 @app.post("/generate")
-async def generate_now():
-    """Manually trigger a new photo generation."""
+async def generate_now(request: Request, current_user: User = Depends(get_current_user),
+                       csrf_token: str = Form(None, alias="_csrf_token")):
+    # CSRF check
+    if not verify_csrf(request, csrf_token or ""):
+        raise HTTPException(status_code=403, detail="CSRF validation failed")
+
+    # Rate limit check
+    if not check_user_rate_limit(current_user.id, "generate", 3, 86400):
+        raise HTTPException(status_code=429, detail="今天生成次数已达上限")
+
+    log_event("generate.requested", user_id=current_user.id,
+              ip_address=request.client.host if request.client else "",
+              user_agent=request.headers.get("user-agent", ""))
+
     import threading
     def gen():
-        Scheduler().run_generation()
+        Scheduler().run_generation(current_user.id)
     t = threading.Thread(target=gen, daemon=True)
     t.start()
     return {"status": "ok", "message": "Generation started"}
