@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>小布的旅行</title>
+    <title>{% block title %}小布的旅行{% endblock %}</title>
     <link rel="stylesheet" href="/static/css/style.css">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐾</text></svg>">
 </head>
@@ -13,6 +13,11 @@
         <nav>
             <a href="/">🏠 首页</a>
             <a href="/profile">⚙️ 档案</a>
+            {% if request.state.user %}
+            <form method="POST" action="/logout" style="display:inline">
+              <button type="submit" class="btn-link">登出</button>
+            </form>
+            {% endif %}
         </nav>
     </header>
     <main class="container">

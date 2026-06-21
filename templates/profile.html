@@ -52,9 +52,14 @@
         </div>
         <div class="form-group">
             <label>图片生成 API Key</label>
-            <input type="text" name="image_api_key" value="{{ profile.image_api_key if profile else '' }}" placeholder="粘贴从阿里云获取的通义万相 API Key (sk-开头)">
+            <input type="password" name="image_api_key" id="image_api_key"
+                   value="{{ profile.image_api_key if profile else '' }}"
+                   placeholder="粘贴火山引擎 API Key">
+            {% if profile and profile.image_api_key %}
+              <small>已保存（末尾：****{{ profile.image_api_key[-4:] }}）</small>
+            {% endif %}
             <p style="font-size:0.8rem;color:var(--color-text-light);margin-top:4px;">
-                去 <a href="https://dashscope.aliyun.com/" target="_blank">dashscope.aliyun.com</a> 创建 API-KEY，粘贴到这里即可
+                去 <a href="https://console.volcengine.com/" target="_blank">火山引擎控制台</a> 创建 API Key，粘贴到这里即可
             </p>
         </div>
         <div class="form-group">
