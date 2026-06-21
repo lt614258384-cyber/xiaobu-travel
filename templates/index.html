@@ -46,6 +46,11 @@
 </div>
 {% endif %}
 
+<div id="generating-status" style="display:none;text-align:center;margin:16px 0;">
+    <div class="gen-animation">📮</div>
+    <p id="gen-message" style="color:var(--color-text-light);font-size:0.95rem;"></p>
+</div>
+
 <script>
 function getCookie(name) {
     const value = `; ${document.cookie}`;
@@ -54,32 +59,150 @@ function getCookie(name) {
     return '';
 }
 
+const PROGRESS_MESSAGES = [
+    { icon: '🐾', text: '小布正踩着快乐的步伐出发...' },
+    { icon: '🎨', text: '正在用爪爪画下此刻的风景...' },
+    { icon: '✍️', text: '正在写明信片，字有点歪但很认真...' },
+    { icon: '📸', text: '按下快门，咔嚓——' },
+    { icon: '📮', text: '明信片投入邮筒，等待海风送达...' },
+    { icon: '✉️', text: '信使海鸥正在飞越大海...' },
+    { icon: '💨', text: '穿过一朵棉花糖云，快了快了...' },
+    { icon: '📬', text: '信箱响了！正在装订中...' },
+];
+
 async function generatePhoto() {
     const btn = document.getElementById("generate-btn");
-    btn.textContent = "⏳ 生成中...";
+    const statusDiv = document.getElementById("generating-status");
+    const msgEl = document.getElementById("gen-message");
+    const animEl = statusDiv.querySelector('.gen-animation');
+
     btn.disabled = true;
+    statusDiv.style.display = 'block';
+
+    let msgIdx = 0;
+    const msgTimer = setInterval(() => {
+        if (msgIdx < PROGRESS_MESSAGES.length) {
+            const m = PROGRESS_MESSAGES[msgIdx];
+            animEl.textContent = m.icon;
+            msgEl.textContent = m.text;
+            msgIdx++;
+        }
+    }, 2200);
+
     try {
         const csrf = getCookie('__Host-csrf');
         const formData = new URLSearchParams();
         formData.append('_csrf_token', csrf);
+
         const resp = await fetch("/generate", {
             method: "POST",
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: formData.toString()
         });
-        if (resp.ok) {
-            setTimeout(() => { window.location.reload(); }, 25000);
-        } else {
+
+        if (!resp.ok) {
+            clearInterval(msgTimer);
             const err = await resp.json().catch(() => ({}));
-            alert("生成失败，请重试" + (err.detail ? ": " + err.detail : ""));
-            btn.textContent = "✨ 生成新照片";
+            msgEl.textContent = '寄送失败: ' + (err.detail || '请重试');
+            animEl.textContent = '😢';
             btn.disabled = false;
+            setTimeout(() => { statusDiv.style.display = 'none'; }, 3000);
+            return;
         }
-    } catch (err) {
-        alert("网络错误: " + err.message);
-        btn.textContent = "✨ 生成新照片";
+
+        // Poll for new content
+        const beforeId = getLatestCardId();
+        for (let i = 0; i < 18; i++) {
+            await sleep(2000);
+            const latest = await fetchLatest();
+            if (latest && latest.id > 0 && latest.id !== beforeId && latest.story_text) {
+                clearInterval(msgTimer);
+                animEl.textContent = '💌';
+                msgEl.textContent = '收到了！小布寄来了新的明信片~';
+                await sleep(800);
+                insertNewCard(latest);
+                statusDiv.style.display = 'none';
+                btn.disabled = false;
+                return;
+            }
+        }
+
+        // Timeout — reload page
+        clearInterval(msgTimer);
+        msgEl.textContent = '路途有点远...刷新页面看看吧';
+        animEl.textContent = '⏰';
         btn.disabled = false;
+        setTimeout(() => { statusDiv.style.display = 'none'; }, 4000);
+
+    } catch (err) {
+        clearInterval(msgTimer);
+        msgEl.textContent = '网络波动，明信片迷路了...';
+        animEl.textContent = '🌊';
+        btn.disabled = false;
+        setTimeout(() => { statusDiv.style.display = 'none'; }, 3000);
     }
 }
+
+function getLatestCardId() {
+    const heroImg = document.querySelector('.hero-card img');
+    if (heroImg) {
+        const src = heroImg.getAttribute('src');
+        const match = src && src.match(/xiaobu_(\d+)/);
+        return match ? parseInt(match[1]) : 0;
+    }
+    return 0;
+}
+
+async function fetchLatest() {
+    try {
+        const resp = await fetch('/api/latest');
+        if (resp.ok) return await resp.json();
+    } catch(e) {}
+    return null;
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+function insertNewCard(latest) {
+    // Update hero card
+    const hero = document.querySelector('.hero-card');
+    if (hero) {
+        const img = hero.querySelector('img');
+        const story = hero.querySelector('.story');
+        const meta = hero.querySelector('.meta');
+        if (img) img.src = '/' + latest.image_path;
+        if (story) story.textContent = latest.story_text;
+        if (meta) meta.innerHTML =
+            '<span>📍 ' + latest.location_name + '</span>' +
+            '<span>🌤 ' + latest.weather + '</span>' +
+            '<span>💭 ' + latest.mood + '</span>' +
+            '<span>' + latest.generated_at + '</span>';
+    }
+}
+
+// Story detail modal
+document.addEventListener('click', function(e) {
+    const card = e.target.closest('.timeline-card');
+    if (!card) return;
+    const caption = card.querySelector('.caption');
+    const img = card.querySelector('img');
+    const date = card.querySelector('.date');
+    if (!caption || !img) return;
+
+    let modal = document.getElementById('story-modal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'story-modal';
+        modal.className = 'story-modal';
+        modal.innerHTML = '<div class="story-modal-backdrop"></div><div class="story-modal-content"><span class="story-modal-close">&times;</span><img><div class="story-modal-date"></div><div class="story-modal-text"></div></div>';
+        document.body.appendChild(modal);
+        modal.querySelector('.story-modal-backdrop').addEventListener('click', () => modal.classList.remove('open'));
+        modal.querySelector('.story-modal-close').addEventListener('click', () => modal.classList.remove('open'));
+    }
+    modal.querySelector('img').src = img.src;
+    modal.querySelector('.story-modal-date').textContent = date ? date.textContent : '';
+    modal.querySelector('.story-modal-text').textContent = caption.textContent;
+    modal.classList.add('open');
+});
 </script>
 {% endblock %}

@@ -62,8 +62,59 @@ body { font-family: "PingFang SC","Microsoft YaHei",sans-serif; background: var(
 .empty-state .icon { font-size: 3rem; margin-bottom: 16px; }
 .empty-state p { font-size: 1.05rem; }
 
+/* Generation progress animation */
+.gen-animation {
+    font-size: 3rem;
+    animation: genBounce 0.8s ease-in-out infinite;
+    margin-bottom: 8px;
+}
+@keyframes genBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+/* Story detail modal */
+.timeline-card { cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; }
+.timeline-card:hover { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+.timeline-card .caption {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.story-modal { display: none; }
+.story-modal.open { display: block; }
+.story-modal-backdrop {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.5); z-index: 999;
+    animation: fadeIn 0.2s ease;
+}
+.story-modal-content {
+    position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    background: #fff; border-radius: 16px; padding: 24px; z-index: 1000;
+    max-width: 500px; width: 90%; max-height: 85vh; overflow-y: auto;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.15);
+    animation: modalIn 0.25s ease;
+}
+.story-modal-content img {
+    width: 100%; border-radius: 10px; margin-bottom: 16px;
+}
+.story-modal-date { color: var(--color-text-light); font-size: 0.85rem; margin-bottom: 12px; }
+.story-modal-text { color: var(--color-text); font-size: 0.95rem; line-height: 1.8; white-space: pre-wrap; }
+.story-modal-close {
+    position: absolute; top: 12px; right: 16px;
+    font-size: 1.5rem; cursor: pointer; color: var(--color-text-light);
+    background: none; border: none; padding: 4px 8px; line-height: 1;
+}
+.story-modal-close:hover { color: var(--color-text); }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes modalIn { from { opacity: 0; transform: translate(-50%, -48%); } to { opacity: 1; transform: translate(-50%, -50%); } }
+
 @media (max-width: 640px) {
     .status-bar { flex-wrap: wrap; gap: 12px; }
     .timeline { grid-template-columns: 1fr; }
     .hero-card img { max-height: 400px; }
+    .story-modal-content { padding: 16px; max-width: 95%; }
 }

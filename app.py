@@ -158,6 +158,36 @@ async def index(request: Request, current_user: User = Depends(get_current_user)
     })
 
 
+@app.get("/api/latest")
+async def api_latest(request: Request, current_user: User = Depends(get_current_user)):
+    """Return the latest journey log as JSON for polling after generation."""
+    sess = get_session()
+    log = (
+        sess.query(JourneyLog)
+        .filter_by(user_id=current_user.id)
+        .order_by(JourneyLog.generated_at.desc())
+        .first()
+    )
+    if not log:
+        sess.close()
+        return {"id": 0, "story_text": "", "image_path": "", "location_name": "", "weather": "", "mood": ""}
+
+    loc_name = ""
+    if log.location_id:
+        loc = sess.query(Location).get(log.location_id)
+        loc_name = loc.name if loc else ""
+    sess.close()
+    return {
+        "id": log.id,
+        "story_text": log.story_text or "",
+        "image_path": log.image_path or "",
+        "location_name": loc_name,
+        "weather": log.weather or "",
+        "mood": log.mood or "",
+        "generated_at": log.generated_at.strftime("%m月%d日 %H:%M") if log.generated_at else "",
+    }
+
+
 @app.post("/generate")
 async def generate_now(request: Request, current_user: User = Depends(get_current_user),
                        csrf_token: str = Form(None, alias="_csrf_token")):
