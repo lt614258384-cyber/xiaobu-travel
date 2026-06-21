@@ -201,6 +201,18 @@ class Scheduler:
             image_gen = get_image_generator(api_type=api_type, api_key=profile.image_api_key)
             image_path = image_gen.generate(prompt, profile.reference_photos or [])
             image_path = image_path.replace("\\", "/")
+
+            # Move generated image to user-scoped directory
+            from pathlib import Path
+            import shutil
+            src = Path(image_path)
+            user_gen_dir = Path("data/generated") / str(user_id)
+            user_gen_dir.mkdir(parents=True, exist_ok=True)
+            dst = user_gen_dir / src.name
+            if src != dst and src.exists():
+                shutil.move(str(src), str(dst))
+            image_path = str(dst).replace("\\", "/")
+
             story = self.storyteller.compose_story(
                 activity, profile,
                 weather=weather, mood=state.mood, features=features,
