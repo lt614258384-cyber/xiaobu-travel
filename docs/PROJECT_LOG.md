@@ -4,12 +4,12 @@
 
 ## 日志元数据
 
-- 最后更新：2026-06-22 00:44（Asia/Hong_Kong，UTC+8）
+- 最后更新：2026-06-22 01:30（Asia/Hong_Kong，UTC+8）
 - 仓库：`D:\Xiaobu's travel`
 - 当前分支：`feat/xiaobu-travel`
 - 上游仓库：`https://github.com/lt614258384-cyber/xiaobu-travel`
-- 当前产品阶段：可运行的单用户本地 MVP；多用户和公网部署尚未实施
-- 当前首要工作：完成基础可靠性修复，然后设计并原子实现认证与数据隔离
+- 当前产品阶段：可靠性清理已完成；下一步进入认证与数据隔离设计
+- 当前首要工作：编写"认证 + 数据隔离"联合设计规格
 
 ## Agent 更新协议
 
@@ -95,6 +95,7 @@
 | 2026-06-21 | 已完成 | 项目上下文整理 | `docs/CONTEXT.md`，提交 `f80dc55` |
 | 2026-06-22 | 仅设计完成 | 可靠性清理设计 | `docs/superpowers/specs/2026-06-22-reliability-cleanup-design.md`，提交 `b73cb37` |
 | 2026-06-22 | 仅计划完成 | 可靠性清理实施计划 | `docs/superpowers/plans/2026-06-22-reliability-cleanup.md`，提交 `8a6f599` |
+| 2026-06-22 | 已完成 | 可靠性清理全部实施 | 提交 `7934248`-`c73b5ef`：Prompt 清理、Scheduler shutdown、lifespan 迁移、安全上传、依赖升级、测试隔离；26 tests passed |
 | 2026-06-22 | 已完成 | Better Auth 安全技能查找、来源验证和安装 | 安装目录中存在对应 `SKILL.md`；新会话仍需确认技能可发现 |
 | 2026-06-22 | 已完成 | 当前框架只读安全审计 | 代码证据、OWASP 官方指导、OSV 直接依赖查询；无代码改动 |
 | 2026-06-22 | 已完成 | 跨 Agent 项目日志设计与计划 | 提交 `1efe590`、`e77b163` |
@@ -109,7 +110,7 @@
 | P0 | 未解决 | API Key 明文存储并完整回填网页 | `Profile.image_api_key`、`templates/profile.html` | 加密存储、掩码显示、仅主人访问、禁止写日志 |
 | P0 | 未解决 | `/generate` 可匿名触发付费生成 | POST 路由无鉴权、CSRF、限速和配额 | 登录、CSRF、用户限额、审计和失败隔离 |
 | P0 | 未解决 | 上传和媒体暴露 | 无服务端大小/魔数校验，整个 `/data` 公开 | JPEG/PNG/WebP 白名单、大小限制、UUID、私有媒体访问 |
-| P0 | 未解决 | 生产依赖有公开漏洞 | Pillow 10.4.0、Jinja2 3.1.4、python-multipart 0.0.12 | 升级并重新执行完整依赖审计 |
+| P0 | 已解决 ✅ | 生产依赖有公开漏洞 | Pillow→12.2.0, Jinja2→3.1.6, python-multipart→0.0.32, python-dotenv→1.0.1 | 仍需完整传递依赖审计 |
 | P1 | 未解决 | 无 CSRF、速率限制和安全审计 | 所有状态修改接口缺少控制 | Session CSRF Token、Origin 校验、数据库/Redis 限速、审计事件 |
 | P1 | 未解决 | 默认 SECRET_KEY 可预测 | `config.py` 使用开发默认值 | 生产启动拒绝默认或低熵秘密，要求 32+ 字符高熵值 |
 | P1 | 未解决 | 调度器和生成目录全局共享 | Scheduler 查询共享 Profile、State、Task | 所有任务和文件绑定 `user_id`，使用幂等任务和唯一文件名 |
@@ -118,12 +119,12 @@
 | P1 | 未解决 | 运行入口始终 `reload=True` 且监听 `0.0.0.0` | `run.py` | 开发/生产配置分离，生产禁用 reload 并启用 HTTPS/可信代理配置 |
 | P1 | 未解决 | 数据库和特征缓存可能被误提交 | `.gitignore` 未覆盖 `*.db` 和特征缓存 | 扩充忽略规则并保留用户现有文件 |
 | P1 | 未解决 | Python 3.13 下 psycopg2 依赖解析/构建失败 | 依赖审计因缺少适配 wheel/`pg_config` 中断 | 评估 psycopg 3 或兼容的 PostgreSQL 驱动版本 |
-| P1 | 未解决 | 测试数据库状态不稳定 | 默认配置可能导向 PostgreSQL；旧 `test.db` 缺列 | 测试使用隔离临时数据库和统一 fixture |
-| P1 | 未解决 | 测试期间后台线程出现未捕获异常 | 全新临时 SQLite 下 19 tests passed，但 `gen_first` 线程对空种子库访问 None | 测试中禁用后台生成，并让首次生成处理无地点/活动状态 |
-| P2 | 已规划未实施 | FastAPI `on_event` 已弃用 | 可靠性设计和计划已提交 | 迁移 lifespan，保存并关闭唯一 Scheduler |
-| P2 | 已规划未实施 | 中文上传文件名兼容和路径安全 | 文件名拼接档案名与原始扩展名 | 使用 ASCII UUID 与图片扩展白名单 |
-| P2 | 已规划未实施 | 种子 Prompt 残留旧风格词 | `seed/activities_data.py` | 清理源数据和已有数据库，移除运行时替换补丁 |
-| P2 | 未解决 | `python-dotenv` 未写入 requirements | `config.py` 导入但依赖清单缺失 | 补充并锁定依赖 |
+| P1 | 已解决 ✅ | 测试数据库状态不稳定 | 默认 DATABASE_URL 改为 SQLite，conftest 隔离每个测试到临时 SQLite | 26 tests passed |
+| P1 | 已解决 ✅ | 测试期间后台线程出现未捕获异常 | `select_activity` 处理 None location，`gen_first` 在空库中安全退出 | 不再出现 `PytestUnhandledThreadExceptionWarning` |
+| P2 | 已实现 ✅ | FastAPI `on_event` 已弃用 | 迁移到 lifespan，Scheduler/shutdown 由 lifespan 管理 | 提交 `52927b2`，无 `on_event` deprecation |
+| P2 | 已实现 ✅ | 中文上传文件名兼容和路径安全 | UUID 文件名 + 图片扩展白名单（`.jpg/.jpeg/.png/.webp`） | 提交 `63493e0`，`uploads.py` |
+| P2 | 已实现 ✅ | 种子 Prompt 残留旧风格词 | `seed/activities_data.py` 203 条全部清理；`prompt_cleanup.py` 清理已有数据库；移除 `storyteller.py` 运行时补丁 | 提交 `7934248`，所有测试通过 |
+| P2 | 已解决 ✅ | `python-dotenv` 未写入 requirements | `requirements.txt` 和 `requirements-sqlite.txt` 均已补充 | 提交 `6b5124c` |
 | P3 | 未解决 | 角色纵向一致性不足 | Seedream 参考图不能精确复刻五官 | 后续评估 LoRA，不阻塞多用户安全改造 |
 | P3 | 待验证 | Seedream 5.0 | 新模型未做兼容和质量测试 | 独立实验，不直接替换生产模型 |
 
@@ -140,14 +141,14 @@
 
 ## 多用户与部署路线图
 
-### Phase 1：基础可靠性与依赖修复
+### Phase 1：基础可靠性与依赖修复 ✅（已完成 2026-06-22）
 
-- 补齐和升级依赖。
-- FastAPI `on_event` 迁移到 lifespan。
-- Scheduler 安全关闭。
-- 上传文件改用安全 ASCII UUID。
-- 清理旧 Prompt 风格词和已有数据库模板。
-- 修复测试数据库隔离和后台线程异常。
+- ✅ 补齐和升级依赖（Pillow 12.2.0, Jinja2 3.1.6, python-multipart 0.0.32, python-dotenv 1.0.1）。
+- ✅ FastAPI `on_event` 迁移到 lifespan。
+- ✅ Scheduler 安全关闭（`shutdown()` 幂等方法）。
+- ✅ 上传文件改用安全 ASCII UUID + 扩展名白名单。
+- ✅ 清理旧 Prompt 风格词和已有数据库模板（`prompt_cleanup.py`）。
+- ✅ 修复测试数据库隔离（conftest + SQLite 默认）和后台线程异常（None location 保护）。
 
 ### Phase 2：认证与数据隔离（必须原子上线）
 
@@ -199,15 +200,16 @@
 
 ### 推荐交接顺序
 
-1. 阅读并执行 `docs/superpowers/plans/2026-06-22-reliability-cleanup.md`。
-2. 将依赖升级、测试隔离和后台线程异常纳入 Phase 1 的修订范围。
-3. Phase 1 完成并验证后，编写“认证 + 数据隔离”联合设计规格。
-4. 在该规格中使用 `better-auth-security-best-practices`、`fastapi-python`、`security-requirement-extraction`，并将通用安全原则映射到 FastAPI，而不是照搬 Better Auth 的 TypeScript 配置。
-5. 认证与隔离实现完成前，不部署公网。
+1. ✅ Phase 1 已完成 —> 进入 Phase 2。
+2. 编写”认证 + 数据隔离”联合设计规格（使用 `superpowers:writing-plans`）。
+3. 加载 `better-auth-security-best-practices`、`fastapi-python`、`security-requirement-extraction`，将通用安全原则映射到 FastAPI（不要照搬 Better Auth 的 TypeScript 配置）。
+4. 在该规格中确认：User 表、AuthSession 表、Argon2id 参数、CSRF token 方案、速率限制策略、旧数据迁移策略。
+5. 规格确认后，编写实施计划并使用 `superpowers:subagent-driven-development` 执行。
+6. 认证与隔离实现完成前，不部署公网。
 
 ### 给下一位 Agent 的最短指令
 
-> 阅读根目录 `AGENTS.md` 和 `docs/PROJECT_LOG.md`，检查 Git 状态，保留所有未跟踪运行时数据，然后从“当前最优先的下一步”继续。结束对话前更新项目日志。
+> 阅读根目录 `AGENTS.md` 和 `docs/PROJECT_LOG.md`，检查 Git 状态，保留所有未跟踪运行时数据，然后从”当前最优先的下一步”继续。结束对话前更新项目日志。
 
 ## 重要文件索引
 
@@ -228,6 +230,20 @@
 - 测试：`tests/`
 
 ## 会话与开发记录（倒序）
+
+### 2026-06-22 01:30 — Phase 1 可靠性清理实施完成
+
+- 用户目标：阅读 CONTEXT.md 和 PROJECT_LOG.md，继续开发。后续选择方案 3（PaaS 部署），提出多用户改造需求，安装安全相关 skills。
+- 执行结果：
+  - Task 1：移除旧 Prompt 风格词 — 创建 `seed/prompt_cleanup.py`（幂等清理函数），从 203 条种子数据移除"吉卜力动画风格""温暖治愈"，删除 `storyteller.py` 运行时补丁，3 个新测试。
+  - Task 2：Scheduler 安全关闭 — 新增 `Scheduler.shutdown()`，幂等处理未运行状态，2 个新测试。
+  - Task 3：FastAPI lifespan — 用 `@asynccontextmanager` lifespan 替代弃用的 `@app.on_event`，`init_db()` → `cleanup_activity_prompt_templates()` → `Scheduler.start()` → yield → `Scheduler.shutdown()`，保存 scheduler 到 `app.state`，1 个新测试。
+  - Task 4：安全上传文件名 — 创建 `uploads.py`（`make_reference_photo_filename` + `make_reference_photo_web_path`），UUID hex + 扩展名白名单（`.jpg/.jpeg/.png/.webp`），1 个新测试。
+  - 额外：默认 DATABASE_URL 改为 SQLite；创建 `tests/conftest.py` 测试隔离；修复 `select_activity(None)` 空数据库异常；Pillow→12.2.0，Jinja2→3.1.6，python-multipart→0.0.32；补充 python-dotenv→1.0.1。
+- 验证证据：26 tests passed，零失败；`rg on_event app.py` 无匹配；`rg 吉卜力|温暖治愈 seed/activities_data.py engine/storyteller.py` 无匹配；无 `PytestUnhandledThreadExceptionWarning`。
+- 代码变化：9 个文件新建或修改，4 个提交（`7934248`、`0dcde89`、`52927b2`、`63493e0`、`6b5124c`、`c73b5ef`）；git status 无修改（仅保留未跟踪 `data/`、`docs/superpowers/`、`*.db` 文件）。
+- 遗留问题：Phase 2–5 全部待实施；psycopg2-binary Python 3.13 构建问题未解决；Seedream 5.0 未测试；完整传递依赖审计未完成。
+- 下一步：编写"认证 + 数据隔离"联合设计规格。
 
 ### 2026-06-22 00:44 — 建立实际项目日志
 
