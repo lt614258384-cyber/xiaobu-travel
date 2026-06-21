@@ -18,11 +18,11 @@ class Storyteller:
         atmosphere = activity.location.atmosphere if activity.location else ""
         appearance = profile.appearance or "一只可爱的狗狗"
 
-        # Build prompt with reference image emphasis
+        # Prompt optimized for character consistency with reference images
         base = (
-            f"基于参考图中这只名叫小布的{appearance}，严格保持参考图中狗狗的品种、毛色、体型、五官特征和表情风格，"
-            f"让它在{activity.location.name if activity.location else ''}里{activity.name}，"
-            f"天气{weather}，心情{mood}，{atmosphere}"
+            f"保持参考图中狗狗的品种、毛色、体型、五官完全不变，"
+            f"让它出现在{activity.location.name if activity.location else '一个新的地方'}里{activity.name}，"
+            f"天气{weather}，{atmosphere}"
         )
         # Strip Ghibli/anime keywords
         base = base.replace("吉卜力动画风格", "").replace("温暖治愈", "").replace("，吉卜力动画风格", "")
