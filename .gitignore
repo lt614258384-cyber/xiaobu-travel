@@ -9,3 +9,6 @@ data/uploads/*
 data/generated/*
 !data/uploads/.gitkeep
 !data/generated/.gitkeep
+
+# Secrets
+.env

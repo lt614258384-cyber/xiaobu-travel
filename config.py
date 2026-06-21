@@ -2,6 +2,9 @@ import os
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from dotenv import load_dotenv
+load_dotenv()
+
 @dataclass
 class Settings:
     DATABASE_URL: str = os.getenv("DATABASE_URL", "postgresql://localhost:5432/xiaobu")
