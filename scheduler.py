@@ -223,7 +223,7 @@ class Scheduler:
                 weather=weather, mood=state.mood, features=features,
                 memory_context=memory_context,
                 all_stories_count=len(all_stories),
-                api_key=profile.image_api_key or "",
+                api_key=profile.text_api_key or profile.image_api_key or "",
             )
 
             # Persist updated memory

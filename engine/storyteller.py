@@ -3,8 +3,8 @@ import httpx
 from models import Activity, Profile
 
 
-STORY_MODEL = "doubao-seed-1-8-251228"
-STORY_API_URL = "https://ark.cn-beijing.volces.com/api/v3/chat/completions"
+STORY_MODEL = "deepseek-v4-pro"
+STORY_API_URL = "https://api.deepseek.com/v1/chat/completions"
 
 
 class Storyteller:
@@ -113,11 +113,6 @@ class Storyteller:
         if resp.status_code == 200:
             data = resp.json()
             content = data["choices"][0]["message"]["content"].strip()
-            # Fix: replace 小布 with 我 (model sometimes ignores first-person instruction)
-            content = content.replace("小布", "我")
-            # Clean up resulting duplicates
-            while "我我" in content:
-                content = content.replace("我我", "我")
             # Remove common artifacts
             for prefix in ["《", "【", "\"", '"', "'", "'"]:
                 if content.startswith(prefix):

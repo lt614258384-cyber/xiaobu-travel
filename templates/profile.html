@@ -64,6 +64,18 @@
             </p>
         </div>
         <div class="form-group">
+            <label>🤖 DeepSeek API Key（故事文案生成）</label>
+            <input type="password" name="text_api_key" id="text_api_key"
+                   value="{{ profile.text_api_key if profile else '' }}"
+                   placeholder="粘贴 DeepSeek API Key">
+            {% if profile and profile.text_api_key %}
+              <small>已保存（末尾：****{{ profile.text_api_key[-4:] }}）</small>
+            {% endif %}
+            <p style="font-size:0.8rem;color:var(--color-text-light);margin-top:4px;">
+                去 <a href="https://platform.deepseek.com/" target="_blank">DeepSeek 控制台</a> 创建 API Key，粘贴到这里即可
+            </p>
+        </div>
+        <div class="form-group">
             <label>小布的照片（最多 10 张）</label>
             <div class="upload-zone" id="upload-zone">
                 <p class="hint">📷 点击或拖拽上传照片</p>
