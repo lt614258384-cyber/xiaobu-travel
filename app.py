@@ -10,6 +10,7 @@ from models import get_session, Profile, init_db, JourneyState, JourneyLog, Loca
 from config import settings
 from scheduler import Scheduler
 from seed.prompt_cleanup import cleanup_activity_prompt_templates
+from uploads import make_reference_photo_filename, make_reference_photo_web_path
 
 
 @asynccontextmanager
@@ -76,12 +77,11 @@ async def profile_save(
         if photo.filename and photo.size > 0:
             if len(photo_paths) >= settings.MAX_REFERENCE_PHOTOS:
                 break
-            ext = Path(photo.filename).suffix or ".jpg"
-            filename = f"ref_{name}_{len(photo_paths)}{ext}"
+            filename = make_reference_photo_filename(photo.filename)
             filepath = settings.UPLOAD_DIR / filename
-            with open(filepath, "wb") as f:
-                shutil.copyfileobj(photo.file, f)
-            photo_paths.append(str(Path("data/uploads") / filename))
+            with open(filepath, "wb") as file_handle:
+                shutil.copyfileobj(photo.file, file_handle)
+            photo_paths.append(make_reference_photo_web_path(filename))
 
     profile.reference_photos = photo_paths[:settings.MAX_REFERENCE_PHOTOS]
     session.commit()
