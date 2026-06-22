@@ -1,0 +1,168 @@
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'PingFang SC','Microsoft YaHei',sans-serif;background:#f8f3ea;color:#4a3728;padding:32px 24px;line-height:1.6}
+  .container{max-width:1100px;margin:0 auto}
+  h1{font-family:Georgia,'Songti SC',serif;color:#5c3d2e;margin-bottom:6px}
+  .subtitle{color:#8d7464;margin-bottom:28px;font-size:15px}
+
+  .layout-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;margin-top:24px}
+  .layout-card{border-radius:18px;background:#fffdf7;border:1px solid #ead8c3;overflow:hidden;cursor:pointer;transition:.2s;box-shadow:0 8px 24px rgba(84,59,40,.08)}
+  .layout-card:hover{transform:translateY(-3px);box-shadow:0 14px 36px rgba(84,59,40,.15)}
+  .layout-card.selected{outline:3px solid #d98b5f;outline-offset:3px}
+
+  .preview-area{background:linear-gradient(150deg,#f5e7d4,#faf3e6);padding:20px;display:flex;flex-direction:column;align-items:center;gap:14px}
+  .copy-area{padding:16px 18px 18px}
+  .copy-area h3{font-family:Georgia,'Songti SC',serif;color:#8a5230;margin:0 0 6px;font-size:15px}
+  .copy-area p{color:#8d7464;font-size:13px;line-height:1.6;margin:0}
+  .tag{display:inline-block;border-radius:999px;padding:3px 10px;font-size:11px;font-weight:700;margin-bottom:8px;background:#ffe6d3;color:#995638}
+
+  /* Mobile phone mockup shared */
+  .phone{width:220px;border-radius:20px;background:#fffaf2;border:5px solid #fff;padding:10px;box-shadow:0 10px 30px rgba(59,44,34,.15);position:relative}
+  .phone-notch{width:70px;height:5px;border-radius:99px;background:#e5d5c0;margin:0 auto 8px}
+  .phone-content{border-radius:8px;overflow:hidden;background:#fffef9;border:1px solid #ecdcc5}
+
+  /* A: Vertical stack */
+  .stack-photo{height:100px;background:linear-gradient(#9fd3da 0 40%,#f5e1b0 40%,#e9c882 70%,#f5e1b0 85%);display:flex;align-items:center;justify-content:center;font-size:36px;position:relative}
+  .stack-photo:before{content:'☁️';position:absolute;top:8px;left:10px;font-size:14px;opacity:.7}
+  .stack-text{padding:10px;font-family:Georgia,'Songti SC',serif;font-size:8px;color:#5c4639;line-height:1.7}
+  .stack-text b{display:block;font-size:11px;color:#9c633f;margin-bottom:4px}
+  .stack-meta{display:flex;gap:4px;padding:0 10px 8px;flex-wrap:wrap}
+  .stack-meta span{font-size:7px;border-radius:99px;padding:2px 6px;background:#f5e5d1;color:#896650}
+  .stack-cta{text-align:center;padding:6px;margin:0 10px 8px;border-radius:99px;background:#d6885d;color:#fff;font-size:8px}
+
+  /* B: Horizontal card preserved */
+  .hori-letter{display:grid;grid-template-columns:1fr 1.2fr;min-height:108px}
+  .hori-photo{background:linear-gradient(#9fd3da 0 52%,#e9b76e 53%);display:flex;align-items:center;justify-content:center;font-size:30px;position:relative}
+  .hori-photo:before{content:'☁️';position:absolute;top:6px;left:6px;font-size:11px;opacity:.7}
+  .hori-text{padding:8px;font-family:Georgia,'Songti SC',serif;font-size:7px;color:#5c4639;line-height:1.6}
+  .hori-text b{display:block;font-size:10px;color:#9c633f;margin-bottom:3px}
+  .hori-meta{display:flex;gap:3px;padding:0 8px 6px;flex-wrap:wrap}
+  .hori-meta span{font-size:6px;border-radius:99px;padding:2px 5px;background:#f5e5d1;color:#896650}
+  .hori-cta{text-align:center;padding:5px;margin:0 8px 6px;border-radius:99px;background:#d6885d;color:#fff;font-size:7px}
+
+  /* C: Envelope fold */
+  .fold-outer{position:relative;height:155px}
+  .fold-flap{position:absolute;inset:0;background:linear-gradient(180deg,#e8cb9a 30%,#dbb582 60%,#c9a06c);border-radius:4px 4px 0 0;clip-path:polygon(0 0,100% 0,50% 55%);z-index:3}
+  .fold-body{position:absolute;inset:15px 0 0;background:#fffef9;border-radius:3px;border:3px solid #e3c79b;padding:4px;z-index:1}
+  .fold-preview{display:flex;gap:4px;height:55px;opacity:.85}
+  .fold-preview .fp-photo{width:48%;background:linear-gradient(#a3d7df 0 52%,#ebbb74 53%);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:20px}
+  .fold-preview .fp-text{width:52%;font-family:Georgia,'Songti SC',serif;font-size:5.5px;color:#8b7364;line-height:1.6;overflow:hidden}
+  .fold-hint{text-align:center;font-size:7px;color:#b87a54;margin-top:6px;font-family:Georgia,'Songti SC',serif}
+
+  /* Desktop comparison strip */
+  .desktop-ref{margin-top:8px;background:#fffdf7;border-radius:12px;padding:10px 14px;border:1px dashed #e5d3be}
+  .desktop-ref .label{font-size:9px;color:#b0927a;margin-bottom:6px;text-transform:uppercase;letter-spacing:1px}
+  .desktop-letter{display:grid;grid-template-columns:1.05fr .95fr;border-radius:6px;overflow:hidden;min-height:82px;border:3px solid #dfbc91;background:#fffdf7}
+  .desk-photo{background:linear-gradient(#9fd3da 0 52%,#e9b76e 53%);display:flex;align-items:center;justify-content:center;font-size:28px}
+  .desk-text{padding:7px 9px;font-family:Georgia,'Songti SC',serif;font-size:7px;color:#5c4639;line-height:1.5}
+  .desk-text b{display:block;font-size:10px;color:#9c633f;margin-bottom:3px}
+
+  .decisions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:28px}
+  .decision{border:1px solid #eadfce;border-radius:13px;padding:14px 16px;background:#fffdf7;cursor:pointer}
+  .decision:hover{background:#fff8ee}
+  .decision.selected{outline:3px solid #d98b5f}
+  .decision h3{font-size:14px;margin:0 0 4px;color:#674a39}
+  .decision p{font-size:12px;color:#8d7464;margin:0}
+
+  @media(max-width:850px){.layout-grid{grid-template-columns:1fr}.phone{width:260px}}
+</style>
+
+<div class="container">
+<h1>📱 移动端，这封温暖的信怎么展开？</h1>
+<p class="subtitle">温暖纸张风格已确认。现在看同一封信在手机上的三种布局方式。</p>
+
+<div class="layout-grid">
+  <!-- A: Vertical Stack -->
+  <div class="layout-card" data-choice="vertical-stack" onclick="toggleSelect(this)">
+    <div class="preview-area">
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="phone-content">
+          <div class="stack-photo">🐕</div>
+          <div class="stack-text"><b>嗨，我到贝壳湾啦</b>海面亮晶晶的，浪花轻轻拍着我的爪子。我把最好看的贝壳收进小背包，想寄回家给你看。</div>
+          <div class="stack-meta"><span>🐚 贝壳湾</span><span>☀️ 晴</span><span>💛 想家</span></div>
+          <div class="stack-cta">拆开看看</div>
+        </div>
+      </div>
+      <div class="desktop-ref">
+        <div class="label">桌面端对比</div>
+        <div class="desktop-letter">
+          <div class="desk-photo">🐕</div>
+          <div class="desk-text"><b>嗨，我到贝壳湾啦</b>海面亮晶晶的，浪花轻轻拍着我的爪子。我把最好看的贝壳收进小背包，想寄回家给你看。</div>
+        </div>
+      </div>
+    </div>
+    <div class="copy-area"><span class="tag">A · 纵向展开</span><h3>照片在上，信文在下</h3><p>移动端最自然的阅读流：先看到照片画面，再读故事。与桌面并排布局完全不同，但阅读最不费力。大多数内容类产品的默认选择。</p></div>
+  </div>
+
+  <!-- B: Horizontal Card Preserved -->
+  <div class="layout-card" data-choice="horizontal-card" onclick="toggleSelect(this)">
+    <div class="preview-area">
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="phone-content">
+          <div class="hori-letter">
+            <div class="hori-photo">🐕</div>
+            <div class="hori-text"><b>嗨，我到贝壳湾啦</b>海面亮晶晶的，浪花轻轻拍着我的爪子。我把最好看的贝壳收进小背包。</div>
+          </div>
+          <div class="hori-meta"><span>🐚 贝壳湾</span><span>☀️ 晴</span><span>💛 想家</span></div>
+          <div class="hori-cta">拆开看看</div>
+        </div>
+      </div>
+      <div class="desktop-ref">
+        <div class="label">桌面端对比</div>
+        <div class="desktop-letter">
+          <div class="desk-photo">🐕</div>
+          <div class="desk-text"><b>嗨，我到贝壳湾啦</b>海面亮晶晶的，浪花轻轻拍着我的爪子。我把最好看的贝壳收进小背包，想寄回家给你看。</div>
+        </div>
+      </div>
+    </div>
+    <div class="copy-area"><span class="tag">B · 横向保留</span><h3>缩小比例，保持并排</h3><p>桌面和手机保持一致的"照片左、信文右"结构。信件的整体感更强，但手机上照片和文字区域都变小，阅读体验略紧凑。</p></div>
+  </div>
+
+  <!-- C: Envelope Fold -->
+  <div class="layout-card" data-choice="envelope-fold" onclick="toggleSelect(this)">
+    <div class="preview-area">
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="phone-content" style="padding:8px">
+          <div class="fold-outer">
+            <div class="fold-flap"></div>
+            <div class="fold-body">
+              <div class="fold-preview">
+                <div class="fp-photo">🐕</div>
+                <div class="fp-text"><b style="color:#9c633f">嗨，我到贝壳湾啦</b>海面亮晶晶的…</div>
+              </div>
+            </div>
+          </div>
+          <div class="fold-hint">轻点信封拆开 ↓</div>
+        </div>
+      </div>
+      <div class="desktop-ref">
+        <div class="label">桌面端对比（展开后）</div>
+        <div class="desktop-letter">
+          <div class="desk-photo">🐕</div>
+          <div class="desk-text"><b>嗨，我到贝壳湾啦</b>海面亮晶晶的，浪花轻轻拍着我的爪子。我把最好看的贝壳收进小背包，想寄回家给你看。</div>
+        </div>
+      </div>
+    </div>
+    <div class="copy-area"><span class="tag">C · 信封折叠</span><h3>轻点信封，信纸展开</h3><p>移动端以信封折叠形态呈现，轻点后展开完整图文合信。仪式感最强，与"来信"叙事最一致，但需要用户多一步操作。</p></div>
+  </div>
+</div>
+
+<div class="decisions">
+  <div class="decision" data-choice="A" onclick="toggleSelect(this)"><h3>A · 纵向展开</h3><p>照片在上、信文在下 —— 最自然的移动阅读流</p></div>
+  <div class="decision" data-choice="B" onclick="toggleSelect(this)"><h3>B · 横向保留</h3><p>桌面移动一致 —— 信件整体感更强</p></div>
+  <div class="decision" data-choice="C" onclick="toggleSelect(this)"><h3>C · 信封折叠</h3><p>轻点展开 —— 仪式感最强，但多一步</p></div>
+</div>
+</div>
+
+<script>
+function toggleSelect(el) {
+  const group = el.closest('.layout-grid') || el.closest('.decisions');
+  if (!group) return;
+  group.querySelectorAll('.layout-card,.decision').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  console.log('selected:', el.dataset.choice);
+}
+</script>

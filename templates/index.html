@@ -1,208 +1,337 @@
 {% extends "base.html" %}
 {% block content %}
+
+{# ── State: First-time user, no letters yet ── #}
 {% if not logs %}
-<div class="empty-state">
-    <div class="icon">🐾</div>
-    <p>小布的旅行即将开始...</p>
-    <p style="font-size:0.9rem;color:var(--color-text-light);">先设置<a href="/profile">小布的档案</a>，然后小布就会从汪星发来照片啦</p>
+<div class="empty-state" role="status" aria-label="小布还没有寄过信">
+    <div class="icon">📭</div>
+    <p class="empty-title">小布还没有寄过信</p>
+    <p class="empty-desc">先去<a href="/profile">设置小布的档案</a>，然后小布就会从汪星寄来第一封信啦</p>
 </div>
+
+{# ── State: Has letters — show latest letter as Hero ── #}
 {% else %}
-<div class="status-bar">
-    <div class="status-item"><div class="label">🐾 汪星第</div><div class="value">{{ state.day_number if state else 1 }} 天</div></div>
-    <div class="status-item"><div class="label">📍 当前在</div><div class="value">{{ location.name if location else '彩虹桥' }}</div></div>
-    <div class="status-item"><div class="label">🌤 今日天气</div><div class="value">{{ state.weather_today if state else '晴' }}</div></div>
-    <div class="status-item"><div class="label">💭 心情</div><div class="value">{{ state.mood if state else '期待' }}</div></div>
-</div>
-
 {% set latest = logs[0] %}
-<div class="hero-card">
-    <img src="/{{ latest.image_path }}" alt="小布在{{ latest.location_name }}">
-    {% if latest.story_text %}<div class="story">{{ latest.story_text }}</div>{% endif %}
-    <div class="meta">
-        <span>📍 {{ latest.location_name }}</span>
-        <span>🌤 {{ latest.weather }}</span>
-        <span>💭 {{ latest.mood }}</span>
-        <span>{{ latest.generated_at.strftime('%m月%d日 %H:%M') }}</span>
-    </div>
-</div>
 
-<div style="text-align:center;margin-bottom:24px;">
-    <button class="btn btn-primary" id="generate-btn" onclick="generatePhoto()" style="font-size:1.1rem;padding:12px 32px;">
-        ✨ 生成新照片
-    </button>
-</div>
-
-<div class="timeline-title">📸 过往瞬间</div>
-<div class="timeline">
-    {% for log in logs[1:] %}
-    <div class="timeline-card">
-        <img src="/{{ log.image_path }}" alt="小布在{{ log.location_name }}" loading="lazy">
-        <div class="info">
-            <div class="date">{{ log.generated_at.strftime('%m月%d日 %H:%M') }} · {{ log.location_name }}</div>
-            {% if log.story_text %}<div class="caption">{{ log.story_text }}</div>{% endif %}
-        </div>
+<section class="letter-hero" aria-label="最新来信" data-latest-id="{{ latest.id }}">
+  <div class="letter-hero-card" id="hero-card">
+    <div class="letter-hero-photo">
+      <img src="/{{ latest.image_path }}" alt="小布在{{ latest.location_name }}" id="hero-img">
     </div>
-    {% endfor %}
+    <div class="letter-hero-story">
+      <p class="letter-story-text" id="hero-story">{{ latest.story_text }}</p>
+      <div class="letter-hero-postmark">
+        <span class="postmark-tag">📍 {{ latest.location_name }}</span>
+        <span class="postmark-tag">🌤 {{ latest.weather }}</span>
+        <span class="postmark-tag">💭 {{ latest.mood }}</span>
+        <span class="postmark-tag">{{ latest.generated_at.strftime('%m月%d日') }}</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="home-actions">
+  <button class="btn btn-primary btn-large" id="generate-btn" onclick="triggerLetter()"
+          aria-label="看看小布最近在做什么">
+    ✨ 看看小布最近在做什么
+  </button>
+  <a href="/mailbox" class="mailbox-entry" id="mailbox-entry" aria-label="查看汪星信箱，共 {{ logs|length }} 封来信">
+    📮 查看汪星信箱<span class="mailbox-count-badge">{{ logs|length }}</span>
+    <span class="mailbox-arrow-hint">›</span>
+  </a>
 </div>
 {% endif %}
 
-<div id="generating-status" style="display:none;text-align:center;margin:16px 0;">
-    <div class="gen-animation">📮</div>
-    <p id="gen-message" style="color:var(--color-text-light);font-size:0.95rem;"></p>
-</div>
+{# ── Waiting ritual (hidden by default) ── #}
+<section class="waiting-ritual" id="waiting-ritual" style="display:none" role="status" aria-live="polite" aria-atomic="false">
+  <div class="waiting-paws" aria-hidden="true">🐾 🐾 🐾</div>
+  <div class="waiting-dots" aria-hidden="true">
+    <span class="wdot"></span><span class="wdot"></span><span class="wdot"></span><span class="wdot"></span>
+  </div>
+  <p class="waiting-title">小布正在写信</p>
+  <p class="waiting-tip" id="waiting-tip">小布正在挑选今天最喜欢的一张照片</p>
+  <p class="waiting-subtle">一般需要 10–25 秒</p>
+</section>
+
+{# ── Letter arrived (hidden by default) ── #}
+<section class="letter-arrived" id="letter-arrived" style="display:none" role="status" aria-label="信箱响了，小布寄来了一封新信">
+  <div class="arrived-envelope" aria-hidden="true">
+    <div class="envelope-body">
+      <div class="envelope-seal">🐾</div>
+    </div>
+  </div>
+  <p class="arrived-title">信箱响了——小布寄来了一封新信</p>
+  <button class="btn btn-primary btn-large" onclick="openLetter()" aria-label="拆开看看">
+    💌 拆开看看
+  </button>
+</section>
+
+{# ── Opened letter content (hidden by default, replaces hero) ── #}
+<section class="letter-opened" id="letter-opened" style="display:none" aria-label="展开的来信">
+  <div class="letter-hero-card letter-new-card" id="new-letter-card">
+    <div class="letter-hero-photo">
+      <img src="" alt="小布的最新照片" id="new-img">
+    </div>
+    <div class="letter-hero-story">
+      <p class="letter-story-text" id="new-story"></p>
+      <div class="letter-hero-postmark" id="new-meta"></div>
+    </div>
+  </div>
+  <div class="letter-collected">
+    <p>✉️ 来信已自动收藏至信箱</p>
+    <a href="/mailbox">查看汪星信箱 →</a>
+  </div>
+  <div class="letter-opened-actions">
+    <button class="btn btn-primary" onclick="backToHero()">← 返回首页</button>
+  </div>
+</section>
+
+{# ── Generation error state (hidden) ── #}
+<section class="gen-error" id="gen-error" style="display:none" role="alert">
+  <div class="gen-error-icon">🐕</div>
+  <p class="gen-error-title">今天信没能寄到</p>
+  <p class="gen-error-msg" id="gen-error-msg">小布今天在路上耽搁了。可能是邮路不好，也可能只是运气不太好。</p>
+  <button class="btn btn-primary" onclick="retryLetter()">再等等看</button>
+  <p class="gen-error-tech" id="gen-error-tech"></p>
+</section>
+
+{# ── Timeout prompt (hidden) ── #}
+<section class="timeout-prompt" id="timeout-prompt" style="display:none" role="alert">
+  <p class="timeout-title">还在路上…</p>
+  <p class="timeout-msg">45 秒了，小布还在写信。要继续等吗？</p>
+  <div class="timeout-actions">
+    <button class="btn btn-primary" onclick="continueWait()">继续等</button>
+    <button class="btn btn-ghost" onclick="giveUp()">算了</button>
+  </div>
+</section>
 
 <script>
-function getCookie(name) {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
-    return '';
-}
-
 const PROGRESS_MESSAGES = [
-    { icon: '🐾', text: '小布正踩着快乐的步伐出发...' },
-    { icon: '🎨', text: '正在用爪爪画下此刻的风景...' },
-    { icon: '✍️', text: '正在写明信片，字有点歪但很认真...' },
-    { icon: '📸', text: '按下快门，咔嚓——' },
-    { icon: '📮', text: '明信片投入邮筒，等待海风送达...' },
-    { icon: '✉️', text: '信使海鸥正在飞越大海...' },
-    { icon: '💨', text: '穿过一朵棉花糖云，快了快了...' },
-    { icon: '📬', text: '信箱响了！正在装订中...' },
+  '小布正在挑选今天最喜欢的一张照片',
+  '小布把今天的故事写进信里',
+  '汪星邮局正在盖上一枚爪印',
+  '信使海鸥已经出发，信箱快响啦',
 ];
+const SLOW_MESSAGE = '小布今天格外认真，还在挑照片…';
 
-async function generatePhoto() {
-    const btn = document.getElementById("generate-btn");
-    const statusDiv = document.getElementById("generating-status");
-    const msgEl = document.getElementById("gen-message");
-    const animEl = statusDiv.querySelector('.gen-animation');
+let msgTimer = null;
+let slowTimer = null;
+let timeoutTimer = null;
+let pollTimer = null;
+let beforeId = 0;
+let latestResult = null;
 
-    btn.disabled = true;
-    statusDiv.style.display = 'block';
-
-    let msgIdx = 0;
-    const msgTimer = setInterval(() => {
-        if (msgIdx < PROGRESS_MESSAGES.length) {
-            const m = PROGRESS_MESSAGES[msgIdx];
-            animEl.textContent = m.icon;
-            msgEl.textContent = m.text;
-            msgIdx++;
-        }
-    }, 2200);
-
-    try {
-        const csrf = getCookie('__Host-csrf');
-        const formData = new URLSearchParams();
-        formData.append('_csrf_token', csrf);
-
-        const resp = await fetch("/generate", {
-            method: "POST",
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: formData.toString()
-        });
-
-        if (!resp.ok) {
-            clearInterval(msgTimer);
-            const err = await resp.json().catch(() => ({}));
-            msgEl.textContent = '寄送失败: ' + (err.detail || '请重试');
-            animEl.textContent = '😢';
-            btn.disabled = false;
-            setTimeout(() => { statusDiv.style.display = 'none'; }, 3000);
-            return;
-        }
-
-        // Poll for new content
-        const beforeId = getLatestCardId();
-        for (let i = 0; i < 18; i++) {
-            await sleep(2000);
-            const latest = await fetchLatest();
-            if (latest && latest.id > 0 && latest.id !== beforeId && latest.story_text) {
-                clearInterval(msgTimer);
-                animEl.textContent = '💌';
-                msgEl.textContent = '收到了！小布寄来了新的明信片~';
-                await sleep(800);
-                insertNewCard(latest);
-                statusDiv.style.display = 'none';
-                btn.disabled = false;
-                return;
-            }
-        }
-
-        // Timeout — reload page
-        clearInterval(msgTimer);
-        msgEl.textContent = '路途有点远...刷新页面看看吧';
-        animEl.textContent = '⏰';
-        btn.disabled = false;
-        setTimeout(() => { statusDiv.style.display = 'none'; }, 4000);
-
-    } catch (err) {
-        clearInterval(msgTimer);
-        msgEl.textContent = '网络波动，明信片迷路了...';
-        animEl.textContent = '🌊';
-        btn.disabled = false;
-        setTimeout(() => { statusDiv.style.display = 'none'; }, 3000);
-    }
+function getCookie(name) {
+  const value = '; ' + document.cookie;
+  const parts = value.split('; ' + name + '=');
+  if (parts.length === 2) return parts.pop().split(';').shift();
+  return '';
 }
 
-function getLatestCardId() {
-    const heroImg = document.querySelector('.hero-card img');
-    if (heroImg) {
-        const src = heroImg.getAttribute('src');
-        const match = src && src.match(/xiaobu_(\d+)/);
-        return match ? parseInt(match[1]) : 0;
-    }
-    return 0;
+function getLatestLogId() {
+  const hero = document.querySelector('.letter-hero[data-latest-id]');
+  if (hero) {
+    const id = parseInt(hero.getAttribute('data-latest-id'));
+    return id > 0 ? id : 0;
+  }
+  return 0;
 }
 
 async function fetchLatest() {
-    try {
-        const resp = await fetch('/api/latest');
-        if (resp.ok) return await resp.json();
-    } catch(e) {}
-    return null;
+  try {
+    const resp = await fetch('/api/latest');
+    if (resp.ok) return await resp.json();
+  } catch(e) {}
+  return null;
 }
 
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
-function insertNewCard(latest) {
-    // Update hero card
-    const hero = document.querySelector('.hero-card');
-    if (hero) {
-        const img = hero.querySelector('img');
-        const story = hero.querySelector('.story');
-        const meta = hero.querySelector('.meta');
-        if (img) img.src = '/' + latest.image_path;
-        if (story) story.textContent = latest.story_text;
-        if (meta) meta.innerHTML =
-            '<span>📍 ' + latest.location_name + '</span>' +
-            '<span>🌤 ' + latest.weather + '</span>' +
-            '<span>💭 ' + latest.mood + '</span>' +
-            '<span>' + latest.generated_at + '</span>';
-    }
+function showOnly(id) {
+  ['waiting-ritual','letter-arrived','letter-opened','gen-error','timeout-prompt'].forEach(x => {
+    const el = document.getElementById(x);
+    if (el) el.style.display = 'none';
+  });
+  const el = document.getElementById(id);
+  if (el) el.style.display = 'block';
+  // Hide hero and actions during generation flow
+  const hero = document.getElementById('hero-card');
+  const actions = document.querySelector('.home-actions');
+  const isHero = (id === 'waiting-ritual' || id === 'letter-arrived' || id === 'letter-opened' || id === 'gen-error' || id === 'timeout-prompt');
+  if (hero) hero.style.display = isHero ? 'none' : '';
+  if (actions) actions.style.display = (id === 'letter-opened') ? 'none' : '';
 }
 
-// Story detail modal
-document.addEventListener('click', function(e) {
-    const card = e.target.closest('.timeline-card');
-    if (!card) return;
-    const caption = card.querySelector('.caption');
-    const img = card.querySelector('img');
-    const date = card.querySelector('.date');
-    if (!caption || !img) return;
+function clearAllTimers() {
+  if (msgTimer) { clearInterval(msgTimer); msgTimer = null; }
+  if (slowTimer) { clearTimeout(slowTimer); slowTimer = null; }
+  if (timeoutTimer) { clearTimeout(timeoutTimer); timeoutTimer = null; }
+  if (pollTimer) { clearTimeout(pollTimer); pollTimer = null; }
+}
 
-    let modal = document.getElementById('story-modal');
-    if (!modal) {
-        modal = document.createElement('div');
-        modal.id = 'story-modal';
-        modal.className = 'story-modal';
-        modal.innerHTML = '<div class="story-modal-backdrop"></div><div class="story-modal-content"><span class="story-modal-close">&times;</span><img><div class="story-modal-date"></div><div class="story-modal-text"></div></div>';
-        document.body.appendChild(modal);
-        modal.querySelector('.story-modal-backdrop').addEventListener('click', () => modal.classList.remove('open'));
-        modal.querySelector('.story-modal-close').addEventListener('click', () => modal.classList.remove('open'));
+async function triggerLetter() {
+  const btn = document.getElementById('generate-btn');
+  beforeId = getLatestLogId();
+  latestResult = null;
+
+  btn.disabled = true;
+  showOnly('waiting-ritual');
+
+  // Start rotating messages
+  let msgIdx = 0;
+  const tipEl = document.getElementById('waiting-tip');
+  tipEl.textContent = PROGRESS_MESSAGES[0];
+  msgTimer = setInterval(() => {
+    msgIdx = (msgIdx + 1) % PROGRESS_MESSAGES.length;
+    tipEl.textContent = PROGRESS_MESSAGES[msgIdx];
+  }, 5000);
+
+  // After 30s, show slow message
+  slowTimer = setTimeout(() => {
+    tipEl.textContent = SLOW_MESSAGE;
+  }, 30000);
+
+  // After 45s, show timeout prompt
+  timeoutTimer = setTimeout(() => {
+    clearAllTimers();
+    showOnly('timeout-prompt');
+  }, 45000);
+
+  // Send generation request
+  try {
+    const csrf = getCookie('__Host-csrf');
+    const formData = new URLSearchParams();
+    formData.append('_csrf_token', csrf);
+
+    const resp = await fetch('/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: formData.toString()
+    });
+
+    if (!resp.ok) {
+      clearAllTimers();
+      const err = await resp.json().catch(() => ({}));
+      if (resp.status === 429) {
+        document.getElementById('gen-error-msg').textContent = '今天已经寄了好几封啦，明天再来吧~';
+      } else {
+        document.getElementById('gen-error-msg').textContent = '小布今天在路上耽搁了。可能是邮路不好，也可能只是运气不太好。';
+      }
+      document.getElementById('gen-error-tech').textContent = err.detail || '';
+      showOnly('gen-error');
+      document.getElementById('generate-btn').disabled = false;
+      return;
     }
-    modal.querySelector('img').src = img.src;
-    modal.querySelector('.story-modal-date').textContent = date ? date.textContent : '';
-    modal.querySelector('.story-modal-text').textContent = caption.textContent;
-    modal.classList.add('open');
-});
+
+    // Poll for completion
+    const startTime = Date.now();
+    const poll = async () => {
+      const latest = await fetchLatest();
+      if (latest && latest.id > 0 && latest.id !== beforeId && latest.story_text) {
+        clearAllTimers();
+        latestResult = latest;
+        showOnly('letter-arrived');
+        return;
+      }
+      if (Date.now() - startTime > 75000) {
+        // Total timeout (45s prompt + 30s extra = 75s)
+        clearAllTimers();
+        document.getElementById('gen-error-msg').textContent = '小布今天在路上耽搁了。可能是邮路不好，也可能只是运气不太好。';
+        document.getElementById('gen-error-tech').textContent = '生成超时，请稍后重试';
+        showOnly('gen-error');
+        document.getElementById('generate-btn').disabled = false;
+        return;
+      }
+      pollTimer = setTimeout(poll, 2000);
+    };
+    poll();
+
+  } catch (err) {
+    clearAllTimers();
+    document.getElementById('gen-error-msg').textContent = '网络波动，信迷路了…';
+    document.getElementById('gen-error-tech').textContent = '';
+    showOnly('gen-error');
+    document.getElementById('generate-btn').disabled = false;
+  }
+}
+
+function openLetter() {
+  if (!latestResult) return;
+  showOnly('letter-opened');
+  document.getElementById('new-img').src = '/' + latestResult.image_path;
+  document.getElementById('new-story').textContent = latestResult.story_text;
+  document.getElementById('new-meta').innerHTML =
+    '<span class="postmark-tag">📍 ' + latestResult.location_name + '</span>' +
+    '<span class="postmark-tag">🌤 ' + (latestResult.weather || '晴') + '</span>' +
+    '<span class="postmark-tag">💭 ' + (latestResult.mood || '开心') + '</span>' +
+    '<span class="postmark-tag">刚刚</span>';
+}
+
+function backToHero() {
+  showOnly('');
+  document.getElementById('generate-btn').disabled = false;
+  const hero = document.getElementById('hero-card');
+  const actions = document.querySelector('.home-actions');
+  if (hero) hero.style.display = '';
+  if (actions) actions.style.display = '';
+  // Update hero with new content
+  if (latestResult) {
+    const img = document.getElementById('hero-img');
+    const story = document.getElementById('hero-story');
+    if (img) img.src = '/' + latestResult.image_path;
+    if (story) story.textContent = latestResult.story_text;
+  }
+  // Reload after short delay so user sees the updated hero
+  setTimeout(() => { window.location.reload(); }, 600);
+}
+
+function continueWait() {
+  showOnly('waiting-ritual');
+  const tipEl = document.getElementById('waiting-tip');
+  tipEl.textContent = '小布还在努力…';
+
+  // Give another 30s before final timeout
+  timeoutTimer = setTimeout(() => {
+    clearAllTimers();
+    document.getElementById('gen-error-msg').textContent = '小布今天在路上耽搁了。可能是邮路不好，也可能只是运气不太好。';
+    document.getElementById('gen-error-tech').textContent = '生成超时，请稍后重试';
+    showOnly('gen-error');
+    document.getElementById('generate-btn').disabled = false;
+  }, 30000);
+
+  // Resume polling
+  const poll = async () => {
+    const latest = await fetchLatest();
+    if (latest && latest.id > 0 && latest.id !== beforeId && latest.story_text) {
+      clearAllTimers();
+      latestResult = latest;
+      showOnly('letter-arrived');
+      return;
+    }
+    if (!document.getElementById('timeout-prompt').style.display || document.getElementById('timeout-prompt').style.display === 'none') {
+      pollTimer = setTimeout(poll, 2000);
+    }
+  };
+  poll();
+}
+
+function giveUp() {
+  clearAllTimers();
+  showOnly('');
+  document.getElementById('generate-btn').disabled = false;
+  const hero = document.getElementById('hero-card');
+  const actions = document.querySelector('.home-actions');
+  if (hero) hero.style.display = '';
+  if (actions) actions.style.display = '';
+}
+
+function retryLetter() {
+  showOnly('');
+  document.getElementById('generate-btn').disabled = false;
+  const hero = document.getElementById('hero-card');
+  const actions = document.querySelector('.home-actions');
+  if (hero) hero.style.display = '';
+  if (actions) actions.style.display = '';
+}
 </script>
 {% endblock %}

@@ -136,10 +136,25 @@ class AuditLog(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
 
 
+_engine = None
+_engine_url = None
+
+
 def get_engine():
-    if settings.DATABASE_URL.startswith("sqlite"):
-        return create_engine(settings.DATABASE_URL, connect_args={"check_same_thread": False})
-    return create_engine(settings.DATABASE_URL)
+    """Return the module-level database engine, recreating if DATABASE_URL changes."""
+    global _engine, _engine_url
+    url = settings.DATABASE_URL
+    if _engine is not None and _engine_url == url:
+        return _engine
+    # Dispose old engine if exists
+    if _engine is not None:
+        _engine.dispose()
+    if url.startswith("sqlite"):
+        _engine = create_engine(url, connect_args={"check_same_thread": False})
+    else:
+        _engine = create_engine(url)
+    _engine_url = url
+    return _engine
 
 
 def init_db():
@@ -148,5 +163,4 @@ def init_db():
 
 
 def get_session():
-    engine = get_engine()
-    return Session(engine)
+    return Session(get_engine())

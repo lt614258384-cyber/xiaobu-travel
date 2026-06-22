@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}汪星信箱 · 小布的旅行{% endblock %}
+{% block content %}
+
+<div class="mailbox-page">
+  <header class="mailbox-header">
+    <h2>🐾 汪星信箱</h2>
+    {% if logs %}
+    <span class="mailbox-count">{{ logs|length }} 封来信</span>
+    {% endif %}
+  </header>
+
+  {% if not logs %}
+  <div class="empty-mailbox" role="status" aria-label="信箱还是空的">
+    <div class="empty-mailbox-icon">📭</div>
+    <p class="empty-mailbox-title">信箱还是空的</p>
+    <p class="empty-mailbox-msg">小布刚出发不久，第一封信还在路上。</p>
+    <a href="/" class="btn btn-primary" style="margin-top:16px;text-decoration:none">看看小布最近在做什么</a>
+  </div>
+  {% else %}
+  <div class="mailbox-list" role="list" aria-label="来信列表">
+    {% for log in logs %}
+    <a href="/letter/{{ log.id }}" class="mailbox-row{% if loop.first %} unread{% endif %}"
+       role="listitem" data-letter-id="{{ log.id }}"
+       aria-label="{% if loop.first %}未读{% endif %}来自{{ log.location_name }}的信，{{ log.generated_at.strftime('%m月%d日') }}">
+      <div class="mailbox-thumb">
+        <img src="/{{ log.image_path }}" alt="小布在{{ log.location_name }}" loading="lazy">
+        {% if loop.first %}<span class="unread-dot" aria-hidden="true"></span>{% endif %}
+      </div>
+      <div class="mailbox-info">
+        <div class="mailbox-place">{{ log.location_name or '汪星某处' }}</div>
+        <div class="mailbox-meta">
+          <span>{{ log.weather or '晴' }}</span>
+          <span>{{ log.mood or '开心' }}</span>
+          <span>{{ log.generated_at.strftime('%m月%d日') }}</span>
+        </div>
+        <div class="mailbox-snippet">{{ log.story_text[:60] }}{% if log.story_text and log.story_text|length > 60 %}…{% endif %}</div>
+      </div>
+      <span class="mailbox-arrow" aria-hidden="true">›</span>
+    </a>
+    {% endfor %}
+  </div>
+
+  {% if logs|length > 10 %}
+  <div class="mailbox-load-more" id="load-more">
+    <button class="btn btn-ghost" onclick="loadMore()">查看更多来信 ↓</button>
+  </div>
+  {% endif %}
+  {% endif %}
+
+  <div style="text-align:center;margin-top:24px">
+    <a href="/" class="btn btn-primary" style="text-decoration:none">← 返回首页</a>
+  </div>
+</div>
+
+<script>
+// Track viewed letters in localStorage for read/unread state
+(function() {
+  const viewed = JSON.parse(localStorage.getItem('viewed_letters') || '[]');
+  document.querySelectorAll('.mailbox-row[data-letter-id]').forEach(row => {
+    const id = parseInt(row.dataset.letterId);
+    if (viewed.includes(id)) {
+      row.classList.remove('unread');
+      row.classList.add('read');
+      const envIcon = row.querySelector('.env-icon');
+      if (envIcon) envIcon.textContent = '📨';
+    }
+  });
+})();
+</script>
+{% endblock %}

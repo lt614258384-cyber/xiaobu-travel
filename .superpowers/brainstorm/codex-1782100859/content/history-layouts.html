@@ -1,0 +1,82 @@
+<style>
+  .history-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:24px}
+  .history-choice{border:1px solid #eadfce;border-radius:18px;background:#fffdf8;overflow:hidden;cursor:pointer;transition:.2s;box-shadow:0 8px 30px rgba(84,59,40,.08)}
+  .history-choice:hover{transform:translateY(-3px);box-shadow:0 13px 34px rgba(84,59,40,.14)}
+  .history-choice.selected{outline:3px solid #d98b5f;outline-offset:3px}
+  .preview{height:310px;padding:16px;background:linear-gradient(145deg,#f7ead8,#fffaf1);display:flex;align-items:center;justify-content:center}
+  .copy{padding:16px 18px 18px}.copy h3{margin:0 0 7px}.copy p{margin:0;color:#75665d;line-height:1.55;font-size:14px}
+  .tag{display:inline-block;background:#ffe8d7;color:#9d5a39;border-radius:999px;padding:3px 9px;font-size:11px;font-weight:700;margin-bottom:9px}
+  .phone{width:235px;height:275px;background:#fff;border-radius:12px;box-shadow:0 12px 28px rgba(63,44,31,.18);padding:12px;position:relative;overflow:hidden;border:5px solid #fff}
+  .phone-head{display:flex;justify-content:space-between;align-items:center;font-size:10px;color:#8c6b58;border-bottom:1px solid #efe2d2;padding:2px 2px 8px}
+  .latest{height:118px;background:linear-gradient(145deg,#a6dbe2,#efbd76);margin:10px 0;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:42px}
+  .letter-line{height:5px;background:#eadbc9;border-radius:99px;margin:6px 3px}.letter-line.short{width:62%}
+  .mail-button{position:absolute;left:18px;right:18px;bottom:15px;border-radius:999px;background:#d98b5f;color:#fff;padding:9px;text-align:center;font-size:11px;box-shadow:0 5px 14px rgba(161,92,53,.25)}
+  .drawer{position:absolute;left:8px;right:8px;bottom:7px;height:165px;border-radius:13px;background:#fff8ec;box-shadow:0 -10px 26px rgba(74,50,34,.18);padding:11px;transform:translateY(34px)}
+  .drawer-handle{width:35px;height:3px;background:#d6b99a;border-radius:99px;margin:0 auto 8px}.drawer-title{font-size:11px;font-weight:700;color:#795844;margin-bottom:7px}
+  .mail-row{display:flex;align-items:center;gap:7px;background:#fff;border:1px solid #f0e1cf;border-radius:7px;padding:6px;margin-bottom:5px}.env{font-size:20px}.mail-meta{font-size:8px;color:#8d7465}.mail-meta b{display:block;font-size:9px;color:#64493a}
+  .mailbox-page{width:255px;height:278px;background:#fffdf8;border:5px solid #fff;border-radius:12px;box-shadow:0 12px 28px rgba(63,44,31,.18);padding:13px}
+  .mailbox-title{font-family:Georgia,'Songti SC',serif;color:#714b36;font-size:17px;margin:12px 0 2px}.mailbox-sub{font-size:8px;color:#a0806c;margin-bottom:10px}
+  .shelf{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.envelope-card{height:73px;border-radius:5px;background:#f0d7b5;padding:7px;position:relative;box-shadow:0 4px 9px rgba(83,55,35,.1)}
+  .envelope-card:nth-child(2){background:#d9e4d0}.envelope-card:nth-child(3){background:#e7c6b5}.envelope-card:nth-child(4){background:#d6dce8}
+  .envelope-card:after{content:'';position:absolute;left:0;right:0;bottom:0;height:45px;background:linear-gradient(145deg,transparent 49%,rgba(255,255,255,.28) 50%),linear-gradient(215deg,transparent 49%,rgba(255,255,255,.36) 50%)}
+  .postmark{font-size:7px;color:#7d6558}.place{font-size:9px;font-weight:700;color:#5f4b3f;margin-top:7px}.paw{position:absolute;right:7px;top:7px;font-size:14px}
+  .archive-strip{position:absolute;left:10px;right:10px;bottom:10px;background:#fff8ec;border:1px solid #ead8c2;border-radius:9px;padding:9px}
+  .archive-head{display:flex;justify-content:space-between;font-size:10px;color:#755641;margin-bottom:7px}.archive-head b{font-size:11px}.archive-head span{color:#bd754d}
+  .mini-mails{display:flex;gap:7px;overflow:hidden}.mini{min-width:66px;height:52px;border-radius:5px;background:#eed2ad;display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 3px 8px rgba(83,55,35,.1)}
+  .mini:nth-child(2){background:#d5dfcb}.mini:nth-child(3){background:#e4c2b2}
+  @media(max-width:900px){.history-grid{grid-template-columns:1fr}.preview{height:290px}}
+</style>
+
+<h2>过往来信，怎样收纳最轻盈？</h2>
+<p class="subtitle">目标是让首页只保留“刚收到的一封”，历史随时可找，却不再把页面一路撑到底。点击你偏好的入口方式。</p>
+
+<div class="history-grid">
+  <div class="history-choice" data-choice="drawer" onclick="toggleSelect(this)">
+    <div class="preview">
+      <div class="phone">
+        <div class="phone-head"><b>🐾 小布的旅行</b><span>档案</span></div>
+        <div class="latest">🐕</div>
+        <div class="letter-line"></div><div class="letter-line short"></div>
+        <div class="drawer">
+          <div class="drawer-handle"></div>
+          <div class="drawer-title">📮 过往来信 · 34 封</div>
+          <div class="mail-row"><div class="env">✉️</div><div class="mail-meta"><b>来自贝壳湾</b>6月20日 · 海风很轻</div></div>
+          <div class="mail-row"><div class="env">💌</div><div class="mail-meta"><b>来自树洞图书馆</b>6月18日 · 新朋友</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="copy"><span class="tag">A · 首页抽屉</span><h3>向上拉开旧信</h3><p>不离开首页，最近几封触手可及；信件多后抽屉会变深，需要分页或搜索。</p></div>
+  </div>
+
+  <div class="history-choice" data-choice="mailbox-page" onclick="toggleSelect(this)">
+    <div class="preview">
+      <div class="mailbox-page">
+        <div class="phone-head"><b>🐾 小布的旅行</b><span>首页 · 档案</span></div>
+        <div class="mailbox-title">汪星信箱</div>
+        <div class="mailbox-sub">收藏着小布寄回家的 34 封信</div>
+        <div class="shelf">
+          <div class="envelope-card"><span class="paw">🐾</span><div class="postmark">6月20日</div><div class="place">贝壳湾</div></div>
+          <div class="envelope-card"><span class="paw">🌿</span><div class="postmark">6月18日</div><div class="place">树洞图书馆</div></div>
+          <div class="envelope-card"><span class="paw">⭐</span><div class="postmark">6月16日</div><div class="place">汪星小镇</div></div>
+          <div class="envelope-card"><span class="paw">🌊</span><div class="postmark">6月14日</div><div class="place">落日码头</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="copy"><span class="tag">B · 独立信箱 · 推荐</span><h3>首页只等最新一封</h3><p>导航进入“汪星信箱”，可按日期收藏、搜索和扩展；首页最干净，长期最耐用。</p></div>
+  </div>
+
+  <div class="history-choice" data-choice="collapsible" onclick="toggleSelect(this)">
+    <div class="preview">
+      <div class="phone">
+        <div class="phone-head"><b>🐾 小布的旅行</b><span>档案</span></div>
+        <div class="latest">🐕</div>
+        <div class="letter-line"></div><div class="letter-line short"></div>
+        <div class="archive-strip">
+          <div class="archive-head"><b>旧信匣</b><span>查看全部 ›</span></div>
+          <div class="mini-mails"><div class="mini">✉️</div><div class="mini">💌</div><div class="mini">✉️</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="copy"><span class="tag">C · 首页折叠信匣</span><h3>横向掠过旧信封</h3><p>比当前网格轻巧，也能保留首页发现感；移动端自然，桌面端信息密度较低。</p></div>
+  </div>
+</div>

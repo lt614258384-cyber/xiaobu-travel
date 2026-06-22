@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}来自{{ letter.location_name }}的信 · 小布的旅行{% endblock %}
+{% block content %}
+
+<article class="letter-detail" aria-label="小布从{{ letter.location_name }}寄来的信">
+  <header class="letter-postmark">
+    <span class="postmark-from">✉️ 来自 <strong>{{ letter.location_name or '汪星某处' }}</strong></span>
+    <span class="postmark-date">{{ letter.generated_at.strftime('%Y年%m月%d日 %H:%M') }}</span>
+  </header>
+
+  <div class="letter-detail-card">
+    <div class="letter-photo">
+      <img src="/{{ letter.image_path }}" alt="小布在{{ letter.location_name }}" loading="eager">
+    </div>
+    <div class="letter-story">
+      <p>{{ letter.story_text }}</p>
+      <div class="letter-meta">
+        <span>🌤 {{ letter.weather or '晴' }}</span>
+        <span>💭 {{ letter.mood or '开心' }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="letter-footer">
+    <p class="letter-collected-hint">✉️ 此信已收藏在汪星信箱中</p>
+    <div class="letter-actions">
+      <a href="/" class="btn btn-primary">← 返回首页</a>
+      <a href="/mailbox" class="btn btn-ghost">查看汪星信箱</a>
+    </div>
+  </div>
+</article>
+
+<script>
+// Mark this letter as viewed
+(function() {
+  const id = {{ letter.id }};
+  let viewed = JSON.parse(localStorage.getItem('viewed_letters') || '[]');
+  if (!viewed.includes(id)) {
+    viewed.push(id);
+    if (viewed.length > 200) viewed = viewed.slice(-200);
+    localStorage.setItem('viewed_letters', JSON.stringify(viewed));
+  }
+})();
+</script>
+{% endblock %}

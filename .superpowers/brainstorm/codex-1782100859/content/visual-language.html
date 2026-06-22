@@ -1,0 +1,31 @@
+<style>
+  .style-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:24px}
+  .style-choice{border:1px solid #ddd3c6;border-radius:18px;background:#fff;overflow:hidden;cursor:pointer;transition:.2s;box-shadow:0 9px 30px rgba(59,44,34,.09)}
+  .style-choice:hover{transform:translateY(-3px);box-shadow:0 14px 36px rgba(59,44,34,.15)}.style-choice.selected{outline:3px solid #d98b5f;outline-offset:3px}
+  .preview{height:335px;padding:16px;display:flex;align-items:center;justify-content:center}.copy{padding:16px 18px 18px}.copy h3{margin:0 0 7px}.copy p{margin:0;color:#75665d;line-height:1.55;font-size:14px}
+  .tag{display:inline-block;border-radius:999px;padding:3px 9px;font-size:11px;font-weight:700;margin-bottom:9px}
+  .phone{width:235px;height:300px;border-radius:14px;padding:12px;box-shadow:0 12px 28px rgba(44,31,24,.22);position:relative;overflow:hidden}
+  .head{display:flex;justify-content:space-between;align-items:center;font-size:8px;padding-bottom:7px;margin-bottom:10px}.letter{display:grid;grid-template-columns:1.05fr .95fr;border-radius:7px;overflow:hidden;min-height:157px;position:relative}.photo{display:flex;align-items:center;justify-content:center;font-size:42px;position:relative}.photo:before{content:'☁️';position:absolute;top:12px;left:13px;font-size:18px;opacity:.75}.text{padding:13px 10px;font-size:8px;line-height:1.65}.text b{display:block;font-size:11px;margin-bottom:6px}.meta{display:flex;gap:5px;flex-wrap:wrap;margin-top:9px}.meta span{font-size:7px;border-radius:99px;padding:3px 6px}.cta{border-radius:99px;padding:7px;text-align:center;font-size:9px;margin:13px 14px 0}.mailbox{text-align:center;font-size:8px;margin-top:10px}
+  .paper-preview{background:linear-gradient(145deg,#f1dfc5,#fff9ee)}.paper-phone{background:#fffaf0;border:5px solid #fff}.paper-phone .head{color:#8d6a55;border-bottom:1px solid #ead8c3}.paper-phone .letter{background:#fffdf7;border:5px solid #dfbc91;box-shadow:0 6px 13px rgba(91,62,41,.12)}.paper-phone .photo{background:linear-gradient(#9fd3da 0 52%,#e9b76e 53%)}.paper-phone .text{font-family:Georgia,'Songti SC',serif;color:#5c4639}.paper-phone .text b{color:#9c633f}.paper-phone .meta span{background:#f5e5d1;color:#896650}.paper-phone .cta{background:#d6885d;color:#fff}.paper-phone .mailbox{color:#b46d47}.paper-tag{background:#ffe6d3;color:#995638}
+  .night-preview{background:radial-gradient(circle at 30% 20%,#7c749b,#263a5a 70%)}.night-phone{background:#263a58;border:5px solid #607096}.night-phone .head{color:#e9dfc4;border-bottom:1px solid #60728d}.night-phone .letter{background:#f7eddb;border:4px solid #b59671;box-shadow:0 0 24px rgba(255,221,155,.24)}.night-phone .photo{background:linear-gradient(#61789c 0 52%,#b99178 53%)}.night-phone .text{font-family:Georgia,'Songti SC',serif;color:#4c4450}.night-phone .text b{color:#74607a}.night-phone .meta span{background:#405673;color:#f1e6cf}.night-phone .cta{background:#dfb76e;color:#283a57}.night-phone .mailbox{color:#edd291}.night-tag{background:#e7ddff;color:#594f7c}
+  .fresh-preview{background:linear-gradient(145deg,#d8f1ec,#edf8d9)}.fresh-phone{background:#fbfff9;border:5px solid #fff}.fresh-phone .head{color:#4d786c;border-bottom:1px solid #cfe7df}.fresh-phone .letter{background:#fff;border:4px solid #8dcfc0;box-shadow:0 6px 13px rgba(45,104,90,.12)}.fresh-phone .photo{background:linear-gradient(#80d7e1 0 52%,#ffd37f 53%)}.fresh-phone .text{font-family:'PingFang SC','Microsoft YaHei',sans-serif;color:#3d6158}.fresh-phone .text b{color:#268875}.fresh-phone .meta span{background:#ddf4ed;color:#397c6c}.fresh-phone .cta{background:#ec8b68;color:#fff}.fresh-phone .mailbox{color:#2d927e}.fresh-tag{background:#d9f3eb;color:#287d69}
+  @media(max-width:900px){.style-grid{grid-template-columns:1fr}.preview{height:315px}}
+</style>
+
+<h2>这封信应该带着怎样的光和纸张？</h2>
+<p class="subtitle">三种风格都使用已批准的图文合信流程，只比较整体情绪、颜色和材质。</p>
+
+<div class="style-grid">
+  <div class="style-choice" data-choice="warm-paper" onclick="toggleSelect(this)">
+    <div class="preview paper-preview"><div class="phone paper-phone"><div class="head"><b>🐾 小布的旅行</b><span>汪星信箱</span></div><div class="letter"><div class="photo">🐕</div><div class="text"><b>嗨，我到贝壳湾啦</b>海面亮晶晶的。我把最好看的贝壳收进小背包，想寄回家给你看。</div></div><div class="meta"><span>贝壳湾</span><span>晴天</span><span>想家</span></div><div class="cta">看看小布最近在做什么</div><div class="mailbox">查看汪星信箱 ›</div></div></div>
+    <div class="copy"><span class="tag paper-tag">A · 温暖纸张 · 推荐</span><h3>旅行手帐与旧信纸</h3><p>奶油纸、陶土橙、海风蓝；信件用轻柔宋体/衬线体，控件保持清晰现代。最亲密，也最接近现有品牌。</p></div>
+  </div>
+  <div class="style-choice" data-choice="night-post" onclick="toggleSelect(this)">
+    <div class="preview night-preview"><div class="phone night-phone"><div class="head"><b>✦ 汪星夜邮局</b><span>信箱</span></div><div class="letter"><div class="photo">🐕</div><div class="text"><b>今晚的月亮很近</b>我沿着星光走到海边。风把你的名字轻轻带了过来。</div></div><div class="meta"><span>落日码头</span><span>星夜</span><span>安静</span></div><div class="cta">看看小布最近在做什么</div><div class="mailbox">打开星夜信箱 ›</div></div></div>
+    <div class="copy"><span class="tag night-tag">B · 星夜邮局</span><h3>深蓝夜色与暖灯</h3><p>梦幻、沉静、仪式感强，尤其适合夜间阅读；整体更情绪化，白天可能显得偏重。</p></div>
+  </div>
+  <div class="style-choice" data-choice="fresh-journal" onclick="toggleSelect(this)">
+    <div class="preview fresh-preview"><div class="phone fresh-phone"><div class="head"><b>🌿 小布的旅行册</b><span>来信</span></div><div class="letter"><div class="photo">🐕</div><div class="text"><b>今天又发现新地方</b>草地软软的，我跑了好几个大圈，还认识了一只爱笑的小狗。</div></div><div class="meta"><span>三叶草原</span><span>微风</span><span>开心</span></div><div class="cta">看看小布最近在做什么</div><div class="mailbox">翻看旅行收藏 ›</div></div></div>
+    <div class="copy"><span class="tag fresh-tag">C · 清新旅行册</span><h3>薄荷绿与晴空色</h3><p>轻快、年轻、日常使用压力小；更像旅行记录产品，私人来信的温度略弱。</p></div>
+  </div>
+</div>

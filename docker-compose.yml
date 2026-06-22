@@ -1,0 +1,38 @@
+# ── 小布的旅行 docker-compose.yml ──
+# Local testing with app + PostgreSQL
+
+services:
+  app:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://xiaobu:xiaobu@db:5432/xiaobu
+      - SECRET_KEY=change-me-in-production-use-32-plus-chars
+      - ENV=production
+      - PORT=8000
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - app_data:/app/data
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_USER=xiaobu
+      - POSTGRES_PASSWORD=xiaobu
+      - POSTGRES_DB=xiaobu
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U xiaobu"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pg_data:
+  app_data:

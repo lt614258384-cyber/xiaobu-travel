@@ -1,0 +1,60 @@
+<style>
+  .ritual-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:24px}
+  .ritual{border:1px solid #eadfce;border-radius:18px;background:#fffdf8;overflow:hidden;cursor:pointer;transition:.2s;box-shadow:0 8px 30px rgba(84,59,40,.08)}
+  .ritual:hover{transform:translateY(-3px);box-shadow:0 13px 34px rgba(84,59,40,.14)}
+  .ritual.selected{outline:3px solid #d98b5f;outline-offset:3px}
+  .preview{height:310px;padding:18px;background:linear-gradient(160deg,#f5e6d1,#fffaf0);display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .copy{padding:16px 18px 18px}.copy h3{margin:0 0 7px}.copy p{margin:0;color:#75665d;line-height:1.55;font-size:14px}
+  .tag{display:inline-block;background:#ffe8d7;color:#9d5a39;border-radius:999px;padding:3px 9px;font-size:11px;font-weight:700;margin-bottom:9px}
+  .stage{width:100%;max-width:270px;height:230px;border-radius:15px;background:#fffdf7;box-shadow:0 11px 27px rgba(74,49,33,.15);padding:20px 16px;text-align:center;position:relative;overflow:hidden}
+  .stage-title{font-family:Georgia,'Songti SC',serif;color:#694b3a;font-size:16px;margin-bottom:5px}.stage-sub{font-size:9px;color:#9a7c69}
+  .route{position:relative;height:96px;margin:24px 5px 0}.route-line{position:absolute;left:12px;right:12px;top:30px;border-top:2px dashed #d6b38b}.route-stop{position:absolute;top:23px;width:16px;height:16px;background:#fff;border:3px solid #d6b38b;border-radius:50%}.route-stop:nth-child(2){left:0}.route-stop:nth-child(3){left:32%}.route-stop:nth-child(4){left:64%}.route-stop:nth-child(5){right:0}.route-stop.active{border-color:#cf7750;background:#ffe1c8;box-shadow:0 0 0 5px rgba(207,119,80,.12)}
+  .flying-mail{position:absolute;top:0;left:48%;font-size:27px;animation:hop 1.3s ease-in-out infinite}.labels{display:flex;justify-content:space-between;padding-top:48px;font-size:8px;color:#8f7564}.route-msg{font-size:11px;color:#745746;margin-top:4px}
+  @keyframes hop{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-8px) rotate(5deg)}}
+  .assembly{position:relative;height:130px;margin-top:19px}.assembly-envelope{position:absolute;left:32px;right:32px;bottom:0;height:87px;background:#dfba8e;border-radius:5px;box-shadow:0 8px 16px rgba(75,51,34,.18);z-index:2}
+  .assembly-envelope:after{content:'';position:absolute;inset:0;background:linear-gradient(145deg,transparent 49%,#cfa77b 50%),linear-gradient(215deg,transparent 49%,#e9caa3 50%)}
+  .assembly-paper{position:absolute;left:55px;right:55px;bottom:48px;height:78px;background:#fff;border-radius:3px;box-shadow:0 4px 10px rgba(75,51,34,.12);z-index:1;animation:letterIn 2.4s ease-in-out infinite;padding:10px;font-size:8px;text-align:left;color:#856c5d;line-height:1.5}
+  .assembly-photo{position:absolute;left:75px;bottom:48px;width:68px;height:68px;background:linear-gradient(#a6dbe2 0 52%,#efbd76 53%);display:flex;align-items:center;justify-content:center;font-size:25px;z-index:1;transform:rotate(-4deg);animation:photoIn 2.4s .2s ease-in-out infinite}
+  .seal{position:absolute;right:47px;bottom:29px;width:31px;height:31px;background:#b95748;color:#ffe7ca;border-radius:50%;z-index:4;display:flex;align-items:center;justify-content:center;font-size:15px;box-shadow:0 3px 7px rgba(80,37,31,.25);animation:sealPulse 1.2s ease-in-out infinite}
+  @keyframes letterIn{0%,20%{transform:translateY(-18px);opacity:.45}50%,100%{transform:translateY(18px);opacity:1}}
+  @keyframes photoIn{0%,25%{transform:translateY(-19px) rotate(-7deg);opacity:.35}55%,100%{transform:translateY(14px) rotate(-4deg);opacity:1}}
+  @keyframes sealPulse{50%{transform:scale(1.08)}}
+  .assembly-msg{font-size:11px;color:#745746;margin-top:6px}.dots{display:flex;justify-content:center;gap:5px;margin-top:8px}.dots i{width:5px;height:5px;border-radius:50%;background:#e0c4a4}.dots i:nth-child(2){background:#c8754e}
+  .window{height:135px;margin-top:19px;border-radius:80px 80px 8px 8px;background:linear-gradient(#50658d,#a68daa 58%,#e9c19d);position:relative;overflow:hidden;border:7px solid #d7b48d}
+  .window:before{content:'✦  ·   ✦     ·  ✦';position:absolute;top:14px;left:23px;color:#fff3cd;font-size:13px;letter-spacing:9px;opacity:.8}.moon{position:absolute;right:29px;top:30px;font-size:29px}.cloud{position:absolute;left:18px;bottom:22px;font-size:37px;filter:grayscale(.2);animation:drift 4s ease-in-out infinite}.tiny-mail{position:absolute;left:50%;top:76px;font-size:20px;animation:floatMail 2.6s ease-in-out infinite}
+  @keyframes drift{50%{transform:translateX(13px)}}@keyframes floatMail{50%{transform:translate(-10px,-10px) rotate(7deg)}}
+  .quiet-msg{font-family:Georgia,'Songti SC',serif;font-size:12px;color:#745746;margin-top:12px}.quiet-note{font-size:9px;color:#a08573;margin-top:5px}
+  @media(max-width:900px){.ritual-grid{grid-template-columns:1fr}.preview{height:290px}}
+</style>
+
+<h2>等待新信时，哪种仪式最像这个产品？</h2>
+<p class="subtitle">这些文案是氛围提示，不显示虚假的百分比。系统完成后统一切换为“信箱响了”。</p>
+
+<div class="ritual-grid">
+  <div class="ritual" data-choice="mail-route" onclick="toggleSelect(this)">
+    <div class="preview"><div class="stage">
+      <div class="stage-title">汪星邮路</div><div class="stage-sub">一封新信正在路上</div>
+      <div class="route"><div class="route-line"></div><div class="route-stop"></div><div class="route-stop"></div><div class="route-stop active"></div><div class="route-stop"></div><div class="flying-mail">💌</div><div class="labels"><span>写信</span><span>装照片</span><span>盖邮戳</span><span>送达</span></div></div>
+      <div class="route-msg">信使海鸥已经飞过云朵山……</div>
+    </div></div>
+    <div class="copy"><span class="tag">A · 邮路地图</span><h3>看见信走到哪里</h3><p>清楚、有趣，等待感最弱；但阶段只是叙事循环，容易被误解为真实进度。</p></div>
+  </div>
+
+  <div class="ritual" data-choice="envelope-assembly" onclick="toggleSelect(this)">
+    <div class="preview"><div class="stage">
+      <div class="stage-title">小布正在装信封</div><div class="stage-sub">把今天的照片和故事一起寄回家</div>
+      <div class="assembly"><div class="assembly-paper">今天我去了一个很漂亮的地方……</div><div class="assembly-photo">🐕</div><div class="assembly-envelope"></div><div class="seal">🐾</div></div>
+      <div class="assembly-msg">汪星邮局正在盖上一枚爪印</div><div class="dots"><i></i><i></i><i></i><i></i></div>
+    </div></div>
+    <div class="copy"><span class="tag">B · 装信仪式 · 推荐</span><h3>照片与故事被装进信封</h3><p>与“图文合信”最连贯；完成时信封合上，再自然过渡到拆信动画。</p></div>
+  </div>
+
+  <div class="ritual" data-choice="quiet-window" onclick="toggleSelect(this)">
+    <div class="preview"><div class="stage">
+      <div class="stage-title">在窗边等一封信</div><div class="stage-sub">不催促远方，只听风慢慢靠近</div>
+      <div class="window"><div class="moon">🌙</div><div class="cloud">☁️</div><div class="tiny-mail">✉️</div></div>
+      <div class="quiet-msg">风从汪星那边吹过来了</div><div class="quiet-note">你可以先去做别的，信到了会留在信箱里</div>
+    </div></div>
+    <div class="copy"><span class="tag">C · 安静等信</span><h3>低刺激的陪伴式等待</h3><p>最柔和，也最适合情绪敏感场景；反馈较弱，长时间等待可能让人不确定。</p></div>
+  </div>
+</div>

@@ -1,0 +1,81 @@
+<style>
+  .choice-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:24px}
+  .concept{border:1px solid #eadfce;border-radius:18px;background:#fffdf8;overflow:hidden;cursor:pointer;transition:.2s;box-shadow:0 8px 30px rgba(84,59,40,.08)}
+  .concept:hover{transform:translateY(-3px);box-shadow:0 13px 34px rgba(84,59,40,.14)}
+  .concept.selected{outline:3px solid #d98b5f;outline-offset:3px}
+  .concept-preview{height:300px;padding:18px;background:linear-gradient(145deg,#f7ead8,#fffaf1);display:flex;align-items:center;justify-content:center}
+  .concept-copy{padding:16px 18px 18px}.concept-copy h3{margin:0 0 7px}.concept-copy p{margin:0;color:#75665d;line-height:1.55;font-size:14px}
+  .tag{display:inline-block;background:#ffe8d7;color:#9d5a39;border-radius:999px;padding:3px 9px;font-size:11px;font-weight:700;margin-bottom:9px}
+  .postcard{width:100%;max-width:270px;background:#fff;border:7px solid #fff;border-radius:5px;box-shadow:0 12px 28px rgba(63,44,31,.2);transform:rotate(-2deg)}
+  .scene{height:145px;background:linear-gradient(#9bd7df 0 52%,#f7c67d 53%);display:flex;align-items:flex-end;justify-content:center;font-size:58px;padding-bottom:12px;position:relative;overflow:hidden}
+  .scene:before{content:'☁️   ☁️';position:absolute;top:13px;left:20px;font-size:22px;letter-spacing:25px;opacity:.8}
+  .postcard-note{font-family:Georgia,'Songti SC',serif;padding:12px 14px 14px;color:#5c4639;font-size:13px;line-height:1.6}
+  .postcard-note b{display:block;font-size:11px;color:#b27450;margin-bottom:3px}
+  .letter-wrap{width:250px;position:relative;padding-top:48px}
+  .envelope{height:150px;background:#ddb98e;border-radius:4px;position:relative;box-shadow:0 12px 30px rgba(63,44,31,.22)}
+  .envelope:before{content:'';position:absolute;inset:0;background:linear-gradient(145deg,transparent 49%,#cda87e 50%),linear-gradient(215deg,transparent 49%,#e7c79e 50%)}
+  .paper{position:absolute;left:20px;right:20px;top:0;height:190px;background:#fffdf5;border-radius:3px;padding:18px 18px;box-shadow:0 5px 18px rgba(63,44,31,.13);font-family:Georgia,'Songti SC',serif;color:#5b4639;font-size:12px;line-height:1.65}
+  .paper h4{font-size:16px;margin:0 0 8px;color:#8f5b3c}.signature{text-align:right;margin-top:12px;color:#b06f49}
+  .hybrid{width:100%;max-width:285px;position:relative;background:#ead0ac;border-radius:6px;padding:14px;box-shadow:0 12px 28px rgba(63,44,31,.2);transform:rotate(1deg)}
+  .hybrid-inner{display:grid;grid-template-columns:1.05fr .95fr;background:#fffdf7;min-height:205px;border-radius:3px;overflow:hidden}
+  .hybrid-photo{background:linear-gradient(#a7d9e0 0 52%,#e6b66c 53%);display:flex;align-items:center;justify-content:center;font-size:54px;position:relative}
+  .hybrid-letter{padding:15px 13px;font-family:Georgia,'Songti SC',serif;color:#5a463a;font-size:11px;line-height:1.6}
+  .hybrid-letter b{display:block;color:#9f6644;font-size:14px;margin-bottom:6px}.stamp{position:absolute;right:6px;top:7px;border:2px dashed #c9805b;color:#c46f48;padding:4px;font-size:15px;background:#fff8ed}
+  .mail-tabs{display:flex;gap:6px;margin-top:9px}.mail-tabs span{background:#f8ead5;border-radius:999px;padding:3px 7px;font-size:9px;color:#8d654c}
+  @media(max-width:900px){.choice-grid{grid-template-columns:1fr}.concept-preview{height:270px}}
+</style>
+
+<h2>小布最近的生活，应该以什么形式抵达？</h2>
+<p class="subtitle">先只看“最新一封来信”的核心呈现。点击最符合你心里感觉的一种。</p>
+
+<div class="choice-grid">
+  <div class="concept" data-choice="postcard" onclick="toggleSelect(this)">
+    <div class="concept-preview">
+      <div class="postcard">
+        <div class="scene">🐕</div>
+        <div class="postcard-note"><b>来自 · 贝壳湾</b>今天捡到一枚会唱歌的贝壳。海风一吹，它就像你以前叫我回家那样轻轻响。</div>
+      </div>
+    </div>
+    <div class="concept-copy">
+      <span class="tag">A · 明信片</span>
+      <h3>照片先抵达</h3>
+      <p>轻盈、直观，适合频繁收到。故事较短，点击或翻面后阅读全文。</p>
+    </div>
+  </div>
+
+  <div class="concept" data-choice="letter" onclick="toggleSelect(this)">
+    <div class="concept-preview">
+      <div class="letter-wrap">
+        <div class="paper">
+          <h4>给家里的一封信</h4>
+          今天我沿着海边走了很久。沙子软软的，脚印很快就被浪花收走了……
+          <div class="signature">想你的小布 🐾</div>
+        </div>
+        <div class="envelope"></div>
+      </div>
+    </div>
+    <div class="concept-copy">
+      <span class="tag">B · 长信</span>
+      <h3>故事先被读见</h3>
+      <p>更私密、更有陪伴感。照片像夹在信中的纪念照，但每次阅读更慢、更郑重。</p>
+    </div>
+  </div>
+
+  <div class="concept" data-choice="hybrid" onclick="toggleSelect(this)">
+    <div class="concept-preview">
+      <div class="hybrid">
+        <div class="stamp">🐾</div>
+        <div class="hybrid-inner">
+          <div class="hybrid-photo">🐕</div>
+          <div class="hybrid-letter"><b>嗨，我到贝壳湾啦</b>今天海面亮晶晶的。我把最好看的贝壳收进小背包，下次写信再讲给你听。<div class="signature">小布</div></div>
+        </div>
+        <div class="mail-tabs"><span>汪星邮戳</span><span>6月22日</span><span>展开读信</span></div>
+      </div>
+    </div>
+    <div class="concept-copy">
+      <span class="tag">C · 图文合信 · 推荐</span>
+      <h3>照片与来信一起展开</h3>
+      <p>保留生成图片的主角地位，同时让完整故事像一封信；最适合延伸“收信—拆信—收藏”。</p>
+    </div>
+  </div>
+</div>

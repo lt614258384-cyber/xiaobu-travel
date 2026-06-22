@@ -47,13 +47,12 @@ def build_memory(profile: Profile, features: str, all_stories: list[str]) -> str
     ]
 
     if not all_stories:
-        parts.append("（今天是我来到汪星的第一天，一切才刚刚开始。）")
+        parts.append("（今天是我刚来到汪星，一切才刚刚开始。）")
     else:
         for i, story in enumerate(all_stories, 1):
             # Trim excessive length for older stories to save context
             if i < len(all_stories) - 10 and len(story) > 120:
                 story = story[:120] + "…"
-            parts.append(f"### 第{i}天")
             parts.append(story)
             parts.append("")
 

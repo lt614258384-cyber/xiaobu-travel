@@ -1,0 +1,168 @@
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'PingFang SC','Microsoft YaHei',sans-serif;background:#f8f3ea;color:#4a3728;padding:32px 24px;line-height:1.6}
+  .container{max-width:1000px;margin:0 auto}
+  h1{font-family:Georgia,'Songti SC',serif;color:#5c3d2e;margin-bottom:4px}
+  h2{font-family:Georgia,'Songti SC',serif;color:#8a5230;font-size:17px;margin:28px 0 12px;padding-bottom:6px;border-bottom:1px solid #ecdcc5}
+  .subtitle{color:#8d7464;margin-bottom:20px;font-size:15px}
+
+  .section-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-bottom:20px}
+  .section-card{border-radius:16px;background:#fffdf7;border:1px solid #ead8c3;overflow:hidden;cursor:pointer;transition:.2s;box-shadow:0 6px 18px rgba(84,59,40,.06)}
+  .section-card:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(84,59,40,.12)}
+  .section-card.selected{outline:3px solid #d98b5f;outline-offset:3px}
+  .card-preview{padding:20px;display:flex;justify-content:center;align-items:center;min-height:200px;background:linear-gradient(150deg,#f5e7d4,#faf3e6)}
+  .card-copy{padding:14px 18px 16px}
+  .card-copy h3{font-family:Georgia,'Songti SC',serif;color:#8a5230;margin:0 0 5px;font-size:14px}
+  .card-copy p{color:#8d7464;font-size:12.5px;line-height:1.6;margin:0}
+  .tag{display:inline-block;border-radius:999px;padding:2px 9px;font-size:10px;font-weight:700;margin-bottom:7px;background:#ffe6d3;color:#995638}
+
+  .phone{width:200px;border-radius:18px;background:#fffaf2;border:5px solid #fff;padding:9px;box-shadow:0 8px 24px rgba(59,44,34,.12)}
+  .phone-notch{width:65px;height:4px;border-radius:99px;background:#e5d5c0;margin:0 auto 7px}
+  .phone-inner{border-radius:7px;background:#fffef9;border:1px solid #ecdcc5;padding:10px}
+
+  /* Mailbox list */
+  .mailbox-list{display:flex;flex-direction:column;gap:5px}
+  .letter-row{display:flex;align-items:center;gap:6px;padding:7px 8px;border-radius:6px;font-size:7px;transition:.15s}
+  .letter-row .env{font-size:16px;flex-shrink:0;width:24px;text-align:center}
+  .letter-row .info{flex:1}
+  .letter-row .info .place{font-weight:700;color:#684a39;font-size:8px}
+  .letter-row .info .date{color:#b0927a;font-size:6px}
+  .letter-row .info .preview{color:#9a8270;font-size:6px;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px}
+  .unread{background:#fef4e8}
+  .unread .info .place{color:#b85d2a}
+  .read{opacity:.8}
+  .new-dot{width:5px;height:5px;border-radius:50%;background:#d9764a;flex-shrink:0}
+  .new-badge{font-size:5.5px;background:#d9764a;color:#fff;border-radius:99px;padding:1px 5px;flex-shrink:0}
+
+  /* Three-col for mailbox badge */
+  .three-col{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:12px}
+  .three-col .section-card .card-preview{min-height:150px}
+
+  /* Accessibility preview */
+  .a11y-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+  .a11y-item{border:1px solid #ead8c3;border-radius:12px;padding:16px;background:#fffdf7}
+  .a11y-item h4{font-size:13px;color:#8a5230;margin-bottom:6px}
+  .a11y-item p{font-size:12px;color:#8d7464;line-height:1.6}
+  .a11y-item .do{color:#2d927e;font-size:11px;margin-top:6px}
+  .a11y-item .dont{color:#c46a4a;font-size:11px;margin-top:3px}
+
+  .decision-bar{display:flex;gap:10px;margin-top:24px}
+  .decision-btn{padding:10px 24px;border-radius:99px;border:1px solid #d4a88b;background:#fffdf7;color:#a06845;cursor:pointer;font-size:13px;transition:.15s}
+  .decision-btn:hover{background:#fef4e8}
+  .decision-btn.selected{background:#d98b5f;color:#fff;border-color:#d98b5f}
+
+  @media(max-width:750px){.section-grid,.three-col,.a11y-grid{grid-template-columns:1fr}}
+</style>
+
+<div class="container">
+<h1>📬 已读状态 · ♿ 无障碍</h1>
+<p class="subtitle">最后两个细节决策，确认后进入规格编写。</p>
+
+<!-- ===== READ STATE ===== -->
+<h2>1. 信箱中的已读/未读</h2>
+<p style="color:#8d7464;font-size:14px;margin-bottom:12px">最新一封拆开后自动进入信箱。如何区分新信和旧信？</p>
+
+<div class="three-col">
+  <div class="section-card" data-choice="read-A" onclick="toggleSelect(this)">
+    <div class="card-preview">
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="phone-inner">
+          <div class="mailbox-list">
+            <div class="letter-row unread"><div class="new-dot"></div><div class="env">✉️</div><div class="info"><div class="place">灯塔礁</div><div class="date">今天</div><div class="preview">夕阳把海面染成金色…</div></div></div>
+            <div class="letter-row read"><div style="width:5px;flex-shrink:0"></div><div class="env">📨</div><div class="info"><div class="place">贝壳湾</div><div class="date">昨天</div><div class="preview">浪花轻轻拍着我的爪子…</div></div></div>
+            <div class="letter-row read"><div style="width:5px;flex-shrink:0"></div><div class="env">📨</div><div class="info"><div class="place">彩色小镇</div><div class="date">6月20日</div><div class="preview">石板路上晒着暖烘烘的阳光…</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-copy"><span class="tag">A · 圆点 + 底色 · 推荐</span><h3>橙色圆点 + 浅杏底色</h3><p>未读信左侧有小橙色圆点且底色微暖，打开后自动消失。图标用封口信封 ✉️ vs 开口 📨 区分。简单不抢眼。</p></div>
+  </div>
+  <div class="section-card" data-choice="read-B" onclick="toggleSelect(this)">
+    <div class="card-preview">
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="phone-inner">
+          <div class="mailbox-list">
+            <div class="letter-row unread"><div class="env">💌</div><div class="info"><div class="place">灯塔礁</div><div class="date">今天</div><div class="preview">夕阳把海面染成金色…</div></div><div class="new-badge">新</div></div>
+            <div class="letter-row read"><div class="env">💌</div><div class="info"><div class="place">贝壳湾</div><div class="date">昨天</div><div class="preview">浪花轻轻拍着我的爪子…</div></div>
+            <div class="letter-row read"><div class="env">💌</div><div class="info"><div class="place">彩色小镇</div><div class="date">6月20日</div><div class="preview">石板路上晒着暖烘烘的阳光…</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-copy"><span class="tag">B · 徽章标签</span><h3>右侧"新"字徽章</h3><p>新信右侧出现橙色"新"字标签，视觉更明确但稍显 UI 化，与温暖的纸张氛围有轻微冲突。</p></div>
+  </div>
+  <div class="section-card" data-choice="read-C" onclick="toggleSelect(this)">
+    <div class="card-preview">
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="phone-inner">
+          <div class="mailbox-list">
+            <div class="letter-row unread"><div class="env">💌</div><div class="info" style="font-weight:700;color:#5c3020"><div class="place" style="color:#b85d2a !important;font-size:9px">灯塔礁</div><div class="date">今天</div><div class="preview" style="color:#6b4f3d">夕阳把海面染成金色…</div></div></div>
+            <div class="letter-row read"><div class="env">💌</div><div class="info" style="font-weight:400"><div class="place" style="color:#8d7464 !important">贝壳湾</div><div class="date">昨天</div><div class="preview">浪花轻轻拍着我的爪子…</div></div></div>
+            <div class="letter-row read"><div class="env">💌</div><div class="info" style="font-weight:400"><div class="place" style="color:#8d7464 !important">彩色小镇</div><div class="date">6月20日</div><div class="preview">石板路上晒着暖烘烘的阳光…</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-copy"><span class="tag">C · 排版区分</span><h3>加粗 + 深色文字</h3><p>未读信用加粗和更深文字颜色区分，读后变浅变细。不引入额外 UI 元素，但区分度较弱。</p></div>
+  </div>
+</div>
+
+<!-- ===== ACCESSIBILITY ===== -->
+<h2>2. 无障碍要求（项目日志已约束，确认即绑定到规格）</h2>
+
+<div class="a11y-grid">
+  <div class="a11y-item">
+    <h4>🎬 prefers-reduced-motion</h4>
+    <p>当用户在操作系统设置了"减少动效"，所有动画（爪印跳动、信封折叠、轮换文案淡入淡出）替换为静态状态显示。</p>
+    <div class="do">✅ 加载时直接显示静态"小布正在写信…"不含动画</div>
+    <div class="do">✅ 拆信动画替换为即时显示完整内容</div>
+    <div class="dont">❌ 不使用自动播放的 CSS animation/transition</div>
+  </div>
+  <div class="a11y-item">
+    <h4>⌨️ 键盘可访问性</h4>
+    <p>所有交互（首页按钮、拆信按钮、信箱列表、弹窗关闭）必须通过键盘完成。</p>
+    <div class="do">✅ 所有可点击元素使用 &lt;button&gt; 或 role="button" + tabindex</div>
+    <div class="do">✅ 弹窗打开时焦点移入，关闭时焦点回到触发元素</div>
+    <div class="do">✅ 列表项可用 Tab 导航、Enter 打开</div>
+    <div class="dont">❌ 不使用 div onclick 替代 button</div>
+  </div>
+  <div class="a11y-item">
+    <h4>🎨 色彩对比度</h4>
+    <p>温暖纸张色板需通过 WCAG AA 对比度最低要求。</p>
+    <div class="do">✅ 正文文字 #5c4639 在 #fffdf7 背景上 → 对比度约 7.4:1（通过 AAA）</div>
+    <div class="do">✅ 次要文字 #8d7464 → 对比度约 4.8:1（通过 AA）</div>
+    <div class="dont">❌ 不依赖颜色作为唯一信息传达方式（已读/未读同时用图标和圆点）</div>
+  </div>
+  <div class="a11y-item">
+    <h4>🔍 语义化与屏幕阅读器</h4>
+    <p>有意义的内容结构和 aria 标签。</p>
+    <div class="do">✅ 页面使用语义化地标：&lt;main&gt;、&lt;nav&gt;、&lt;article&gt;</div>
+    <div class="do">✅ 信件内容用 &lt;article aria-label="小布从贝壳湾寄来的信"&gt;</div>
+    <div class="do">✅ 加载状态用 aria-live="polite" 播报文案变化</div>
+    <div class="do">✅ 空信箱用 aria-label 描述当前状态</div>
+  </div>
+</div>
+
+<div style="margin-top:24px;padding:16px 20px;background:#fffdf7;border-radius:14px;border:1px solid #ead8c3">
+  <p style="font-family:Georgia,'Songti SC',serif;color:#8a5230;margin-bottom:10px"><b>已读状态确认：</b></p>
+  <div class="decision-bar" style="margin-top:0">
+    <div class="decision-btn" data-choice="read-A" onclick="toggleSelect(this)">A · 圆点+底色（推荐）</div>
+    <div class="decision-btn" data-choice="read-B" onclick="toggleSelect(this)">B · 徽章标签</div>
+    <div class="decision-btn" data-choice="read-C" onclick="toggleSelect(this)">C · 排版区分</div>
+  </div>
+  <p style="font-size:12px;color:#8d7464;margin-top:12px">无障碍要求无选项——这是项目日志中的硬约束，直接进入规格。</p>
+</div>
+</div>
+
+<script>
+function toggleSelect(el) {
+  const choice = el.dataset.choice;
+  const prefix = choice.split('-')[0];
+  document.querySelectorAll('[data-choice^="' + prefix + '"]').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  console.log('selected:', choice);
+}
+</script>

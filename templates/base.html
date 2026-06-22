@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}小布的旅行{% endblock %}</title>
-    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/style.css?v=20260622">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐾</text></svg>">
 </head>
 <body>
@@ -12,6 +12,7 @@
         <h1>🐾 小布的旅行</h1>
         <nav>
             <a href="/">🏠 首页</a>
+            <a href="/mailbox">📮 信箱</a>
             <a href="/profile">⚙️ 档案</a>
             {% if request.state.user %}
             <form method="POST" action="/logout" style="display:inline">

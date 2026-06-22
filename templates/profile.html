@@ -69,8 +69,8 @@
             </div>
             <input type="file" id="photo-input" accept="image/*" multiple style="display:none;">
             <div class="photo-previews" id="photo-previews">
-                {% if profile and profile.reference_photos %}
-                {% for photo in profile.reference_photos %}
+                {% if photos %}
+                {% for photo in photos %}
                 <div class="photo-preview-wrapper"><img src="/{{ photo }}" class="photo-preview" alt="小布"></div>
                 {% endfor %}
                 {% endif %}

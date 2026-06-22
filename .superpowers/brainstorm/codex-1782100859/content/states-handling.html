@@ -1,0 +1,259 @@
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'PingFang SC','Microsoft YaHei',sans-serif;background:#f8f3ea;color:#4a3728;padding:32px 24px;line-height:1.6}
+  .container{max-width:1050px;margin:0 auto}
+  h1{font-family:Georgia,'Songti SC',serif;color:#5c3d2e;margin-bottom:4px}
+  h2{font-family:Georgia,'Songti SC',serif;color:#8a5230;font-size:17px;margin:32px 0 14px;padding-bottom:8px;border-bottom:1px solid #ecdcc5}
+  .subtitle{color:#8d7464;margin-bottom:20px;font-size:15px}
+
+  .scenario-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+  .scenario-card{border-radius:16px;background:#fffdf7;border:1px solid #ead8c3;overflow:hidden;cursor:pointer;transition:.2s;box-shadow:0 6px 18px rgba(84,59,40,.06)}
+  .scenario-card:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(84,59,40,.12)}
+  .scenario-card.selected{outline:3px solid #d98b5f;outline-offset:3px}
+
+  .state-preview{padding:20px;display:flex;justify-content:center;align-items:center;min-height:220px;background:linear-gradient(150deg,#f5e7d4,#faf3e6)}
+  .state-copy{padding:14px 18px 16px}
+  .state-copy h3{font-family:Georgia,'Songti SC',serif;color:#8a5230;margin:0 0 5px;font-size:14px}
+  .state-copy p{color:#8d7464;font-size:12.5px;line-height:1.6;margin:0}
+  .tag{display:inline-block;border-radius:999px;padding:2px 9px;font-size:10px;font-weight:700;margin-bottom:7px;background:#ffe6d3;color:#995638}
+
+  /* Phone mockup */
+  .phone{width:210px;border-radius:20px;background:#fffaf2;border:5px solid #fff;padding:10px;box-shadow:0 10px 28px rgba(59,44,34,.14)}
+  .phone-notch{width:70px;height:5px;border-radius:99px;background:#e5d5c0;margin:0 auto 8px}
+  .phone-inner{border-radius:8px;background:#fffef9;border:1px solid #ecdcc5;padding:12px 10px;text-align:center}
+  .env-icon{font-size:44px;margin-bottom:8px}
+  .state-title{font-family:Georgia,'Songti SC',serif;font-size:12px;color:#684a39;margin-bottom:6px}
+  .state-msg{font-size:8px;color:#9a8270;line-height:1.6;margin-bottom:10px}
+  .state-btn{display:inline-block;padding:6px 16px;border-radius:99px;font-size:9px;cursor:pointer}
+
+  .btn-primary{background:#d6885d;color:#fff}
+  .btn-ghost{border:1px solid #d4a88b;color:#a06845;background:transparent}
+  .btn-disabled{background:#e5d5c6;color:#b8a192}
+
+  /* Loading animation */
+  .loading-strip{display:flex;gap:3px;justify-content:center;margin-bottom:8px}
+  .dot{width:7px;height:7px;border-radius:50%;background:#dfb78b;animation:bounce 1.2s infinite}
+  .dot:nth-child(2){animation-delay:.15s}.dot:nth-child(3){animation-delay:.3s}.dot:nth-child(4){animation-delay:.45s}
+  @keyframes bounce{0%,80%,100%{transform:translateY(0);opacity:.35}40%{transform:translateY(-9px);opacity:1}}
+
+  .progress-tip{font-size:7.5px;color:#b0927a;margin-bottom:10px;font-style:italic}
+  .paw-prints{display:flex;gap:5px;justify-content:center;font-size:12px;margin-bottom:6px;opacity:.5}
+  .quiet-tip{font-size:7px;color:#c4ab93;margin-top:6px}
+
+  .three-col{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:16px}
+
+  /* Empty mailbox */
+  .empty-mailbox{display:flex;flex-direction:column;align-items:center;text-align:center}
+  .empty-icon{font-size:48px;margin-bottom:6px}
+  .env-row{display:flex;gap:5px;margin-bottom:8px}
+  .mini-env{width:42px;height:28px;border-radius:3px;background:#eed9b8;position:relative}
+  .mini-env:after{content:'';position:absolute;inset:0;background:linear-gradient(145deg,transparent 49%,#dbbc87 50%),linear-gradient(215deg,transparent 49%,#f5e2c0 50%)}
+
+  @media(max-width:750px){.scenario-grid,.three-col{grid-template-columns:1fr}}
+</style>
+
+<div class="container">
+<h1>📮 各种状态下，用户看到什么？</h1>
+<p class="subtitle">温暖纸张 + 纵向展开已确认。现在设计生成中、失败、超时、空信箱等状态。</p>
+
+<!-- ===== LOADING ===== -->
+<h2>1. 生成等待中（装信仪式）</h2>
+<p style="color:#8d7464;font-size:14px;margin-bottom:12px">前面已确定用氛围文案轮换，不显示虚假百分比。现在确认轮换文案的节奏和超时后的表现。</p>
+
+<div class="scenario-grid">
+  <div class="scenario-card" data-choice="loading-A" onclick="toggleSelect(this)">
+    <div class="state-preview">
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="phone-inner">
+          <div class="paw-prints">🐾 🐾 🐾</div>
+          <div class="loading-strip"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+          <div class="state-title">小布正在写信</div>
+          <div class="progress-tip">小布正在挑选今天最喜欢的一张照片</div>
+          <div class="quiet-tip">一般需要 10-25 秒</div>
+        </div>
+      </div>
+    </div>
+    <div class="state-copy"><span class="tag">A · 安静等待</span><h3>爪印 + 跳动点 + 一条轮换文案</h3><p>4 条文案每 5 秒轮换。30 秒后显示"还在挑照片，小布今天格外认真"。不显示进度百分比。</p></div>
+  </div>
+  <div class="scenario-card" data-choice="loading-B" onclick="toggleSelect(this)">
+    <div class="state-preview">
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="phone-inner">
+          <div class="env-icon">✉️</div>
+          <div class="state-title">信正在路上</div>
+          <div class="progress-tip">第 2 步：汪星邮局正在盖上一枚爪印</div>
+          <div style="display:flex;gap:4px;font-size:8px;color:#c4a980;justify-content:center;margin-bottom:8px">
+            <span style="color:#d98b5f">⬤</span><span>→</span><span style="color:#d98b5f">⬤</span><span style="opacity:.4">→</span><span style="opacity:.4">⬤</span><span style="opacity:.4">→</span><span style="opacity:.4">⬤</span>
+          </div>
+          <div class="quiet-tip">约 4 小步，每步几秒钟</div>
+        </div>
+      </div>
+    </div>
+    <div class="state-copy"><span class="tag">B · 分步提示</span><h3>4 步邮政旅程指示器</h3><p>明确显示"挑选照片→写信→盖爪印→海鸥出发"四个阶段，当前步骤高亮。更透明但略微机械化。</p></div>
+  </div>
+</div>
+
+<!-- ===== ERROR ===== -->
+<h2>2. 生成失败</h2>
+<p style="color:#8d7464;font-size:14px;margin-bottom:12px">当图片 API 或 LLM 返回错误时，用户看到什么？</p>
+
+<div class="scenario-grid">
+  <div class="scenario-card" data-choice="error-A" onclick="toggleSelect(this)">
+    <div class="state-preview">
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="phone-inner">
+          <div class="env-icon">🐕</div>
+          <div class="state-title">今天信没能寄到</div>
+          <div class="state-msg">小布今天在路上耽搁了。<br>可能是邮路不好，也可能只是运气不太好。</div>
+          <div class="state-btn btn-primary">再等等看</div>
+          <div class="quiet-tip" style="margin-top:8px">技术原因：图片生成服务暂时无响应</div>
+        </div>
+      </div>
+    </div>
+    <div class="state-copy"><span class="tag">A · 小布口吻 · 推荐</span><h3>用小布的语气解释 + 重试按钮 + 技术小字</h3><p>保持产品温暖调性，不直接甩技术错误。底部小字给出真实原因供排查。重试按钮同样用小布口吻。</p></div>
+  </div>
+  <div class="scenario-card" data-choice="error-B" onclick="toggleSelect(this)">
+    <div class="state-preview">
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="phone-inner">
+          <div class="env-icon">⚠️</div>
+          <div class="state-title">生成失败</div>
+          <div class="state-msg">图片生成服务暂时不可用。<br>请检查 API Key 是否有效，或稍后重试。</div>
+          <div class="state-btn btn-primary">重试</div>
+          <div class="state-btn btn-ghost" style="margin-left:4px">检查 API Key</div>
+        </div>
+      </div>
+    </div>
+    <div class="state-copy"><span class="tag">B · 直接说明</span><h3>标准错误提示 + 两个操作按钮</h3><p>直接告知技术原因，提供"重试"和"检查 API Key"两个明确操作。实用但不温暖。</p></div>
+  </div>
+</div>
+
+<!-- ===== TIMEOUT ===== -->
+<h2>3. 超时处理</h2>
+<p style="color:#8d7464;font-size:14px;margin-bottom:12px">等待超过多久算超时？超时后给用户什么选择？</p>
+
+<div class="three-col">
+  <div class="scenario-card" data-choice="timeout-A" onclick="toggleSelect(this)">
+    <div class="state-preview" style="min-height:180px">
+      <div class="phone" style="width:180px">
+        <div class="phone-notch"></div>
+        <div class="phone-inner">
+          <div class="state-title" style="font-size:11px">还在路上…</div>
+          <div class="state-msg" style="font-size:7px">45 秒了，小布还在写信。<br>要继续等吗？</div>
+          <div class="state-btn btn-primary" style="font-size:8px">继续等</div>
+          <div class="state-btn btn-ghost" style="font-size:8px;margin-left:3px">算了</div>
+        </div>
+      </div>
+    </div>
+    <div class="state-copy"><span class="tag">A · 45秒弹窗</span><h3>45秒后询问是否继续</h3><p>默认继续等 30 秒，再次超时则建议检查 API Key 或稍后重试。两段式退让。</p></div>
+  </div>
+  <div class="scenario-card" data-choice="timeout-B" onclick="toggleSelect(this)">
+    <div class="state-preview" style="min-height:180px">
+      <div class="phone" style="width:180px">
+        <div class="phone-notch"></div>
+        <div class="phone-inner">
+          <div class="state-title" style="font-size:11px">今天信没来</div>
+          <div class="state-msg" style="font-size:7px">等了 60 秒，信还没到。<br>小布可能跑得太远了。</div>
+          <div class="state-btn btn-primary" style="font-size:8px">再寄一次</div>
+        </div>
+      </div>
+    </div>
+    <div class="state-copy"><span class="tag">B · 60秒自动结束</span><h3>60秒后自动转为失败</h3><p>直接显示失败状态和重试按钮。干脆，避免用户一直等。适合大多数 API 场景。</p></div>
+  </div>
+  <div class="scenario-card" data-choice="timeout-C" onclick="toggleSelect(this)">
+    <div class="state-preview" style="min-height:180px">
+      <div class="phone" style="width:180px">
+        <div class="phone-notch"></div>
+        <div class="phone-inner">
+          <div class="state-title" style="font-size:11px">信使海鸥飞远了</div>
+          <div class="state-msg" style="font-size:7px">这次寄得比平常久。<br>你可以先做别的，信到了<br>信箱旁的小旗子会升起来。</div>
+          <div class="state-btn btn-ghost" style="font-size:8px">后台继续等</div>
+          <div class="state-btn btn-primary" style="font-size:8px;margin-left:3px">再试一次</div>
+        </div>
+      </div>
+    </div>
+    <div class="state-copy"><span class="tag">C · 45秒提示后台</span><h3>45秒后建议后台等待</h3><p>用户可选择后台继续等（轮询）或立即重试。最灵活，但需要后台轮询机制支持。</p></div>
+  </div>
+</div>
+
+<!-- ===== EMPTY ===== -->
+<h2>4. 空信箱（首次用户 / 全部已读）</h2>
+<p style="color:#8d7464;font-size:14px;margin-bottom:12px">新注册用户还没有任何来信时，汪星信箱页显示什么？</p>
+
+<div class="scenario-grid">
+  <div class="scenario-card" data-choice="empty-A" onclick="toggleSelect(this)">
+    <div class="state-preview">
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="phone-inner">
+          <div class="empty-mailbox">
+            <div class="empty-icon">📭</div>
+            <div class="state-title">信箱还是空的</div>
+            <div class="state-msg">小布刚出发不久，<br>第一封信还在路上。</div>
+            <div class="state-btn btn-primary">看看小布最近在做什么</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="state-copy"><span class="tag">A · 引导行动 · 推荐</span><h3>空信箱 + 引导按钮</h3><p>将空状态转化为行动入口——用户直接点击触发第一次生成。话语温暖，不给压力。</p></div>
+  </div>
+  <div class="scenario-card" data-choice="empty-B" onclick="toggleSelect(this)">
+    <div class="state-preview">
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="phone-inner">
+          <div class="empty-mailbox">
+            <div class="env-row">
+              <div class="mini-env" style="background:#e8d2b0"></div>
+              <div class="mini-env" style="background:#eedcc0;transform:rotate(6deg)"></div>
+            </div>
+            <div class="state-title">等第一封信</div>
+            <div class="state-msg">汪星邮局说小布已经<br>上路了，信马上就来。</div>
+            <div class="state-btn btn-primary">去首页看看</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="state-copy"><span class="tag">B · 叙事过渡</span><h3>装饰信封 + 返回引导</h3><p>用小信封图形暗示"信箱"已准备就绪，引导回首页触发生成。装饰性更强。</p></div>
+  </div>
+</div>
+
+<!-- Selection -->
+<div style="margin-top:28px;padding:20px;background:#fffdf7;border-radius:16px;border:1px solid #ead8c3">
+  <p style="color:#8a5230;font-family:Georgia,'Songti SC',serif;margin-bottom:14px"><b>请逐组选择（可多选，每组一个）：</b></p>
+  <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px">
+    <div style="text-align:center"><div style="font-size:12px;color:#674a39;margin-bottom:6px">生成等待</div>
+      <div class="scenario-card" data-choice="loading-A" onclick="toggleSelect(this)" style="display:inline-block;padding:10px 18px"><span class="tag" style="margin:0">A</span></div>
+      <div class="scenario-card" data-choice="loading-B" onclick="toggleSelect(this)" style="display:inline-block;padding:10px 18px"><span class="tag" style="margin:0">B</span></div>
+    </div>
+    <div style="text-align:center"><div style="font-size:12px;color:#674a39;margin-bottom:6px">生成失败</div>
+      <div class="scenario-card" data-choice="error-A" onclick="toggleSelect(this)" style="display:inline-block;padding:10px 18px"><span class="tag" style="margin:0">A</span></div>
+      <div class="scenario-card" data-choice="error-B" onclick="toggleSelect(this)" style="display:inline-block;padding:10px 18px"><span class="tag" style="margin:0">B</span></div>
+    </div>
+    <div style="text-align:center"><div style="font-size:12px;color:#674a39;margin-bottom:6px">超时</div>
+      <div class="scenario-card" data-choice="timeout-A" onclick="toggleSelect(this)" style="display:inline-block;padding:10px 18px"><span class="tag" style="margin:0">A</span></div>
+      <div class="scenario-card" data-choice="timeout-B" onclick="toggleSelect(this)" style="display:inline-block;padding:10px 18px"><span class="tag" style="margin:0">B</span></div>
+      <div class="scenario-card" data-choice="timeout-C" onclick="toggleSelect(this)" style="display:inline-block;padding:10px 18px"><span class="tag" style="margin:0">C</span></div>
+    </div>
+    <div style="text-align:center"><div style="font-size:12px;color:#674a39;margin-bottom:6px">空信箱</div>
+      <div class="scenario-card" data-choice="empty-A" onclick="toggleSelect(this)" style="display:inline-block;padding:10px 18px"><span class="tag" style="margin:0">A</span></div>
+      <div class="scenario-card" data-choice="empty-B" onclick="toggleSelect(this)" style="display:inline-block;padding:10px 18px"><span class="tag" style="margin:0">B</span></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+function toggleSelect(el) {
+  const choice = el.dataset.choice;
+  const prefix = choice.split('-')[0];
+  // Deselect all cards with same prefix group
+  document.querySelectorAll('.scenario-card[data-choice^="' + prefix + '"]').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  console.log('selected:', choice);
+}
+</script>

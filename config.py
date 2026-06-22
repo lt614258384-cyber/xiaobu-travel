@@ -13,6 +13,7 @@ class Settings:
     UPLOAD_DIR: Path = field(default_factory=lambda: Path("data/uploads"))
     GENERATED_DIR: Path = field(default_factory=lambda: Path("data/generated"))
     MAX_REFERENCE_PHOTOS: int = 10
+    MAX_UPLOAD_SIZE: int = 10 * 1024 * 1024  # 10 MB per-file limit
     SECRET_KEY: str = os.getenv("SECRET_KEY", "dev-secret-change-me")
 
     def __post_init__(self):

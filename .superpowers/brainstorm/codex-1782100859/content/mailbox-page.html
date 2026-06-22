@@ -1,0 +1,203 @@
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'PingFang SC','Microsoft YaHei',sans-serif;background:#f8f3ea;color:#4a3728;padding:32px 24px;line-height:1.6}
+  .container{max-width:1050px;margin:0 auto}
+  h1{font-family:Georgia,'Songti SC',serif;color:#5c3d2e;margin-bottom:4px}
+  h2{font-family:Georgia,'Songti SC',serif;color:#8a5230;font-size:17px;margin:28px 0 12px;padding-bottom:6px;border-bottom:1px solid #ecdcc5}
+  .subtitle{color:#8d7464;margin-bottom:20px;font-size:15px}
+
+  .layout-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+  .layout-card{border-radius:16px;background:#fffdf7;border:1px solid #ead8c3;overflow:hidden;cursor:pointer;transition:.2s;box-shadow:0 6px 18px rgba(84,59,40,.06)}
+  .layout-card:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(84,59,40,.12)}
+  .layout-card.selected{outline:3px solid #d98b5f;outline-offset:3px}
+  .card-preview{padding:20px;display:flex;justify-content:center;align-items:center;min-height:320px;background:linear-gradient(150deg,#f5e7d4,#faf3e6)}
+  .card-copy{padding:14px 18px 16px}
+  .card-copy h3{font-family:Georgia,'Songti SC',serif;color:#8a5230;margin:0 0 5px;font-size:15px}
+  .card-copy p{color:#8d7464;font-size:12.5px;line-height:1.6;margin:0}
+  .tag{display:inline-block;border-radius:999px;padding:2px 9px;font-size:10px;font-weight:700;margin-bottom:7px;background:#ffe6d3;color:#995638}
+
+  .phone{width:200px;border-radius:18px;background:#fffaf2;border:5px solid #fff;padding:9px;box-shadow:0 8px 24px rgba(59,44,34,.12)}
+  .phone-notch{width:65px;height:4px;border-radius:99px;background:#e5d5c0;margin:0 auto 7px}
+  .phone-inner{border-radius:7px;background:#fffef9;border:1px solid #ecdcc5;overflow:hidden}
+
+  /* A: Envelope list */
+  .page-header{padding:10px;border-bottom:1px solid #eedcc8;display:flex;justify-content:space-between;align-items:center;font-size:7px}
+  .page-header .title{font-family:Georgia,'Songti SC',serif;font-size:10px;color:#8a5230}
+  .page-header .count{color:#b0927a}
+  .mail-list{display:flex;flex-direction:column}
+  .mail-row{display:flex;align-items:center;gap:7px;padding:8px 10px;border-bottom:1px solid #f5ead8;font-size:7px;transition:.15s;cursor:pointer}
+  .mail-row:hover{background:#fef8ef}
+  .mail-row .env-icon{font-size:18px;flex-shrink:0;width:26px;text-align:center}
+  .mail-row .info{flex:1;min-width:0}
+  .mail-row .info .place{font-weight:700;color:#684a39;font-size:8px}
+  .mail-row .info .meta-row{display:flex;gap:4px;margin-top:2px;flex-wrap:wrap}
+  .mail-row .info .meta-row span{font-size:6px;border-radius:99px;padding:1px 5px;background:#f5e5d1;color:#896650}
+  .mail-row .info .snippet{color:#9a8270;font-size:6px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:130px}
+  .mail-row .arrow{color:#d4bfa3;font-size:10px;flex-shrink:0}
+  .unread-row{background:#fef4e8}
+  .unread-row .env-icon{font-size:18px}
+  .new-dot{width:5px;height:5px;border-radius:50%;background:#d9764a;flex-shrink:0}
+  .show-more{text-align:center;padding:10px;font-size:8px;color:#b0724e;cursor:pointer}
+
+  /* B: Envelope grid */
+  .env-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;padding:8px}
+  .env-card{border-radius:6px;background:#fffdf7;border:1px solid #eedcc8;padding:7px;text-align:center;cursor:pointer;transition:.15s}
+  .env-card:hover{background:#fef8ef}
+  .env-card .e-icon{font-size:24px;margin-bottom:3px}
+  .env-card .e-place{font-size:7px;font-weight:700;color:#684a39}
+  .env-card .e-date{font-size:6px;color:#b0927a}
+  .env-card .e-stamp{display:inline-block;font-size:14px;margin-top:3px}
+  .unread-env{background:#fef4e8;border-color:#e6c9a0}
+  .unread-env .e-icon{font-size:26px}
+
+  /* C: Timeline */
+  .timeline{padding:8px 10px;position:relative}
+  .tl-item{display:flex;gap:8px;position:relative;padding-bottom:12px}
+  .tl-line{position:absolute;left:14px;top:26px;bottom:0;width:1.5px;background:#e5d5c0}
+  .tl-item:last-child .tl-line{display:none}
+  .tl-dot{width:10px;height:10px;border-radius:50%;background:#d9ae7e;flex-shrink:0;margin-top:3px;z-index:1}
+  .tl-dot.unread-dot{background:#d9764a;box-shadow:0 0 0 3px #fde4d0}
+  .tl-content{flex:1;min-width:0}
+  .tl-content .tl-place{font-size:8px;font-weight:700;color:#684a39}
+  .tl-content .tl-meta{display:flex;gap:4px;margin-top:1px}
+  .tl-content .tl-meta span{font-size:6px;border-radius:99px;padding:1px 5px;background:#f5e5d1;color:#896650}
+  .tl-content .tl-snippet{font-size:6px;color:#9a8270;margin-top:2px;line-height:1.4}
+
+  .decision-bar{display:flex;gap:10px;margin-top:24px}
+  .decision-btn{padding:10px 24px;border-radius:99px;border:1px solid #d4a88b;background:#fffdf7;color:#a06845;cursor:pointer;font-size:13px;transition:.15s}
+  .decision-btn:hover{background:#fef4e8}
+  .decision-btn.selected{background:#d98b5f;color:#fff;border-color:#d98b5f}
+
+  @media(max-width:750px){.layout-grid{grid-template-columns:1fr}}
+</style>
+
+<div class="container">
+<h1>📮 汪星信箱页：怎么收藏所有来信？</h1>
+<p class="subtitle">温暖纸张 + 纵向展开已定。信箱是过往全部来信的收藏馆——三种组织形式。</p>
+
+<div class="layout-grid">
+  <!-- A: List -->
+  <div class="layout-card" data-choice="mailbox-A" onclick="toggleSelect(this)">
+    <div class="card-preview">
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="phone-inner">
+          <div class="page-header"><span class="title">🐾 汪星信箱</span><span class="count">12 封来信</span></div>
+          <div class="mail-list">
+            <div class="mail-row unread-row"><div class="new-dot"></div><div class="env-icon">✉️</div><div class="info"><div class="place">灯塔礁</div><div class="meta-row"><span>🌅 日落</span><span>🐚 拾贝</span></div><div class="snippet">夕阳把海面染成金色…</div></div><div class="arrow">›</div></div>
+            <div class="mail-row"><div style="width:5px;flex-shrink:0"></div><div class="env-icon">📨</div><div class="info"><div class="place">彩色小镇</div><div class="meta-row"><span>☀️ 明信片</span></div><div class="snippet">我踩着石板路，尾巴摇得像小旗子…</div></div><div class="arrow">›</div></div>
+            <div class="mail-row"><div style="width:5px;flex-shrink:0"></div><div class="env-icon">📨</div><div class="info"><div class="place">贝壳湾</div><div class="meta-row"><span>☀️ 赶海</span></div><div class="snippet">浪花轻轻拍着我的爪子…</div></div><div class="arrow">›</div></div>
+            <div class="mail-row"><div style="width:5px;flex-shrink:0"></div><div class="env-icon">📨</div><div class="info"><div class="place">三叶草原</div><div class="meta-row"><span>🌿 奔跑</span></div><div class="snippet">草地软软的，我跑了好几个大圈…</div></div><div class="arrow">›</div></div>
+          </div>
+          <div class="show-more">查看更多来信 ↓</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-copy"><span class="tag">A · 按日列表 · 推荐</span><h3>纵向列表：行 = 一天一封信</h3><p>每行显示信封图标、地点、天气/活动标签、故事首句预览。未读有圆点+暖底色。默认最新在上。超过 10 封出现"查看更多"加载。最符合"信箱"比喻——像一封封排好的信。</p></div>
+  </div>
+
+  <!-- B: Grid -->
+  <div class="layout-card" data-choice="mailbox-B" onclick="toggleSelect(this)">
+    <div class="card-preview">
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="phone-inner">
+          <div class="page-header"><span class="title">🐾 汪星信箱</span><span class="count">12 封来信</span></div>
+          <div class="env-grid">
+            <div class="env-card unread-env"><div class="e-icon">✉️</div><div class="e-place">灯塔礁</div><div class="e-date">今天</div><div class="e-stamp">🐚</div></div>
+            <div class="env-card"><div class="e-icon">💌</div><div class="e-place">彩色小镇</div><div class="e-date">昨天</div><div class="e-stamp">📮</div></div>
+            <div class="env-card"><div class="e-icon">💌</div><div class="e-place">贝壳湾</div><div class="e-date">6月19日</div><div class="e-stamp">🐚</div></div>
+            <div class="env-card"><div class="e-icon">💌</div><div class="e-place">三叶草原</div><div class="e-date">6月18日</div><div class="e-stamp">🌿</div></div>
+            <div class="env-card"><div class="e-icon">💌</div><div class="e-place">落日码头</div><div class="e-date">6月17日</div><div class="e-stamp">🌅</div></div>
+            <div class="env-card"><div class="e-icon">💌</div><div class="e-place">彩虹桥</div><div class="e-date">6月16日</div><div class="e-stamp">🌈</div></div>
+          </div>
+          <div class="show-more">查看更多 ↓</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-copy"><span class="tag">B · 信封陈列</span><h3>双列网格：每个信封一张卡片</h3><p>视觉上像真实的信封收藏盒，每封信用图标+地名+邮戳emoji表示。空间利用率高但不显示故事预览，需要点进去才能知道内容。适合信很多（>30封）时的浏览。</p></div>
+  </div>
+
+  <!-- C: Timeline -->
+  <div class="layout-card" data-choice="mailbox-C" onclick="toggleSelect(this)">
+    <div class="card-preview">
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="phone-inner">
+          <div class="page-header"><span class="title">🐾 汪星信箱</span><span class="count">12 封来信</span></div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-dot unread-dot"></div><div class="tl-content"><div class="tl-place">灯塔礁</div><div class="tl-meta"><span>今天</span><span>🌅 日落</span><span>🐚 拾贝</span></div><div class="tl-snippet">夕阳把海面染成金色，海风轻抚我的毛发，这一刻温暖又宁静。</div></div><div class="tl-line"></div></div>
+            <div class="tl-item"><div class="tl-dot"></div><div class="tl-content"><div class="tl-place">彩色小镇</div><div class="tl-meta"><span>昨天</span><span>☀️ 写明信片</span></div><div class="tl-snippet">我踩着石板路，尾巴摇得像小旗子…</div></div><div class="tl-line"></div></div>
+            <div class="tl-item"><div class="tl-dot"></div><div class="tl-content"><div class="tl-place">贝壳湾</div><div class="tl-meta"><span>6月19日</span><span>☀️ 赶海</span></div><div class="tl-snippet">浪花轻轻拍着我的爪子…</div></div><div class="tl-line"></div></div>
+            <div class="tl-item"><div class="tl-dot"></div><div class="tl-content"><div class="tl-place">三叶草原</div><div class="tl-meta"><span>6月18日</span><span>🌿 奔跑</span></div><div class="tl-snippet">草地软软的，我跑了好几个大圈…</div></div></div>
+          </div>
+          <div class="show-more">查看更早的来信 ↓</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-copy"><span class="tag">C · 时间线</span><h3>旅程时间线</h3><p>强调时间连续性——小布的旅行轨迹一目了然。每条有地点、日期、天气/活动、故事全文（非截断）。纵向空间占用大，但叙事感最强，适合慢慢翻看。</p></div>
+  </div>
+</div>
+
+<h2 style="margin-top:28px">🔄 还有一个交互决策：拆信后怎么进信箱？</h2>
+<div class="layout-grid" style="margin-top:14px">
+  <div class="layout-card" data-choice="nav-A" onclick="toggleSelect(this)">
+    <div class="card-preview" style="min-height:150px">
+      <div class="phone" style="width:185px">
+        <div class="phone-notch"></div>
+        <div class="phone-inner" style="padding:12px;text-align:center">
+          <div style="font-family:Georgia,'Songti SC',serif;font-size:10px;color:#8a5230;margin-bottom:8px">贝壳湾的来信</div>
+          <div style="font-size:32px;margin-bottom:5px">🐕</div>
+          <div style="font-size:7px;color:#684a39;line-height:1.6;margin-bottom:10px">浪花轻轻拍着我的爪子…</div>
+          <div style="font-size:7px;color:#b0927a;margin-bottom:5px">来信已自动收藏至信箱</div>
+          <div class="decision-btn selected" style="display:inline-block;font-size:8px;padding:5px 14px;margin-bottom:4px">返回首页</div>
+          <div style="font-size:7px;color:#b0724e;margin-top:3px;cursor:pointer">查看汪星信箱 →</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-copy"><span class="tag">A · 轻提示 + 链接</span><h3>底部轻提示"已收藏" + 信箱链接</h3><p>拆信页面下方出现一行小字"来信已自动收藏至信箱"和一个信箱链接。不跳转，用户看完信自行决定去留。</p></div>
+  </div>
+  <div class="layout-card" data-choice="nav-B" onclick="toggleSelect(this)">
+    <div class="card-preview" style="min-height:150px">
+      <div class="phone" style="width:185px">
+        <div class="phone-notch"></div>
+        <div class="phone-inner" style="padding:12px;text-align:center">
+          <div style="font-family:Georgia,'Songti SC',serif;font-size:10px;color:#8a5230;margin-bottom:8px">贝壳湾的来信</div>
+          <div style="font-size:32px;margin-bottom:5px">🐕</div>
+          <div style="font-size:7px;color:#684a39;line-height:1.6;margin-bottom:12px">浪花轻轻拍着我的爪子…</div>
+          <div style="display:flex;gap:6px;justify-content:center">
+            <div class="decision-btn selected" style="font-size:8px;padding:5px 12px">返回首页</div>
+            <div class="decision-btn" style="font-size:8px;padding:5px 12px;background:#d98b5f;color:#fff;border-color:#d98b5f">收进信箱</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-copy"><span class="tag">B · 双按钮</span><h3>"返回首页"和"收进信箱"并列</h3><p>让用户主动选择收藏，收到即时反馈。显式"收进信箱"按钮强化收藏动作的仪式感。</p></div>
+  </div>
+</div>
+
+<div style="margin-top:24px;padding:16px 20px;background:#fffdf7;border-radius:14px;border:1px solid #ead8c3">
+  <p style="font-family:Georgia,'Songti SC',serif;color:#8a5230;margin-bottom:12px"><b>请选择：</b></p>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+    <span style="font-size:12px;color:#8d7464;margin-right:8px;align-self:center">信箱布局：</span>
+    <div class="decision-btn" data-choice="mailbox-A" onclick="toggleSelect(this)">A · 按日列表（推荐）</div>
+    <div class="decision-btn" data-choice="mailbox-B" onclick="toggleSelect(this)">B · 信封陈列</div>
+    <div class="decision-btn" data-choice="mailbox-C" onclick="toggleSelect(this)">C · 时间线</div>
+  </div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap">
+    <span style="font-size:12px;color:#8d7464;margin-right:8px;align-self:center">收信后：</span>
+    <div class="decision-btn" data-choice="nav-A" onclick="toggleSelect(this)">A · 轻提示+链接（推荐）</div>
+    <div class="decision-btn" data-choice="nav-B" onclick="toggleSelect(this)">B · 双按钮</div>
+  </div>
+</div>
+</div>
+
+<script>
+function toggleSelect(el) {
+  const choice = el.dataset.choice;
+  const prefix = choice.split('-')[0];
+  document.querySelectorAll('[data-choice^="' + prefix + '"]').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  console.log('selected:', choice);
+}
+</script>
