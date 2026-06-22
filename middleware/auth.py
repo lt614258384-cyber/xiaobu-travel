@@ -44,7 +44,7 @@ def get_current_user(request: Request) -> User:
 
     sess = get_session()
     try:
-        user = sess.query(User).get(auth_session.user_id)
+        user = sess.get(User, auth_session.user_id)
         if user is None:
             raise HTTPException(status_code=status.HTTP_303_SEE_OTHER, headers={"Location": "/login"})
         return user

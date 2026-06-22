@@ -33,6 +33,7 @@ class TestStoryteller:
 
     def test_compose_prompt_substitutes_all(self):
         profile = MagicMock()
+        profile.breed = "柯基"
         profile.appearance = "A cream colored corgi with big ears"
         activity = MagicMock()
         activity.prompt_template = "{appearance} at the beach, {weather} day, feeling {mood}, {atmosphere}"

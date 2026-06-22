@@ -13,6 +13,7 @@ from seed.prompt_cleanup import cleanup_activity_prompt_templates
 from uploads import make_reference_photo_filename, validate_image_bytes
 from middleware.auth import get_current_user, SESSION_COOKIE_NAME
 from middleware.csrf import verify_csrf, generate_csrf_token
+from crypto_utils import mask_api_key, unmask_api_key
 from middleware.rate_limit import check_user_rate_limit
 from routers.auth_routes import router as auth_router
 from audit import log_event
@@ -55,6 +56,17 @@ templates = Jinja2Templates(directory="templates")
 
 # Register auth routes
 app.include_router(auth_router)
+
+
+@app.middleware("http")
+async def add_security_headers(request: Request, call_next):
+    response = await call_next(request)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["X-XSS-Protection"] = "1; mode=block"
+    response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+    response.headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()"
+    return response
 
 
 def _csrf_check(request: Request):
@@ -126,6 +138,10 @@ async def profile_page(request: Request, current_user: User = Depends(get_curren
     sess = get_session()
     profile = sess.query(Profile).filter_by(user_id=current_user.id).first()
     sess.close()
+    # Decrypt API keys for display
+    if profile:
+        profile.image_api_key = unmask_api_key(profile.image_api_key)
+        profile.text_api_key = unmask_api_key(profile.text_api_key)
     photos = [_media_path(p) for p in (profile.reference_photos or [])] if profile else []
     return templates.TemplateResponse(request, "profile.html", {
         "profile": profile, "user": current_user, "photos": photos,
@@ -173,8 +189,8 @@ async def profile_save(
     profile.habits = habits
     profile.content_preference = content_preference
     profile.api_provider = api_provider
-    profile.image_api_key = image_api_key
-    profile.text_api_key = text_api_key
+    profile.image_api_key = mask_api_key(image_api_key) if image_api_key else ""
+    profile.text_api_key = mask_api_key(text_api_key) if text_api_key else ""
     profile.real_life_memories = real_life_memories
 
     # Upload with user-scoped directory
@@ -220,13 +236,13 @@ async def index(request: Request, current_user: User = Depends(get_current_user)
 
     location = None
     if state and state.current_location_id:
-        location = sess.query(Location).get(state.current_location_id)
+        location = sess.get(Location,state.current_location_id)
 
     enriched = []
     for log in logs:
         loc_name = ""
         if log.location_id:
-            loc = sess.query(Location).get(log.location_id)
+            loc = sess.get(Location,log.location_id)
             loc_name = loc.name if loc else ""
         enriched.append({
             "id": log.id, "location_name": loc_name,
@@ -257,7 +273,7 @@ async def api_latest(request: Request, current_user: User = Depends(get_current_
 
     loc_name = ""
     if log.location_id:
-        loc = sess.query(Location).get(log.location_id)
+        loc = sess.get(Location,log.location_id)
         loc_name = loc.name if loc else ""
     sess.close()
     return {
@@ -285,7 +301,7 @@ async def mailbox_page(request: Request, current_user: User = Depends(get_curren
     for log in logs:
         loc_name = ""
         if log.location_id:
-            loc = sess.query(Location).get(log.location_id)
+            loc = sess.get(Location,log.location_id)
             loc_name = loc.name if loc else ""
         enriched.append({
             "id": log.id,
@@ -313,7 +329,7 @@ async def letter_detail(log_id: int, request: Request, current_user: User = Depe
 
     loc_name = ""
     if log.location_id:
-        loc = sess.query(Location).get(log.location_id)
+        loc = sess.get(Location,log.location_id)
         loc_name = loc.name if loc else ""
 
     sess.close()

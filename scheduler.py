@@ -7,6 +7,7 @@ from models import get_session, Profile, JourneyState, JourneyLog, Location, Act
 from engine.state_machine import StateMachine
 from engine.storyteller import Storyteller
 from engine.image_gen import get_image_generator
+from crypto_utils import unmask_api_key
 from memory import load_memory_context, save_memory
 
 
@@ -38,6 +39,8 @@ class Scheduler:
                 users = session.query(User).all()
                 for user in users:
                     profile = session.query(Profile).filter_by(user_id=user.id).first()
+                    if profile:
+                        profile.image_api_key = unmask_api_key(profile.image_api_key or "")
                     if profile and profile.image_api_key:
                         self.run_generation(user.id)
             session.close()
@@ -60,6 +63,8 @@ class Scheduler:
         for user in users:
             # Check user has profile and API key
             profile = sess.query(Profile).filter_by(user_id=user.id).first()
+            if profile:
+                profile.image_api_key = unmask_api_key(profile.image_api_key or "")
             if not profile or not profile.image_api_key:
                 continue
 
@@ -217,7 +222,11 @@ class Scheduler:
         sess = get_session()
         try:
             profile = sess.query(Profile).filter_by(user_id=user_id).first()
-            if not profile or not profile.image_api_key:
+            if not profile:
+                return
+            profile.image_api_key = unmask_api_key(profile.image_api_key or "")
+            profile.text_api_key = unmask_api_key(profile.text_api_key or "")
+            if not profile.image_api_key:
                 return
 
             ready_count = (
@@ -354,6 +363,8 @@ class Scheduler:
             if not profile:
                 sess.close()
                 return
+            profile.image_api_key = unmask_api_key(profile.image_api_key or "")
+            profile.text_api_key = unmask_api_key(profile.text_api_key or "")
 
             state = sess.query(JourneyState).filter_by(user_id=user_id).first()
             if not state:

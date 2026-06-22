@@ -30,6 +30,7 @@ class Settings:
     def check_production_safety(self):
         """If ENV=production, perform startup safety checks. Raises RuntimeError."""
         is_prod = os.getenv("ENV", "").lower() == "production"
+        force_secure = os.getenv("FORCE_SECURE_COOKIES", "").lower() in ("true", "1", "yes")
         issues = []
 
         if self.SECRET_KEY == "dev-secret-change-me" or len(self.SECRET_KEY) < 32:
@@ -39,6 +40,15 @@ class Settings:
             else:
                 import warnings
                 warnings.warn(msg)
+
+        if is_prod:
+            if not force_secure:
+                import warnings
+                warnings.warn("Production without FORCE_SECURE_COOKIES=true: cookies are not Secure. "
+                              "Configure HTTPS and set FORCE_SECURE_COOKIES=true.")
+            if self.IMAGE_API_KEY and len(self.IMAGE_API_KEY) < 10:
+                import warnings
+                warnings.warn("IMAGE_API_KEY is set but appears too short. Verify it is correct.")
 
         if issues:
             raise RuntimeError(f"Production safety check failed: {'; '.join(issues)}")

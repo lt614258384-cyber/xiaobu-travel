@@ -41,6 +41,9 @@ def create_session(user_id: int, remember_me: bool, user_agent: str) -> "tuple[s
         sess.close()
 
 
+_MAX_SESSION_AGE = timedelta(days=30)  # absolute expiry regardless of remember_me
+
+
 def validate_session(token: str) -> "AuthSession | None":
     token_hash_val = hash_token(token)
     sess = get_session()
@@ -48,6 +51,15 @@ def validate_session(token: str) -> "AuthSession | None":
         auth_session = sess.query(AuthSession).filter_by(token_hash=token_hash_val).first()
         if auth_session is None:
             return None
+        # Check absolute expiry (30 days from creation)
+        if auth_session.created_at:
+            created = auth_session.created_at.replace(tzinfo=timezone.utc) if auth_session.created_at.tzinfo is None else auth_session.created_at
+            if created + _MAX_SESSION_AGE < _utcnow():
+                sess.query(CsrfToken).filter_by(session_id=auth_session.id).delete()
+                sess.delete(auth_session)
+                sess.commit()
+                return None
+        # Check session expiry
         if auth_session.expires_at.replace(tzinfo=timezone.utc) < _utcnow():
             try:
                 sess.query(CsrfToken).filter_by(session_id=auth_session.id).delete()
