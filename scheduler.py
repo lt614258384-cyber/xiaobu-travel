@@ -111,19 +111,33 @@ class Scheduler:
         return [time(10, 0)]
 
     def _get_features(self, profile: "Profile", user_id: int) -> str:
-        """Extract detailed dog features from reference photos via vision model. Cached."""
-        import base64, io, json
+        """Extract detailed dog features from reference photos via vision model. Cached.
+        Cache auto-invalidates when reference photos change."""
+        import base64, io, json, hashlib
         from pathlib import Path
         from PIL import Image
 
         cache_dir = Path("data/features")
         cache_dir.mkdir(parents=True, exist_ok=True)
         cache_file = cache_dir / f"{user_id}_features.txt"
-        if cache_file.exists():
-            return cache_file.read_text(encoding="utf-8").strip()
+        hash_file = cache_dir / f"{user_id}_photos_hash.txt"
+
+        # Compute hash of current photo paths to detect changes
+        photo_paths_sorted = sorted(profile.reference_photos or [])
+        current_hash = hashlib.md5(json.dumps(photo_paths_sorted).encode()).hexdigest()
+
+        # Check cache validity
+        if cache_file.exists() and hash_file.exists():
+            stored_hash = hash_file.read_text(encoding="utf-8").strip()
+            if stored_hash == current_hash:
+                features = cache_file.read_text(encoding="utf-8").strip()
+                # Append user's own description as supplementary info
+                if profile.appearance:
+                    features += f"\n主人描述：{profile.appearance}"
+                return features
 
         if not profile.reference_photos or not profile.image_api_key:
-            return ""
+            return profile.appearance or ""
 
         try:
             photos_b64 = []
@@ -140,7 +154,7 @@ class Scheduler:
                     img.save(buf, format="JPEG", quality=80)
                     photos_b64.append(base64.b64encode(buf.getvalue()).decode())
 
-            content = [{"type": "text", "text": "请非常精确地描述照片中这只狗的品种和外貌特征。逐项列出：1. 品种（必须明确说出品种名，如金毛巡回犬）2. 毛色（全身各部位的精确颜色）3. 耳朵（形状、大小、位置、颜色）4. 眼睛（颜色、形状、眼神）5. 鼻子颜色 6. 体型 7. 尾巴 8. 任何独特标记。用中文，200字以内。"}]
+            content = [{"type": "text", "text": "请非常精确地描述照片中这只狗的品种和外貌特征。逐项列出：1. 品种（必须明确说出品种名，如金毛巡回犬）2. 毛色（全身各部位的精确颜色）3. 耳朵（形状、大小、位置、颜色）4. 眼睛（颜色、形状、眼神）5. 鼻子颜色 6. 体型（必须注明成年/幼年、体型大小、体重感）7. 尾巴 8. 任何独特标记。用中文，200字以内。"}]
             for b64 in photos_b64:
                 content.append({"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{b64}"}})
 
@@ -156,11 +170,16 @@ class Scheduler:
             )
             if resp.status_code == 200:
                 features = resp.json()["choices"][0]["message"]["content"]
+                # Save cache with hash
                 cache_file.write_text(features, encoding="utf-8")
+                hash_file.write_text(current_hash, encoding="utf-8")
+                # Append user's own description
+                if profile.appearance:
+                    features += f"\n主人描述：{profile.appearance}"
                 return features
         except Exception as e:
             print(f"Vision analysis failed: {e}")
-        return ""
+        return profile.appearance or ""
 
     def consume_buffer(self, user_id: int) -> dict | None:
         """Take the oldest ready buffer item, mark as sent, return it as a JourneyLog dict.
