@@ -36,8 +36,8 @@ class StateMachine:
                 session.close()
             return current_loc
 
-        # 25% chance: jump to a random location (simulates traveling to explore)
-        if random.random() < 0.25:
+        # 10% chance: jump to a random location (exploration spice on top of mesh)
+        if random.random() < 0.10:
             all_locations = session.query(Location).order_by(func.random()).limit(15).all()
             # Prefer different region, but accept same region too
             current_region_id = current_loc.region_id if current_loc else None

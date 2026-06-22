@@ -13,6 +13,9 @@ def seed():
         session.close()
         return
 
+    import random as _random
+    _rng = _random.Random(42)  # fixed seed for reproducible mesh
+
     location_map = {}
     for region_data in REGIONS:
         region = Region(name=region_data["name"], description=region_data["description"])
@@ -20,19 +23,33 @@ def seed():
         session.flush()
 
         loc_names = [l[0] for l in region_data["locations"]]
-        for i, (name, desc, atmosphere) in enumerate(region_data["locations"]):
-            adj_names = []
-            if i > 0:
-                adj_names.append(loc_names[i - 1])
-            if i < len(loc_names) - 1:
-                adj_names.append(loc_names[i + 1])
+        n = len(loc_names)
+        # Build mesh: each location connects to 3-5 neighbors within region
+        # Ring + cross-connections forming a connected web
+        mesh_adj = {name: set() for name in loc_names}
+        for i in range(n):
+            # Ring connections: i-2, i-1, i+1, i+2 (wrapping around)
+            for offset in [-2, -1, 1, 2]:
+                j = (i + offset) % n
+                if j != i:
+                    mesh_adj[loc_names[i]].add(loc_names[j])
 
+        # Add 2-4 extra random cross-connections per location for density
+        for i in range(n):
+            pool = [name for j, name in enumerate(loc_names) if j != i and name not in mesh_adj[loc_names[i]]]
+            extra = _rng.sample(pool, min(_rng.randint(2, 4), len(pool)))
+            for name in extra:
+                mesh_adj[loc_names[i]].add(name)
+                mesh_adj[name].add(loc_names[i])
+
+        # Create locations with mesh adjacency
+        for name, desc, atmosphere in region_data["locations"]:
             loc = Location(
                 region_id=region.id,
                 name=name,
                 description=desc,
                 atmosphere=atmosphere,
-                adjacent_locations=adj_names,  # resolved to IDs below
+                adjacent_locations=sorted(mesh_adj[name]),  # resolved to IDs below
             )
             session.add(loc)
             session.flush()
@@ -41,12 +58,8 @@ def seed():
     # Resolve adjacent names to IDs
     for region_data in REGIONS:
         loc_names = [l[0] for l in region_data["locations"]]
-        for i, (name, desc, atmosphere) in enumerate(region_data["locations"]):
-            adj_ids = []
-            if i > 0:
-                adj_ids.append(location_map[loc_names[i - 1]].id)
-            if i < len(loc_names) - 1:
-                adj_ids.append(location_map[loc_names[i + 1]].id)
+        for name, desc, atmosphere in region_data["locations"]:
+            adj_ids = [location_map[n].id for n in mesh_adj[name] if n in location_map]
             location_map[name].adjacent_locations = adj_ids
 
     # Add cross-region connections
