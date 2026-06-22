@@ -36,16 +36,24 @@ class StateMachine:
                 session.close()
             return current_loc
 
-        # 15% chance: travel to any location (simulates taking a boat/train to a new region)
-        if random.random() < 0.15:
-            all_locations = session.query(Location).order_by(func.random()).limit(10).all()
-            # Pick a location in a different region if possible
+        # 25% chance: jump to a random location (simulates traveling to explore)
+        if random.random() < 0.25:
+            all_locations = session.query(Location).order_by(func.random()).limit(15).all()
+            # Prefer different region, but accept same region too
             current_region_id = current_loc.region_id if current_loc else None
             other_regions = [loc for loc in all_locations if loc.region_id != current_region_id]
-            if other_regions:
+            if other_regions and random.random() < 0.7:
+                # Usually jump to a new region
                 if close_session:
                     session.close()
                 return random.choice(other_regions)
+            else:
+                # Sometimes jump within same region to skip walking
+                candidates = [loc for loc in all_locations if loc.id != current_loc.id]
+                if candidates:
+                    if close_session:
+                        session.close()
+                    return random.choice(candidates)
 
         weights = self._calculate_weights(adj_locations, profile)
         chosen = random.choices(adj_locations, weights=weights, k=1)[0]
