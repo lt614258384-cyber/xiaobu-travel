@@ -51,7 +51,7 @@
   </div>
   <p class="waiting-title">{{ user.pet_name }}正在写信</p>
   <p class="waiting-tip" id="waiting-tip">{{ user.pet_name }}正在挑选今天最喜欢的一张照片</p>
-  <p class="waiting-subtle">一般需要 10–25 秒</p>
+  <p class="waiting-subtle">一般需要 1–3 分钟</p>
 </section>
 
 {# ── Letter arrived (hidden by default) ── #}
@@ -99,7 +99,7 @@
 {# ── Timeout prompt (hidden) ── #}
 <section class="timeout-prompt" id="timeout-prompt" style="display:none" role="alert">
   <p class="timeout-title">还在路上…</p>
-  <p class="timeout-msg">45 秒了，{{ user.pet_name }}还在写信。要继续等吗？</p>
+  <p class="timeout-msg">2 分钟了，{{ user.pet_name }}还在写信。要继续等吗？</p>
   <div class="timeout-actions">
     <button class="btn btn-primary" onclick="continueWait()">继续等</button>
     <button class="btn btn-ghost" onclick="giveUp()">算了</button>
@@ -193,13 +193,13 @@ async function triggerLetter() {
   // After 30s, show slow message
   slowTimer = setTimeout(() => {
     tipEl.textContent = SLOW_MESSAGE;
-  }, 60000);
+  }, 120000);
 
   // After 90s, show timeout prompt
   timeoutTimer = setTimeout(() => {
     clearAllTimers();
     showOnly('timeout-prompt');
-  }, 90000);
+  }, 180000);
 
   // Send generation request
   try {
@@ -237,7 +237,7 @@ async function triggerLetter() {
         showOnly('letter-arrived');
         return;
       }
-      if (Date.now() - startTime > 150000) {
+      if (Date.now() - startTime > 600000) {
         // Total timeout (45s prompt + 30s extra = 75s)
         clearAllTimers();
         document.getElementById('gen-error-msg').textContent = '{{ user.pet_name }}今天在路上耽搁了。可能是邮路不好，也可能只是运气不太好。';
@@ -301,7 +301,7 @@ function continueWait() {
     document.getElementById('gen-error-tech').textContent = '生成超时，请稍后重试';
     showOnly('gen-error');
     const b = getBtn(); if (b) b.disabled = false;
-  }, 30000);
+  }, 60000);
 
   // Resume polling
   const poll = async () => {
