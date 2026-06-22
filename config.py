@@ -17,9 +17,13 @@ class Settings:
     SECRET_KEY: str = os.getenv("SECRET_KEY", "dev-secret-change-me")
 
     def __post_init__(self):
-        # Rewrite postgresql:// to postgresql+psycopg:// so SQLAlchemy uses psycopg 3
-        if self.DATABASE_URL.startswith("postgresql://"):
-            self.DATABASE_URL = self.DATABASE_URL.replace("postgresql://", "postgresql+psycopg://", 1)
+        # Rewrite postgres URLs so SQLAlchemy uses psycopg 3 driver
+        url = self.DATABASE_URL
+        if url.startswith("postgresql://"):
+            url = url.replace("postgresql://", "postgresql+psycopg://", 1)
+        elif url.startswith("postgres://"):
+            url = url.replace("postgres://", "postgresql+psycopg://", 1)
+        self.DATABASE_URL = url
         self.UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
         self.GENERATED_DIR.mkdir(parents=True, exist_ok=True)
 
