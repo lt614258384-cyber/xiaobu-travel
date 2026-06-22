@@ -24,25 +24,24 @@ class Scheduler:
     def start(self):
         self._aps.add_job(self.plan_today, trigger="cron", hour=0, minute=1, id="plan_today", replace_existing=True)
         self._aps.start()
-        self._first_generation_if_empty()
+        self._fill_buffers_on_startup()
 
-    def _first_generation_if_empty(self):
-        """Generate the first photo immediately if no journey logs exist yet."""
+    def _fill_buffers_on_startup(self):
+        """Ensure all users with API keys have a filled content buffer."""
         import threading
         from models import User
         def gen():
             import time
-            time.sleep(2)  # Wait for server to fully start
+            time.sleep(5)  # Wait for server to fully start
             session = get_session()
-            log_count = session.query(JourneyLog).count()
-            if log_count == 0:
-                users = session.query(User).all()
-                for user in users:
-                    profile = session.query(Profile).filter_by(user_id=user.id).first()
-                    if profile:
-                        profile.image_api_key = unmask_api_key(profile.image_api_key or "")
-                    if profile and profile.image_api_key:
-                        self.run_generation(user.id)
+            users = session.query(User).all()
+            for user in users:
+                profile = session.query(Profile).filter_by(user_id=user.id).first()
+                if profile:
+                    profile.image_api_key = unmask_api_key(profile.image_api_key or "")
+                if profile and profile.image_api_key:
+                    # Refill buffer in background for each user
+                    self.refill_buffer(user.id)
             session.close()
         t = threading.Thread(target=gen, daemon=True)
         t.start()

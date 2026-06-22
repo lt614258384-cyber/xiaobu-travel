@@ -372,10 +372,13 @@ async def generate_now(request: Request, current_user: User = Depends(get_curren
         t.start()
         return {"status": "ok", "message": "Consumed from buffer"}
 
-    # Buffer empty — fall back to direct generation
+    # Buffer empty — fall back to direct generation, then refill buffer
     import threading
+    s = Scheduler()
     def gen():
-        Scheduler().run_generation(current_user.id)
+        s.run_generation(current_user.id)
+        # Refill buffer so next request is instant
+        s.refill_buffer(current_user.id)
     t = threading.Thread(target=gen, daemon=True)
     t.start()
     return {"status": "ok", "message": "Generation started"}
