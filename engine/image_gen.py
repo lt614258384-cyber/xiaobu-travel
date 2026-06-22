@@ -158,7 +158,7 @@ class SeedreamGenerator(ImageGenerator):
             payload = {
                 "model": "doubao-seedream-4-5-251128",
                 "prompt": f"{char_guard}\n\n{prompt}\n\n{char_guard}",
-                "reference_images": ref_imgs,
+                "images": ref_imgs,
                 "size": "2048x2048",
                 "watermark": False,
                 "response_format": "b64_json",
