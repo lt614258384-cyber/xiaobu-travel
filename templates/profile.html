@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="form-page">
-    <h2>📋 小布的档案</h2>
+    <h2>📋 {{ user.pet_name }}的档案</h2>
     <form id="profile-form" action="/profile" method="POST" enctype="multipart/form-data">
         <input type="hidden" name="_csrf_token" id="csrf-token" value="">
         <div class="form-group">
             <label>名字</label>
-            <input type="text" name="name" value="{{ profile.name if profile else '小布' }}" required>
+            <input type="text" name="name" value="{{ profile.name if profile else user.pet_name }}" required>
         </div>
         <div class="form-group">
             <label>品种</label>
@@ -19,7 +19,7 @@
         <div class="form-group">
             <label>外貌描述</label>
             <textarea name="appearance" placeholder="例如：奶油色短毛柯基，耳朵大而直立，背上有一块心形白斑...">{{ profile.appearance if profile else '' }}</textarea>
-            <p style="font-size:0.8rem;color:var(--color-text-light);margin-top:4px;">越详细越好，AI 会根据描述生成小布在汪星的照片</p>
+            <p style="font-size:0.8rem;color:var(--color-text-light);margin-top:4px;">越详细越好，AI 会根据描述生成{{ user.pet_name }}在汪星的照片</p>
         </div>
         <div class="form-group">
             <label>性格标签（可多选）</label>
@@ -56,13 +56,13 @@
             </p>
         </div>
         <div class="form-group">
-            <label>📝 与小布的回忆</label>
+            <label>📝 与{{ user.pet_name }}的回忆</label>
             <textarea name="real_life_memories" rows="6"
-                      placeholder="写下你和小布真实的回忆，AI 生成故事时会自然地融入这些记忆——比如最喜欢的玩具、一起去过的地方、做过的事、小癖好...&#10;&#10;例如：&#10;小布最喜欢咬着那个橙色的网球不放，每天傍晚都要我陪它在小区草坪上玩接球。&#10;有一次带它去海边，它第一次看到海浪，吓得往后退了三步，然后又好奇地凑过去闻。&#10;冬天的时候它最喜欢趴在暖气片旁边打盹，呼噜声能把人催眠。">{{ profile.real_life_memories if profile else '' }}</textarea>
-            <p style="font-size:0.8rem;color:var(--color-text-light);margin-top:4px;">这些回忆会写入小布的记忆文件，让汪星的故事和真实生活有温暖的连接</p>
+                      placeholder="写下你和{{ user.pet_name }}真实的回忆，AI 生成故事时会自然地融入这些记忆——比如最喜欢的玩具、一起去过的地方、做过的事、小癖好...&#10;&#10;例如：&#10;{{ user.pet_name }}最喜欢咬着那个橙色的网球不放，每天傍晚都要我陪它在小区草坪上玩接球。&#10;有一次带它去海边，它第一次看到海浪，吓得往后退了三步，然后又好奇地凑过去闻。&#10;冬天的时候它最喜欢趴在暖气片旁边打盹，呼噜声能把人催眠。">{{ profile.real_life_memories if profile else '' }}</textarea>
+            <p style="font-size:0.8rem;color:var(--color-text-light);margin-top:4px;">这些回忆会写入{{ user.pet_name }}的记忆文件，让汪星的故事和真实生活有温暖的连接</p>
         </div>
         <div class="form-group">
-            <label>小布的照片（最多 10 张）</label>
+            <label>{{ user.pet_name }}的照片（最多 10 张）</label>
             <div class="upload-zone" id="upload-zone">
                 <p class="hint">📷 点击或拖拽上传照片</p>
                 <p class="hint" style="font-size:0.8rem;" id="photo-count">0/10</p>
@@ -71,7 +71,7 @@
             <div class="photo-previews" id="photo-previews">
                 {% if photos %}
                 {% for photo in photos %}
-                <div class="photo-preview-wrapper"><img src="/{{ photo }}" class="photo-preview" alt="小布"></div>
+                <div class="photo-preview-wrapper"><img src="/{{ photo }}" class="photo-preview" alt="{{ user.pet_name }}"></div>
                 {% endfor %}
                 {% endif %}
             </div>

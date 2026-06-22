@@ -136,6 +136,22 @@ class AuditLog(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
 
 
+class ContentBuffer(Base):
+    """Pre-generated content for instant delivery."""
+    __tablename__ = "content_buffer"
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
+    story_text = Column(Text, default="")
+    image_path = Column(String(500), default="")
+    location_name = Column(String(100), default="")
+    weather = Column(String(50), default="晴")
+    mood = Column(String(50), default="开心")
+    location_id = Column(Integer, ForeignKey("locations.id"), nullable=True)
+    activity_id = Column(Integer, ForeignKey("activities.id"), nullable=True)
+    status = Column(String(20), default="ready")  # ready, sent, generating
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+
 _engine = None
 _engine_url = None
 

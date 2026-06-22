@@ -227,11 +227,22 @@ async function triggerLetter() {
       return;
     }
 
-    // Poll for completion
+    // Poll for completion (minimum 10s wait for the ritual)
     const startTime = Date.now();
+    const MIN_WAIT = 10000;  // 10 seconds
     const poll = async () => {
       const latest = await fetchLatest();
       if (latest && latest.id > 0 && latest.id !== beforeId && latest.story_text) {
+        const elapsed = Date.now() - startTime;
+        if (elapsed < MIN_WAIT) {
+          // Wait the remaining time, then show arrival
+          setTimeout(() => {
+            clearAllTimers();
+            latestResult = latest;
+            showOnly('letter-arrived');
+          }, MIN_WAIT - elapsed);
+          return;
+        }
         clearAllTimers();
         latestResult = latest;
         showOnly('letter-arrived');

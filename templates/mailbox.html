@@ -14,8 +14,8 @@
   <div class="empty-mailbox" role="status" aria-label="信箱还是空的">
     <div class="empty-mailbox-icon">📭</div>
     <p class="empty-mailbox-title">信箱还是空的</p>
-    <p class="empty-mailbox-msg">小布刚出发不久，第一封信还在路上。</p>
-    <a href="/" class="btn btn-primary" style="margin-top:16px;text-decoration:none">看看小布最近在做什么</a>
+    <p class="empty-mailbox-msg">{{ user.pet_name }}刚出发不久，第一封信还在路上。</p>
+    <a href="/" class="btn btn-primary" style="margin-top:16px;text-decoration:none">看看{{ user.pet_name }}最近在做什么</a>
   </div>
   {% else %}
   <div class="mailbox-list" role="list" aria-label="来信列表">
@@ -24,7 +24,7 @@
        role="listitem" data-letter-id="{{ log.id }}"
        aria-label="{% if loop.first %}未读{% endif %}来自{{ log.location_name }}的信，{{ log.generated_at.strftime('%m月%d日') }}">
       <div class="mailbox-thumb">
-        <img src="/{{ log.image_path }}" alt="小布在{{ log.location_name }}" loading="lazy">
+        <img src="/{{ log.image_path }}" alt="{{ user.pet_name }}在{{ log.location_name }}" loading="lazy">
         {% if loop.first %}<span class="unread-dot" aria-hidden="true"></span>{% endif %}
       </div>
       <div class="mailbox-info">

@@ -120,9 +120,9 @@ class Storyteller:
             f"{memory_section}"
             f"今天你来到了{location_name}，正在{activity_name}。"
             f"天气{weather}，心情{mood}。{atmosphere}"
-            f"\n\n用\"我\"的第一人称，写一段今天的旅行日记。你就是小布，小布就是你。"
+            f"\n\n用\"我\"的第一人称，写一段今天的旅行日记。你就是{dog_name}，{dog_name}就是你。"
             f"重点描写今天这个新地方的具体细节——看到了什么特别的、听到了什么声音、"
-            f"闻到了什么气味、爪子底下是什么触感。不要出现\"小布\"。"
+            f"闻到了什么气味、爪子底下是什么触感。不要出现\"{dog_name}\"。"
         )
 
         resp = httpx.post(

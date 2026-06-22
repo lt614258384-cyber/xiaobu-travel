@@ -344,6 +344,17 @@ async def generate_now(request: Request, current_user: User = Depends(get_curren
               ip_address=request.client.host if request.client else "",
               user_agent=request.headers.get("user-agent", ""))
 
+    # Try to consume from buffer first
+    scheduler = Scheduler()
+    result = scheduler.consume_buffer(current_user.id)
+    if result:
+        # Also kick off background refill if needed
+        import threading
+        t = threading.Thread(target=scheduler.refill_buffer, args=(current_user.id,), daemon=True)
+        t.start()
+        return {"status": "ok", "message": "Consumed from buffer"}
+
+    # Buffer empty — fall back to direct generation
     import threading
     def gen():
         Scheduler().run_generation(current_user.id)
