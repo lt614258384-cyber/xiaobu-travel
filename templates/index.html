@@ -193,13 +193,13 @@ async function triggerLetter() {
   // After 30s, show slow message
   slowTimer = setTimeout(() => {
     tipEl.textContent = SLOW_MESSAGE;
-  }, 30000);
+  }, 60000);
 
-  // After 45s, show timeout prompt
+  // After 90s, show timeout prompt
   timeoutTimer = setTimeout(() => {
     clearAllTimers();
     showOnly('timeout-prompt');
-  }, 45000);
+  }, 90000);
 
   // Send generation request
   try {
@@ -237,7 +237,7 @@ async function triggerLetter() {
         showOnly('letter-arrived');
         return;
       }
-      if (Date.now() - startTime > 75000) {
+      if (Date.now() - startTime > 150000) {
         // Total timeout (45s prompt + 30s extra = 75s)
         clearAllTimers();
         document.getElementById('gen-error-msg').textContent = '{{ user.pet_name }}今天在路上耽搁了。可能是邮路不好，也可能只是运气不太好。';
@@ -294,7 +294,7 @@ function continueWait() {
   const tipEl = document.getElementById('waiting-tip');
   tipEl.textContent = '{{ user.pet_name }}还在努力…';
 
-  // Give another 30s before final timeout
+  // Give another 60s before final timeout
   timeoutTimer = setTimeout(() => {
     clearAllTimers();
     document.getElementById('gen-error-msg').textContent = '{{ user.pet_name }}今天在路上耽搁了。可能是邮路不好，也可能只是运气不太好。';
