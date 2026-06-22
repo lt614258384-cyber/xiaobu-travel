@@ -12,4 +12,4 @@ RUN mkdir -p data/uploads data/generated data/features
 
 EXPOSE 8080
 
-CMD ["sh", "-c", "echo '=== Checking imports ===' && python -c 'import psycopg; print(\"psycopg version:\", psycopg.__version__)' && python -c 'from app import app; print(\"App import OK\")' && echo '=== Starting ===' && python -m alembic upgrade head 2>&1 && uvicorn app:app --host 0.0.0.0 --port ${PORT:-8080}"]
+CMD ["sh", "-c", "python -m alembic upgrade head && uvicorn app:app --host 0.0.0.0 --port ${PORT:-8080}"]
