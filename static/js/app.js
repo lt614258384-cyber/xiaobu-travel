@@ -94,8 +94,9 @@ function initProfileForm() {
         try {
             const resp = await fetch(form.action, { method: "POST", body: fd });
             if (resp.ok) {
-                // Redirect to homepage — wait 2s for background generation to complete
-                setTimeout(() => { window.location.href = "/"; }, 3000);
+                // Stay on profile page so user can see saved changes
+                btn.textContent = "已保存 ✓";
+                setTimeout(() => { btn.textContent = "💾 保存档案"; btn.disabled = false; }, 2000);
             } else {
                 const err = await resp.json();
                 alert("保存失败: " + (err.detail || "未知错误"));
