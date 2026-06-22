@@ -5,8 +5,8 @@ WORKDIR /app
 # Copy everything first to bust cache when code changes
 COPY . .
 
-# Install dependencies (always runs because COPY . above changes on every code push)
-RUN pip install --no-cache-dir -r requirements.txt
+# Install dependencies with Tsinghua mirror for speed in China
+RUN pip install --no-cache-dir -i https://pypi.tuna.tsinghua.edu.cn/simple -r requirements.txt
 
 RUN mkdir -p data/uploads data/generated data/features
 
