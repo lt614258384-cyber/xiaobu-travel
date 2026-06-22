@@ -1,3 +1,4 @@
+import os
 import time
 from datetime import datetime, timedelta, timezone
 from fastapi import Request, HTTPException, status
@@ -6,7 +7,8 @@ from models import get_session, CsrfToken
 from session_utils import generate_session_token, hash_token
 
 
-CSRF_COOKIE_NAME = "__Host-csrf"
+_IS_HTTPS = os.getenv("ENV", "") == "production" or os.getenv("RAILWAY_PUBLIC_DOMAIN", "")
+CSRF_COOKIE_NAME = "__Host-csrf" if _IS_HTTPS else "csrf_token"
 
 
 def generate_csrf_token(session_id: int) -> str:
@@ -43,7 +45,7 @@ def inject_csrf(response: Response, csrf_token: str) -> None:
         key=CSRF_COOKIE_NAME,
         value=csrf_token,
         httponly=False,
-        secure=False,  # Set True in production via config
+        secure=_IS_HTTPS,
         samesite="lax",
         path="/",
         max_age=86400,  # 24 hours

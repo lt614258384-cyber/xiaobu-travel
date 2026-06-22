@@ -74,7 +74,7 @@ function initProfileForm() {
     form.addEventListener("submit", async e => {
         e.preventDefault();
         // Inject CSRF token from cookie
-        const csrf = getCookie('__Host-csrf');
+        const csrf = getCookie('__Host-csrf') || getCookie('csrf_token');
         const csrfInput = document.getElementById('csrf-token');
         if (csrfInput) csrfInput.value = csrf;
         // Sync tag values

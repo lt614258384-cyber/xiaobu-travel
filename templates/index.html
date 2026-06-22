@@ -203,7 +203,7 @@ async function triggerLetter() {
 
   // Send generation request
   try {
-    const csrf = getCookie('__Host-csrf');
+    const csrf = getCookie('__Host-csrf') || getCookie('csrf_token');
     const formData = new URLSearchParams();
     formData.append('_csrf_token', csrf);
 
