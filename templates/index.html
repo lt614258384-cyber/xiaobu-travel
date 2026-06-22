@@ -159,7 +159,6 @@ function showOnly(id) {
   const hero = document.getElementById('hero-card');
   const actions = document.querySelector('.home-actions');
   const isHero = (id === 'waiting-ritual' || id === 'letter-arrived' || id === 'letter-opened' || id === 'gen-error' || id === 'timeout-prompt');
-  const hero = document.getElementById('hero-card');
   if (hero) hero.style.display = isHero ? 'none' : '';
   if (actions) actions.style.display = (id === 'letter-opened') ? 'none' : '';
 }
