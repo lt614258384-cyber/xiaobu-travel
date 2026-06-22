@@ -20,7 +20,7 @@ class ImageGenerator(ABC):
         return self.api_key or settings.IMAGE_API_KEY
 
     def _encode_ref_photos(self, paths: list[str]) -> list[str]:
-        """Read local image files, resize to max 512px, return base64 strings."""
+        """Read local image files, resize to max 1024px, return base64 strings."""
         encoded = []
         for path in paths[:10]:
             try:
@@ -30,10 +30,10 @@ class ImageGenerator(ABC):
                 if filepath.exists():
                     img = Image.open(filepath)
                     img = img.convert("RGB")
-                    # Resize to max 512px on longest side
+                    # Resize to max 1024px on longest side for better character preservation
                     w, h = img.size
-                    if max(w, h) > 512:
-                        ratio = 512 / max(w, h)
+                    if max(w, h) > 1024:
+                        ratio = 1024 / max(w, h)
                         img = img.resize((int(w * ratio), int(h * ratio)), Image.LANCZOS)
                     # Save to bytes
                     import io
@@ -150,16 +150,14 @@ class SeedreamGenerator(ImageGenerator):
             "Content-Type": "application/json",
         }
 
-        # Image-to-image mode: use first ref photo as base, transform scene while keeping the dog
+        # Image-to-image mode: use ref photos to preserve the dog, transform scene
         if reference_photos:
             ref_imgs = self._encode_ref_photos(reference_photos)
+            # Put character-preservation at BOTH ends for maximum model attention
+            char_guard = "保持参考图中这只金毛犬的外观完全不变：品种、体型、毛色分布、耳朵下垂形状、眼睛颜色和眼神、鼻子形状、嘴巴特征、白色斑块位置，所有细节严格一致。只改变背景环境和姿势动作。"
             payload = {
                 "model": "doubao-seedream-4-5-251128",
-                "prompt": (
-                    "保持画面中这只狗的品种、体型、毛色、耳朵形状、眼睛、鼻子、嘴巴所有特征完全不变，"
-                    "只改变背景和环境，让它出现在一个新场景中。"
-                    + prompt
-                ),
+                "prompt": f"{char_guard}\n\n{prompt}\n\n{char_guard}",
                 "reference_images": ref_imgs,
                 "size": "2048x2048",
                 "watermark": False,

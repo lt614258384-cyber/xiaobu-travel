@@ -185,17 +185,14 @@ class Storyteller:
             )
 
         base += (
-            ", warm healing semi-realistic hand-drawn watercolor illustration"
-            ", delicate colored pencil line art with transparent watercolor and light gouache"
-            ", natural paper texture and subtle brush grain"
-            ", keep the dog's exact breed, fur color, body shape, facial features from the reference image"
-            ", fluffy layered fur, facial features realistic and recognizable"
-            ", low saturation warm tones, soft natural lighting"
-            ", fresh blue-green and golden-yellow palette"
-            ", detailed but soft-edged background"
-            ", elegant children's picture book style, travel watercolor aesthetic"
-            ", avoid: photorealism, 3D render, oily skin, thick comic lines, exaggerated anime eyes"
-            ", avoid: plastic texture, harsh saturation, sharp shadows, stiff poses, standing still facing camera"
-            ", avoid: deformed face, extra fingers, blurry face, text, watermark, different dog breed"
+            ", 温暖治愈的旅行摄影风格"
+            ", 狗狗保持参考图中的品种、毛色、体型、耳朵形状、五官特征完全相同"
+            ", 毛发层次分明自然，面部特征清晰可辨"
+            ", 低饱和暖色调，柔和自然光"
+            ", 清新蓝绿与金黄配色"
+            ", 背景细节丰富但柔和虚化"
+            ", 画面精致如同旅行明信片"
+            ", 避免：3D渲染感、塑料质感、高饱和、锐利阴影、僵硬姿势"
+            ", 避免：面部变形、模糊、文字、水印、不同品种的狗"
         )
         return base

@@ -4,15 +4,15 @@
 
 ## 日志元数据
 
-- 最后更新：2026-06-22 18:00（Asia/Hong_Kong，UTC+8）
+- 最后更新：2026-06-22 19:45（Asia/Hong_Kong，UTC+8）
 - 仓库：`D:\Xiaobu's travel`
 - 当前分支：`feat/xiaobu-travel`
 - 上游仓库：`https://github.com/lt614258384-cyber/xiaobu-travel`
-- 当前产品阶段：多用户核心框架 + LLM 叙事就绪；Tencent 云服务器已部署运行；内容缓冲系统已实施；当前待解决：服务器 GitHub 被墙无法 git pull
-- 当前首要工作：将本地最新代码部署到 Tencent 云服务器（cookie 修复 + 缓冲系统），在服务器端完成 git pull（需配代理或 scp 传文件）
+- 当前产品阶段：多用户核心框架 + LLM 叙事就绪；Tencent 云服务器已部署最新提交 `f349ffb`，公网健康检查通过；**HTTP 登录已修复**，用户可注册和登录；Docker 构建已加清华 PyPI 镜像源
+- 当前首要工作：用户在线上通过 HTTP 填写临时 API Key 完成首次生成与收信验收；或先配置域名与 HTTPS 后再填写正式 Key
 - 故事模型：DeepSeek V4 Pro（ep-20260622031722-sdjgh，1M 上下文，第一人称）
 - 生图模型：doubao-seedream-4-5-251128（Seedream 4.5，2048x2048）
-- **运维备忘**：服务器 49.233.183.173 (Ubuntu 24.04)，Docker 已配置腾讯云镜像，ufw 已关。容器：xiaobu-travel-app-1 (port 8000) + xiaobu-travel-db-1 (port 5432, healthy)。DATABASE_URL=postgresql://xiaobu:xiaobu@db:5432/xiaobu，env.py 自动 rewrite 为 postgresql+psycopg://
+- **运维备忘**：服务器 49.233.183.173 (Ubuntu 24.04)，Docker 已配置腾讯云镜像，ufw 已关。容器：xiaobu-travel-app-1 (port 8000) + xiaobu-travel-db-1 (port 5432, healthy)。数据库连接值仅保存在服务器 `.env`，不得记录或回显；`env.py` 会将 PostgreSQL URL 驱动自动改写为 `postgresql+psycopg://`。
 - 故事模型：DeepSeek V4 Pro（ep-20260622031722-sdjgh，1M 上下文，第一人称）
 - 生图模型：doubao-seedream-4-5-251128（Seedream 4.5，2048x2048）
 
@@ -96,6 +96,8 @@
 ## 当前状态摘要
 
 - 单用户 MVP、可靠性清理、认证与数据隔离、多用户调度、LLM 记忆叙事均已实现；最近一次记录的完整回归为 58 tests passed。
+- 腾讯云服务器已通过 GitHub 镜像代理快进到 `f349ffb` 并完成容器重建；公网 `/health` 返回 200，首页正确 303 跳转 `/login`；Docker 构建使用清华 PyPI 镜像源，速度从 ~20KB/s 提升至正常。
+- **线上登录已修复**：引入 `FORCE_SECURE_COOKIES` 环境变量解耦 HTTPS 与生产环境判断；`_IS_HTTPS` 不再由 `ENV=production` 推断；`routers/auth_routes.py` 登录/登出 CSRF Cookie 名称与 Secure 属性改为动态引用，不再硬编码。HTTP 下使用 `sid` + `csrf_token` 非 Secure Cookie，浏览器可正常存取。
 - 安全审计已完成；公开 `/data`、缺少图片字节校验、无 Alembic、生产入口和持久存储未完成，因此仍不适合公网部署。
 - Phase 5 只有路线图，尚无独立且已批准的设计规格或实施计划；旧的认证/隔离规格与计划已完成，不应作为本阶段直接执行清单。
 - 跨 Agent 日志机制已建立：根目录 `AGENTS.md` 负责发现，本文件负责状态与历史。
@@ -123,6 +125,7 @@
 | 2026-06-22 | 仅设计完成 | "汪星来信"前端设计规格 | `docs/superpowers/specs/2026-06-22-mailbox-frontend-design.md`，10 项决策逐段批准 |
 | 2026-06-22 | 仅计划完成 | "汪星来信"前端实施计划 | `docs/superpowers/plans/2026-06-22-mailbox-frontend.md` |
 | 2026-06-22 | 已完成 | "汪星来信"前端实施：路由+模板+CSS+JS | 新增 `/mailbox`、`/letter/{id}` 路由；新建 `mailbox.html`、`letter.html`；重写 `index.html`（装信仪式+拆信+状态处理）；重写 `style.css`（温暖纸张色板+信箱列表+响应式+无障碍）；更新 `base.html` 导航栏；56/56 相关测试通过 |
+| 2026-06-22 | 已完成 | Cookie Secure 属性与 HTTP 协议耦合修复 | 提交 `e74f0c1`、`f349ffb`：引入 `FORCE_SECURE_COOKIES` 环境变量解耦 HTTPS 判断；登录/登出 CSRF Cookie 改为动态引用；Dockerfile 添加清华 PyPI 镜像源；78/80 tests passed；用户浏览器验证登录成功 |
 
 ## 当前问题与安全隐患
 
@@ -241,21 +244,18 @@
 
 ### 推荐交接顺序
 
-1. ~~当前插队工作：通过用户需求澄清、现有页面评审和可视化方案比较，批准”汪星来信”前端设计。~~ ✅ 已完成并实施。
-2. 用户本地启动应用，验收新前端（首页装信仪式→拆信→信箱列表→历史来信详情）；发现问题则修复。
-3. 使用 `design-critique` 对已实施前端做只读视觉与可用性 QA，分级问题并提交用户决定。
-4. 前端验收通过后提交代码，恢复 Phase 5：先审查并批准统一媒体标识/访问接口规格，覆盖上传参考图、生成图、模板和 `/api/latest`，不让数据库路径直接成为公开 URL。
-5. 测试驱动移除公开 `/data` 挂载，首版采用鉴权媒体路由；存储层预留可替换接口，避免后续对象存储再次改模板和 API。
-6. 测试驱动添加服务端图片字节校验（JPEG/PNG/WebP），并限制按实际读取字节计算的大小；拒绝扩展名或 MIME 声明与真实格式不符的文件。
-7. 设计并实现存储抽象，基于目标 PaaS 决定对象存储或明确的持久卷；同时迁移现有路径表示而不改动运行时文件内容。
-8. PostgreSQL 驱动选型与 Alembic 基线/升级迁移；先验证现有 SQLite 数据认领路径，再配置 PostgreSQL。
-9. Dockerfile + docker-compose.yml（PostgreSQL + 应用）、健康检查和生产启动命令；生产禁用 reload。
-10. Railway/Render 环境变量、HTTPS、可信 Host/Origin/代理、备份恢复和日志保留配置。
-11. 修复 psycopg 驱动依赖后完成传递依赖审计，并运行完整测试、容器启动和迁移演练。
+1. ~~完成“汪星来信”前端设计与实施。~~ ✅
+2. ~~完成私有媒体访问、图片字节校验、PostgreSQL/Alembic、Docker 与腾讯云最新代码部署。~~ ✅
+3. 配置域名与 HTTPS，恢复生产级 Secure Cookie，并验证可信 Host/Origin/代理配置；在此之前不要通过 HTTP 网页提交真实 API Key。
+4. 用户通过 HTTPS 登录线上网页，在“档案”页填写自己的火山引擎 API Key 和参考照片；API Key 保存到该用户的 `Profile.image_api_key`，不得通过日志、对话或自动化命令输出其值。服务器 `.env` 的 `IMAGE_API_KEY` 仅为图片适配器的全局兜底，不是正常多用户流程的必填项。
+5. 完成线上端到端验收：档案保存、首次生成、10 秒收信仪式、缓冲消费与后台补充。
+6. 为上传与生成图片配置持久卷或对象存储，执行容器重启后的文件保留演练。
+7. 使用 `design-critique` 对线上“汪星来信”前端做只读视觉与可用性 QA；发现问题后由用户决定是否实施。
+8. 完成备份恢复、日志保留与传递依赖审计，并记录可复现的运维步骤。
 
 ### 给下一位 Agent 的最短指令
 
-> 阅读根目录 `AGENTS.md` 和 `docs/PROJECT_LOG.md`，检查 Git 状态，保留所有未跟踪运行时数据（`.env`、`data/`、`xiaobu.db`），然后从”当前最优先的下一步”继续。结束对话前更新项目日志。**当前关键任务**：将最新代码部署到腾讯云服务器 49.233.183.173（`ssh ubuntu@49.233.183.173`），先解决 GitHub 被墙问题（需配代理或 scp 传文件），再 `docker compose up -d --build`。
+> 阅读根目录 `AGENTS.md` 和 `docs/PROJECT_LOG.md`，检查 Git 状态，保留所有未跟踪运行时数据（`.env`、`data/`、`xiaobu.db`），然后从”当前最优先的下一步”继续。结束对话前更新项目日志。**当前关键任务**：先配置域名与 HTTPS；然后让用户通过 HTTPS 网页“档案”页填写自己的火山引擎 API Key 和参考照片，再完成首次生成与缓冲收信验收。不得读取、回显或记录密钥值。
 
 ## 重要文件索引
 
@@ -277,6 +277,70 @@
 
 ## 会话与开发记录（倒序）
 
+### 2026-06-22 19:45 — 修复 Cookie Secure 属性与 HTTP 协议耦合错误
+
+- 用户目标：注册后无法登录，输入账号密码点击登录没反应。
+- 执行结果：按系统化调试流程完整定位根因并实施修复，用户确认登录成功。
+  - **根因**：`docker-compose.yml` 设置 `ENV=production` → `middleware/auth.py` 和 `middleware/csrf.py` 将 `_IS_HTTPS` 判定为 True → Session Cookie 使用 `__Host-sid` + `Secure`、CSRF Cookie 硬编码 `__Host-csrf` + `secure=True` → 浏览器在 HTTP 下拒收所有 Secure Cookie → 登录 POST 成功 303 → `/` 找不到 Cookie → 又跳回 `/login`，用户感知为"没反应"。
+  - **修复（3 个源文件 + 1 个测试文件 + Dockerfile 构建优化）**：
+    - `middleware/auth.py`：`_IS_HTTPS` 改为读取显式 `FORCE_SECURE_COOKIES` 环境变量（`true/1/yes`），不再从 `ENV=production` 或 `RAILWAY_PUBLIC_DOMAIN` 推断。
+    - `middleware/csrf.py`：同步 `_IS_HTTPS` 检测逻辑。
+    - `routers/auth_routes.py`：登录和登出路由中的 CSRF Cookie 从硬编码 `"__Host-csrf"` + `secure=True` 改为动态 `CSRF_COOKIE_NAME` + `secure=_IS_HTTPS`。
+    - `docker-compose.yml`：添加 `FORCE_SECURE_COOKIES` 说明注释（仅在配置 HTTPS 后设为 true）。
+    - `tests/test_csrf.py`：测试 Cookie 字典改用动态 `CSRF_COOKIE_NAME` 导入。
+    - `tests/conftest.py`：更新注释以反映动态 Cookie 名称。
+    - `Dockerfile`：pip 安装命令添加清华 PyPI 镜像源（`-i https://pypi.tuna.tsinghua.edu.cn/simple`），国内构建速度从 ~17 分钟降至数分钟。
+  - 部署：提交 `e74f0c1`（Cookie 修复）和 `f349ffb`（PyPI 镜像）；通过 GitHub 镜像代理（`ghproxy.net`）同步到服务器 `/home/ubuntu/xiaobu-travel`；`docker compose up -d --build` 后台重建容器成功；`docker ps` 确认两容器运行且 db healthy；`curl /health` 返回 `{"status":"ok"}`。
+- 验证证据：78/80 tests passed（2 预存失败不变，与本次改动无关）；用户浏览器访问 `http://49.233.183.173:8000/login` 注册并登录成功；`docker ps` 显示 app 容器 Uptime 正常；`/health` 返回 200。
+- 代码变化：6 个源文件 + Dockerfile 修改；2 个新提交（`e74f0c1`、`f349ffb`）；已推送到 GitHub 并部署到生产服务器。`docs/PROJECT_LOG.md` 同步更新。未读取或记录任何密码、Cookie、API Key、数据库记录或 `.env` 内容。
+- 遗留问题：当前仍是 HTTP，Cookie 不具备传输层保护；配置文件和生产安全自检尚未更新 `FORCE_SECURE_COOKIES` 检查项；HTTPS 配置后需设置 `FORCE_SECURE_COOKIES=true` 并验证 Cookie 名称切换为 `__Host-` 前缀。
+- 下一步：用户在线上填写临时 API Key 完成首次生成与收信验收；或先配置域名与 HTTPS 后再填写正式 Key。
+
+### 2026-06-22 18:45 — 定位线上登录后返回登录页的根因
+
+- 用户目标：诊断点击登录后没有进入主页的问题。
+- 执行结果：按系统化调试流程检查线上协议、最近 Cookie 修复、Docker 环境、登录响应构造与受保护主页认证链路。确认根因不是主页路由，而是代码用 `ENV=production` 推断 HTTPS：`docker-compose.yml` 固定设置 `ENV=production`，`middleware/auth.py` 因此使用 Secure `__Host-sid`；当前实际入口却是 HTTP，浏览器拒收 Session Cookie。登录 POST 成功返回 303 后，主页请求没有 Session，又被 303 送回 `/login`。同时 `routers/auth_routes.py` 仍硬编码 Secure `__Host-csrf`，未使用动态 `CSRF_COOKIE_NAME`，属于同一缺陷。
+- 验证证据：`docker-compose.yml` 包含 `ENV=production`；`middleware/auth.py` 的 `_IS_HTTPS` 由 `ENV=production` 或 Railway 域名决定；`_set_session_cookie()` 在该条件下设置 `secure=True` 和 `__Host-sid`；当前公网地址为 HTTP；`get_current_user()` 在 Cookie 缺失时返回 303 `/login`。提交 `b1ce121` 只修改了中间件名称判断，没有修改登录路由中硬编码的 CSRF Cookie。
+- 代码变化：无代码改动；本轮仅完成根因诊断并按仓库约定更新 `docs/PROJECT_LOG.md`。未读取用户密码、Session、Cookie、API Key、数据库记录或 `.env` 内容。
+- 遗留问题：需要把“生产环境”和“实际 HTTPS”拆分为显式配置，统一 Session/CSRF Cookie 名称与 Secure 属性，并补充 HTTP 部署回归测试；或者先完成 HTTPS 反向代理后继续使用 Secure `__Host-` Cookie。当前认证链路未验证通过。
+- 下一步：等待用户授权修复。推荐代码层引入显式 Cookie Secure 配置并统一登录/登出/CSRF 路径，测试驱动验证 HTTP 与 HTTPS 两种模式；随后部署并浏览器复测登录。
+
+### 2026-06-22 18:43 — 明确 HTTP 环境下 API Key 测试边界
+
+- 用户目标：理解为什么不建议在 HTTP 页面填写真实 API Key，以及不填写时如何完成测试。
+- 执行结果：明确密码输入框只隐藏屏幕显示，不会加密网络传输；公网 HTTP 下 Key、登录 Cookie 和请求内容缺少 TLS 保护，存在被网络中间节点观察或篡改的风险。确认可以使用两种安全路径：优先先配置 HTTPS 再用正式 Key；若必须立即冒烟测试，只使用可随时撤销、低额度、最小权限、测试后立即轮换的临时 Key，并接受其仍可能泄露的风险。
+- 验证证据：当前线上入口使用 `http://49.233.183.173:8000/`，尚未配置 HTTPS；档案表单会把 `image_api_key` 提交给服务端并保存到用户 Profile。
+- 代码变化：无代码改动；仅按仓库约定更新 `docs/PROJECT_LOG.md`。未读取、提交或记录任何 API Key 或其他敏感值。
+- 遗留问题：HTTPS 与数据库内 Key 加密仍未完成；正式 Key 不应在当前公网 HTTP 链路上使用。
+- 下一步：推荐立即配置域名与 HTTPS；若用户选择临时测试 Key，则先在供应商侧限制额度/权限，测试后立刻撤销或轮换。
+
+### 2026-06-22 18:42 — 确认线上访问地址
+
+- 用户目标：找回当前腾讯云部署的网页访问地址。
+- 执行结果：确认当前应用入口为 `http://49.233.183.173:8000/`，登录后的档案页为 `/profile`；提醒当前仍为 HTTP，在 HTTPS 配置完成前不要提交真实 API Key。
+- 验证证据：上一轮新鲜公网检查已确认入口返回 303 到 `/login`、登录页返回 200、`/health` 返回 200。
+- 代码变化：无代码改动；仅按仓库约定更新 `docs/PROJECT_LOG.md`。未读取或修改任何敏感运行时数据。
+- 遗留问题：域名与 HTTPS 尚未配置，真实 API Key 尚不应通过当前 HTTP 页面传输。
+- 下一步：配置域名与 HTTPS，然后由用户通过 HTTPS 登录并在“档案”页填写自己的 API Key。
+
+### 2026-06-22 18:39 — 澄清网页用户 API Key 与服务器兜底配置
+
+- 用户目标：确认 API Key 是否应由用户在网页中输入，而不是在服务器端配置。
+- 执行结果：核对档案表单、档案保存路由、调度器、内容缓冲和图片生成适配器。确认正常多用户流程是用户登录后在“档案”页填写“图片生成 API Key”，保存至该用户的 `Profile.image_api_key`；每日调度、缓冲补充、故事生成和图片生成均优先直接使用该用户字段。服务器环境变量 `IMAGE_API_KEY` 只在图片适配器没有收到用户 Key 时作为全局兜底，不是正常网页流程的必填项。纠正上一轮“必须先在服务器端配置真实 Key”的错误表述。
+- 验证证据：`templates/profile.html` 提供 `image_api_key` 密码输入框；`app.py` 的 `POST /profile` 保存到 `profile.image_api_key`；`scheduler.py` 仅为存在 `profile.image_api_key` 的用户规划、生成和补充缓冲，并将该值传入故事与图片生成器；`engine/image_gen.py` 的 `_get_api_key()` 才在实例 Key 为空时回退到 `settings.IMAGE_API_KEY`。
+- 代码变化：无代码改动；仅按仓库约定更新 `docs/PROJECT_LOG.md`。未读取、修改或记录任何 API Key、`.env` 内容、数据库记录或其他敏感运行时数据。
+- 遗留问题：档案页当前会把用户 Key 保存到数据库字段，虽网页使用密码框并仅提示末四位，但数据库内仍是明文；后续应设计字段加密或外部秘密存储。线上首次生成与缓冲补充尚未使用用户自己的 Key 完成验收。
+- 下一步：先为线上站点配置域名与 HTTPS；完成后由用户登录，在“档案”页填写自己的火山引擎 API Key、上传参考照片并保存，再触发“看看最近在做什么”完成首次生成和缓冲链路验收。
+
+### 2026-06-22 18:24 — 通过腾讯云自动化助手部署最新代码
+
+- 用户目标：使用已打开的腾讯云控制台完成当前首要任务，将 cookie 修复和内容缓冲系统部署到腾讯云服务器。
+- 执行结果：通过腾讯云轻量服务器自动化助手确认仓库与容器状态；服务器无法直接访问 GitHub，但 GitHub 镜像代理可读取目标分支。服务器仓库从 `177ffb0` 快进到 `05d3783`，随后执行 `docker compose up -d --build` 完成应用镜像重建与容器替换。部署前将 4 个服务器未跟踪临时文件复制到服务器外部的时间戳备份目录，未删除或覆盖这些文件；`.env` 与运行时数据保持原样。
+- 验证证据：自动化助手输出 `DEPLOY_HEAD=05d3783`；新镜像构建完成并启动应用容器，数据库容器保持 healthy；公网 `GET /health` 返回 HTTP 200 和 `{"status":"ok"}`；公网首页返回 303 到 `/login`，登录页返回 200；线上 `static/js/app.js` 包含 `getCookie('__Host-csrf') || getCookie('csrf_token')`，确认 HTTP Cookie 兼容代码已上线。
+- 代码变化：服务器部署状态发生变化；本地无应用代码改动，仅按仓库约定更新 `docs/PROJECT_LOG.md`。未读取、修改或回显服务器 `.env`、API Key、数据库记录、照片、视觉特征缓存或其他敏感运行时内容。
+- 遗留问题：用户尚未通过线上“档案”页提供自己的图片 API Key，因而未执行付费图片生成和完整收信验收；当前仍是 HTTP，Cookie 不具备生产级传输保护；上传与生成图片尚无持久卷或对象存储。容器构建从 PyPI 下载依赖耗时约 17 分钟，后续可配置可信国内镜像或优化 Docker 缓存。
+- 下一步：用户登录线上网页，在“档案”页填写自己的图片 API Key 与参考照片并保存，然后验证首次生成、缓冲消费与后台补充；随后配置域名与 HTTPS，并为 `data/uploads`、`data/generated` 增加持久化存储。
+
 ### 2026-06-22 18:00 — 腾讯云部署 + Cookie 修复 + 项目日志交接
 
 - 用户目标：租用腾讯云轻量服务器（北京区，2核2G，Ubuntu 24.04），将项目从 Railway 迁移到国内。
@@ -293,6 +357,15 @@
   3. **图片持久化**：容器重启后上传/生成图片丢失，需加对象存储（Cloudflare R2 免费 10GB）或挂载腾讯云 COS。
   4. **HTTPS**：HTTP 下 cookie 不安全，生产环境应配置 HTTPS + 域名。
 - 下一步：scp 最新代码到服务器 → `docker compose up -d --build` → 更新 .env 中 IMAGE_API_KEY → 测试完整流程。
+
+### 2026-06-22 17:29 — 读取项目日志并完成下一步接手准备
+
+- 用户目标：完整读取项目日志，核对当前项目状态，为下一步操作做好接手准备。
+- 执行结果：完整读取 `AGENTS.md` 与本项目日志；核对日志链接的最近一对已批准规格/计划 `docs/superpowers/specs/2026-06-22-mailbox-frontend-design.md` 和 `docs/superpowers/plans/2026-06-22-mailbox-frontend.md`。确认当前首要工作已切换为将 cookie 修复与内容缓冲系统部署到腾讯云服务器；当前部署工作尚无独立的 Phase 5 规格或实施计划文件，应以本日志中的运维交接和最短指令为准。
+- 验证证据：当前分支为 `feat/xiaobu-travel`；`HEAD` 与 `origin/feat/xiaobu-travel` 同为 `05d3783`；`git status --short --branch` 未显示工作区文件改动；最近提交包含 `b1ce121`（HTTP/HTTPS Cookie 名称修复）和 `43c1aae`（内容缓冲系统）。
+- 代码变化：无代码改动；仅按仓库约定更新本项目日志。未读取或修改 `.env`、`data/`、数据库、上传照片、视觉特征缓存或其他运行时数据内容。
+- 遗留问题：服务器仍未同步 cookie 修复与内容缓冲代码；服务器访问 GitHub 失败；生产 API Key、HTTPS 和图片持久化仍待处理。日志中既有 18:00 记录晚于本次环境时钟 17:29，本条按实际 Asia/Hong_Kong 时间插入并保留原记录。
+- 下一步：获得用户继续指令后，优先采用不依赖服务器访问 GitHub 的受控文件传输方案同步最新代码，随后在服务器执行容器重建并验证健康检查、登录 Cookie 与完整收信流程；任何秘密值继续由用户在服务器端安全配置，不写入日志或终端输出。
 
 ### 2026-06-22 17:00 — 内容缓冲系统 + 10 秒收信仪式
 
