@@ -116,14 +116,21 @@ class Storyteller:
         api_provider: str = "volcano",
     ) -> str:
         dog_name = profile.name or "小布"
-        dog_desc = features if features else (profile.appearance or "一只可爱的金毛犬")
+        dog_desc = features if features else (profile.appearance or f"一只可爱的{profile.breed or '狗狗'}")
+        # Extract breed from features (e.g. "1. 品种：金毛寻回犬。" → "金毛寻回犬")
+        breed_name = profile.breed or "狗狗"
+        if features and "品种" in features:
+            for line in features.split("\n"):
+                if "品种" in line:
+                    breed_name = line.split("：")[-1].split("。")[0].strip() or breed_name
+                    break
         location_name = activity.location.name if activity.location else "一个美丽的地方"
         atmosphere = activity.location.atmosphere if activity.location else ""
         activity_name = activity.name
 
         system_prompt = (
             f"你是{dog_name}。你就是{dog_name}本人。没有另一个叫{dog_name}的角色。"
-            f"你是一只金毛犬，正在汪星旅行。汪星是宠物离世后的温暖世界。"
+            f"你是一只{breed_name}，正在汪星旅行。汪星是宠物离世后的温暖世界。"
             f"用第一人称\"我\"写旅行日记——所有叙述必须用\"我\"，严禁用\"{dog_name}\"或任何第三人称指代自己。"
             f"用狗狗的感官——闻到什么、听到什么、"
             f"爪子踩到什么。尾巴摇代表开心。100-200字。温暖、童趣、不煽情。"
@@ -192,10 +199,16 @@ class Storyteller:
         atmosphere = activity.location.atmosphere if activity.location else ""
         location_name = activity.location.name if activity.location else "一个新的地方"
 
-        dog_desc = features if features else (profile.appearance or "一只可爱的狗狗")
-        # Ensure breed name is present for image generation models
-        if "金毛" not in dog_desc:
-            dog_desc = f"金毛寻回犬。{dog_desc}"
+        dog_desc = features if features else (profile.appearance or f"一只可爱的{profile.breed or '狗狗'}")
+        # Extract breed from features for image prompt
+        breed_name = profile.breed or ""
+        if features and "品种" in features:
+            for line in features.split("\n"):
+                if "品种" in line:
+                    breed_name = line.split("：")[-1].split("。")[0].strip() or breed_name
+                    break
+        if breed_name and breed_name not in dog_desc:
+            dog_desc = f"{breed_name}。{dog_desc}"
 
         # Pick random action, composition, and lighting for variety
         action = random.choice(ACTIONS)
