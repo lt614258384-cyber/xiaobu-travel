@@ -4,17 +4,15 @@
 
 ## 日志元数据
 
-- 最后更新：2026-06-22 19:45（Asia/Hong_Kong，UTC+8）
+- 最后更新：2026-06-22 23:00（Asia/Hong_Kong，UTC+8）
 - 仓库：`D:\Xiaobu's travel`
 - 当前分支：`feat/xiaobu-travel`
 - 上游仓库：`https://github.com/lt614258384-cyber/xiaobu-travel`
-- 当前产品阶段：多用户核心框架 + LLM 叙事就绪；Tencent 云服务器已部署最新提交 `f349ffb`，公网健康检查通过；**HTTP 登录已修复**，用户可注册和登录；Docker 构建已加清华 PyPI 镜像源
-- 当前首要工作：用户在线上通过 HTTP 填写临时 API Key 完成首次生成与收信验收；或先配置域名与 HTTPS 后再填写正式 Key
-- 故事模型：DeepSeek V4 Pro（ep-20260622031722-sdjgh，1M 上下文，第一人称）
-- 生图模型：doubao-seedream-4-5-251128（Seedream 4.5，2048x2048）
-- **运维备忘**：服务器 49.233.183.173 (Ubuntu 24.04)，Docker 已配置腾讯云镜像，ufw 已关。容器：xiaobu-travel-app-1 (port 8000) + xiaobu-travel-db-1 (port 5432, healthy)。数据库连接值仅保存在服务器 `.env`，不得记录或回显；`env.py` 会将 PostgreSQL URL 驱动自动改写为 `postgresql+psycopg://`。
-- 故事模型：DeepSeek V4 Pro（ep-20260622031722-sdjgh，1M 上下文，第一人称）
-- 生图模型：doubao-seedream-4-5-251128（Seedream 4.5，2048x2048）
+- 当前产品阶段：多用户核心框架 + LLM 叙事就绪；**新服务器 49.232.37.184 (2核2G 40G)** 已迁移完成，端口 80；云雾 API (yunwu.ai) 支持 gpt-image-2 生图 + deepseek-v4-pro 文案；内容缓冲已启用（5 封预生成）；安全审查 P0-P3 全部修复
+- 当前首要工作：用户继续使用云雾 API 生成体验；可选配域名 + HTTPS；可选 LoRA 角色一致性优化
+- 故事模型：DeepSeek V4 Pro — 火山引擎端点 `ep-20260622031722-sdjgh` / 云雾 `deepseek-v4-pro`
+- 生图模型：云雾 `gpt-image-2` (1024x1024) / 火山引擎 `doubao-seedream-4-5-251128` (2048x2048)
+- **运维备忘**：**新服务器** 49.232.37.184 (Ubuntu 24.04, 2核2G/40G)，Docker 已配腾讯云镜像源 + Docker Hub 镜像，端口 80→8000。项目路径 `/home/ubuntu/xiaobu-travel`。数据用 bind mount `./data:/app/data` 持久化。旧服务器 49.233.183.173 可废弃。
 
 ## Agent 更新协议
 
@@ -276,6 +274,23 @@
 - 测试：`tests/`
 
 ## 会话与开发记录（倒序）
+
+### 2026-06-22 23:00 — 新服务器迁移 + 安全审查修复 + 大量功能迭代
+
+- 用户目标：换新服务器、迁移数据；修复安全审查全部问题；云雾 API 提供商支持；照片管理；信箱导航
+- 执行结果：
+  - **新服务器迁移**：从 `49.233.183.173` 迁至 `49.232.37.184`（2核2G/40G/Ubuntu 24.04）。完整数据迁移（数据库 + 上传 + 生成图）。Docker 配置腾讯云镜像源 + Docker Hub 镜像。端口改为 80。数据用 bind mount 持久化。
+  - **安全审查修复 (P0-P3)**：API Key Fernet 加密存储（`crypto_utils.py`）；移除数据库端口公网暴露；密码从 docker-compose 移到 `.env`；Session 加 30 天绝对过期；SQLAlchemy `Query.get()` → `Session.get()`；5 个安全响应头。
+  - **云雾 API 提供商**：档案页新增 API 提供商下拉框（火山引擎/云雾 API）。云雾：`gpt-image-2` 生图 + `deepseek-v4-pro` Story。火山引擎保留。`docker-compose.yml` 从 `env_file: .env` 读取。
+  - **生图改进**：从单图改为 3×2 格漫画连环画；动作库从 14 个静态摆拍扩展为 22 个生活化动作；故事到图片的视觉联动加强；图片从 PNG 转为 JPEG（大小 1-2MB → 200-400KB）；解除金毛品种硬编码，从视觉分析自动提取品种。
+  - **内容缓冲修复**：`_fill_buffers_on_startup()` 替代仅首次生成的逻辑；直接生成后触发 `refill_buffer`。
+  - **档案照片管理**：最大照片数从 10→5；支持删除已有照片；满时自动替换最旧照片；修复保存后跳转首页的问题；修复 iPhone MPO/实况照片无法上传。
+  - **信箱导航**：新增上下封箭头、← → 键盘翻页、手机滑动切换。
+  - **其他修复**：yunwu.ai 模型名大小写敏感（`deepseek-v4-pro` 全小写）；加强第一人称约束；修复 `showOnly` 重名 `const` 导致的 JS 崩溃。
+- 验证证据：`pytest` 77 passed / 3 failed（都是 storyteller 中文编码预存问题）；服务器 `curl /health` 200；用户浏览器验证登录、生成、档案保存、照片上传均正常。
+- 代码变化：20+ 个提交，从 `0763521` 至 `d991933`；涉及 `app.py`、`scheduler.py`、`storyteller.py`、`image_gen.py`、`models.py`、`crypto_utils.py`、`session_utils.py`、`config.py`、`uploads.py`、`middleware/auth.py`、`docker-compose.yml`、`.env.example`、`requirements.txt`、`templates/`（profile、index、letter、base）、`static/`（app.js、style.css）等。
+- 遗留问题：网站仍是 HTTP（无 HTTPS）；无域名；LoRA 角色一致性未实现；旧服务器 `49.233.183.173` 可废弃。
+- 下一步：配置域名 + HTTPS；设置 `FORCE_SECURE_COOKIES=true`；可选 LoRA 微调。
 
 ### 2026-06-22 19:45 — 修复 Cookie Secure 属性与 HTTP 协议耦合错误
 
