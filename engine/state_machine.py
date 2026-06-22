@@ -1,5 +1,6 @@
 import random
 from models import get_session, Location, Activity, JourneyState, Profile
+from sqlalchemy.sql.expression import func
 
 
 class StateMachine:
@@ -29,10 +30,22 @@ class StateMachine:
         adj_ids = current_loc.adjacent_locations
         adj_locations = [session.get(Location, lid) for lid in adj_ids]
         adj_locations = [loc for loc in adj_locations if loc is not None]
+
         if not adj_locations:
             if close_session:
                 session.close()
             return current_loc
+
+        # 15% chance: travel to any location (simulates taking a boat/train to a new region)
+        if random.random() < 0.15:
+            all_locations = session.query(Location).order_by(func.random()).limit(10).all()
+            # Pick a location in a different region if possible
+            current_region_id = current_loc.region_id if current_loc else None
+            other_regions = [loc for loc in all_locations if loc.region_id != current_region_id]
+            if other_regions:
+                if close_session:
+                    session.close()
+                return random.choice(other_regions)
 
         weights = self._calculate_weights(adj_locations, profile)
         chosen = random.choices(adj_locations, weights=weights, k=1)[0]
