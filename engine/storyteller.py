@@ -163,6 +163,9 @@ class Storyteller:
         location_name = activity.location.name if activity.location else "一个新的地方"
 
         dog_desc = features if features else (profile.appearance or "一只可爱的狗狗")
+        # Ensure breed name is present for image generation models
+        if "金毛" not in dog_desc:
+            dog_desc = f"金毛寻回犬。{dog_desc}"
 
         # Pick random action, composition, and lighting for variety
         action = random.choice(ACTIONS)

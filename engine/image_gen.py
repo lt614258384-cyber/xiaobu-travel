@@ -154,7 +154,7 @@ class SeedreamGenerator(ImageGenerator):
         if reference_photos:
             ref_imgs = self._encode_ref_photos(reference_photos)
             # Put character-preservation at BOTH ends for maximum model attention
-            char_guard = "保持参考图中这只金毛犬的外观完全不变：品种、体型、毛色分布、耳朵下垂形状、眼睛颜色和眼神、鼻子形状、嘴巴特征、白色斑块位置，所有细节严格一致。只改变背景环境和姿势动作。"
+            char_guard = "保持参考图中这只狗的外观完全不变：品种、体型、毛色分布、耳朵形状、眼睛颜色和眼神、鼻子形状，所有细节严格一致。只改变背景环境和姿势动作。"
             payload = {
                 "model": "doubao-seedream-4-5-251128",
                 "prompt": f"{char_guard}\n\n{prompt}\n\n{char_guard}",

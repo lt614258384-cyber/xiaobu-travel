@@ -136,7 +136,7 @@ class Scheduler:
                     img.save(buf, format="JPEG", quality=80)
                     photos_b64.append(base64.b64encode(buf.getvalue()).decode())
 
-            content = [{"type": "text", "text": "请非常详细地描述照片中这只狗的外貌特征。逐项列出：耳朵形状/颜色/大小/位置、头型比例、眼睛颜色/大小/间距/眼神、鼻子颜色/形状、嘴巴特征、毛色分布/纹理/长度、体型、尾巴形状/毛量、独特的白色斑块或标记。用中文，约200字。"}]
+            content = [{"type": "text", "text": "请非常精确地描述照片中这只狗的品种和外貌特征。逐项列出：1. 品种（必须明确说出品种名，如金毛巡回犬）2. 毛色（全身各部位的精确颜色）3. 耳朵（形状、大小、位置、颜色）4. 眼睛（颜色、形状、眼神）5. 鼻子颜色 6. 体型 7. 尾巴 8. 任何独特标记。用中文，200字以内。"}]
             for b64 in photos_b64:
                 content.append({"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{b64}"}})
 
