@@ -5,7 +5,7 @@ function initPhotoUpload() {
     const zone = document.getElementById("upload-zone");
     const input = document.getElementById("photo-input");
     const previews = document.getElementById("photo-previews");
-    const maxPhotos = 10;
+    const maxPhotos = 5;
 
     if (!zone || !input) return;
     zone.addEventListener("click", () => input.click());
