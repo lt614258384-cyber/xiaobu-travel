@@ -2,15 +2,38 @@
 {% block title %}来自{{ letter.location_name }}的信 · {{ user.pet_name }}的旅行{% endblock %}
 {% block content %}
 
-<article class="letter-detail" aria-label="{{ user.pet_name }}从{{ letter.location_name }}寄来的信">
+<article class="letter-detail" aria-label="{{ user.pet_name }}从{{ letter.location_name }}寄来的信"
+         data-letter-id="{{ letter.id }}">
+
+  {# ── Navigation arrows ── #}
+  <nav class="letter-nav" aria-label="信件导航">
+    {% if prev_id %}
+    <a href="/letter/{{ prev_id }}" class="nav-arrow nav-prev" aria-label="上一封信" title="上一封">
+      ‹
+    </a>
+    {% else %}
+    <span class="nav-arrow nav-prev disabled" aria-hidden="true">‹</span>
+    {% endif %}
+
+    <span class="nav-indicator">#{{ letter.id }}</span>
+
+    {% if next_id %}
+    <a href="/letter/{{ next_id }}" class="nav-arrow nav-next" aria-label="下一封信" title="下一封">
+      ›
+    </a>
+    {% else %}
+    <span class="nav-arrow nav-next disabled" aria-hidden="true">›</span>
+    {% endif %}
+  </nav>
+
   <header class="letter-postmark">
     <span class="postmark-from">✉️ 来自 <strong>{{ letter.location_name or '汪星某处' }}</strong></span>
     <span class="postmark-date">{{ letter.generated_at.strftime('%Y年%m月%d日 %H:%M') }}</span>
   </header>
 
-  <div class="letter-detail-card">
+  <div class="letter-detail-card" id="letter-card">
     <div class="letter-photo">
-      <img src="/{{ letter.image_path }}" alt="{{ user.pet_name }}在{{ letter.location_name }}" loading="eager">
+      <img src="/{{ letter.image_path }}" alt="{{ user.pet_name }}在{{ letter.location_name }}" loading="eager" id="letter-img">
     </div>
     <div class="letter-story">
       <p>{{ letter.story_text }}</p>
@@ -40,6 +63,36 @@
     if (viewed.length > 200) viewed = viewed.slice(-200);
     localStorage.setItem('viewed_letters', JSON.stringify(viewed));
   }
+})();
+
+// ── Keyboard navigation ──
+document.addEventListener('keydown', function(e) {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  {% if prev_id %}
+  if (e.key === 'ArrowLeft') { window.location.href = '/letter/{{ prev_id }}'; }
+  {% endif %}
+  {% if next_id %}
+  if (e.key === 'ArrowRight') { window.location.href = '/letter/{{ next_id }}'; }
+  {% endif %}
+});
+
+// ── Mobile swipe ──
+(function() {
+  let touchStartX = 0;
+  const card = document.getElementById('letter-card');
+  card.addEventListener('touchstart', function(e) {
+    touchStartX = e.touches[0].clientX;
+  }, {passive: true});
+  card.addEventListener('touchend', function(e) {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) < 50) return;
+    {% if prev_id %}
+    if (dx > 0) { window.location.href = '/letter/{{ prev_id }}'; }
+    {% endif %}
+    {% if next_id %}
+    if (dx < 0) { window.location.href = '/letter/{{ next_id }}'; }
+    {% endif %}
+  });
 })();
 </script>
 {% endblock %}

@@ -365,6 +365,22 @@ async def letter_detail(log_id: int, request: Request, current_user: User = Depe
         loc = sess.get(Location,log.location_id)
         loc_name = loc.name if loc else ""
 
+    # Find prev/next for navigation
+    prev_log = (
+        sess.query(JourneyLog)
+        .filter_by(user_id=current_user.id)
+        .filter(JourneyLog.id < log_id)
+        .order_by(JourneyLog.id.desc())
+        .first()
+    )
+    next_log = (
+        sess.query(JourneyLog)
+        .filter_by(user_id=current_user.id)
+        .filter(JourneyLog.id > log_id)
+        .order_by(JourneyLog.id.asc())
+        .first()
+    )
+
     sess.close()
     return templates.TemplateResponse(request, "letter.html", {
         "letter": {
@@ -376,6 +392,8 @@ async def letter_detail(log_id: int, request: Request, current_user: User = Depe
             "mood": log.mood,
             "generated_at": log.generated_at,
         },
+        "prev_id": prev_log.id if prev_log else None,
+        "next_id": next_log.id if next_log else None,
         "user": current_user,
     })
 
