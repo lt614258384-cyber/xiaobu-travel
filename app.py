@@ -67,6 +67,12 @@ def _csrf_check(request: Request):
     return
 
 
+@app.get("/health")
+async def health_check():
+    """Health check endpoint for Railway — no auth required."""
+    return {"status": "ok"}
+
+
 @app.get("/media/{path:path}")
 async def serve_media(
     path: str,
@@ -155,6 +161,9 @@ async def profile_save(
         sess.add(profile)
 
     profile.name = name
+    # Sync pet name to User model for use in templates
+    current_user.pet_name = name
+    sess.add(current_user)
     profile.breed = breed
     profile.age = age
     profile.appearance = appearance
