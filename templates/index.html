@@ -10,24 +10,25 @@
             <button class="btn btn-primary btn-large" onclick="triggerFirstLetter()" style="margin-top:20px;">✨ 寄出第一封信</button>
 </div>
 
-{# ── State: Has letters — show latest letter as Hero ── #}
+{# ── State: Has letters — photo wall + latest story ── #}
 {% else %}
 {% set latest = logs[0] %}
 
-<section class="letter-hero" aria-label="最新来信" data-latest-id="{{ latest.id }}">
-  <div class="letter-hero-card" id="hero-card">
-    <div class="letter-hero-photo">
-      <img src="/{{ latest.image_path }}" alt="{{ user.pet_name }}在{{ latest.location_name }}" id="hero-img">
-    </div>
-    <div class="letter-hero-story">
-      <p class="letter-story-text" id="hero-story">{{ latest.story_text }}</p>
-      <div class="letter-hero-postmark">
-        <span class="postmark-tag">📍 {{ latest.location_name }}</span>
-        <span class="postmark-tag">🌤 {{ latest.weather }}</span>
-        <span class="postmark-tag">💭 {{ latest.mood }}</span>
-        <span class="postmark-tag">{{ latest.generated_at.strftime('%m月%d日') }}</span>
-      </div>
-    </div>
+<section class="photo-wall" aria-label="汪星相册" data-latest-id="{{ latest.id }}">
+  {% for log in logs[:20] %}
+  <div class="photo-wall-item">
+    <img src="/{{ log.image_path }}" alt="{{ user.pet_name }}在{{ log.location_name }}" loading="lazy">
+  </div>
+  {% endfor %}
+</section>
+
+<section class="latest-story" id="hero-story-section">
+  <p class="letter-story-text" id="hero-story">{{ latest.story_text }}</p>
+  <div class="letter-hero-postmark">
+    <span class="postmark-tag">📍 {{ latest.location_name }}</span>
+    <span class="postmark-tag">🌤 {{ latest.weather }}</span>
+    <span class="postmark-tag">💭 {{ latest.mood }}</span>
+    <span class="postmark-tag">{{ latest.generated_at.strftime('%m月%d日') }}</span>
   </div>
 </section>
 
@@ -158,8 +159,11 @@ function showOnly(id) {
   // Hide hero and actions during generation flow
   const hero = document.getElementById('hero-card');
   const actions = document.querySelector('.home-actions');
-  const isHero = (id === 'waiting-ritual' || id === 'letter-arrived' || id === 'letter-opened' || id === 'gen-error' || id === 'timeout-prompt');
-  if (hero) hero.style.display = isHero ? 'none' : '';
+  const isFlow = (id === 'waiting-ritual' || id === 'letter-arrived' || id === 'letter-opened' || id === 'gen-error' || id === 'timeout-prompt');
+  const wall = document.querySelector('.photo-wall');
+  const story = document.getElementById('hero-story-section');
+  if (wall) wall.style.display = isFlow ? 'none' : '';
+  if (story) story.style.display = isFlow ? 'none' : '';
   if (actions) actions.style.display = (id === 'letter-opened') ? 'none' : '';
 }
 
@@ -285,19 +289,17 @@ function openLetter() {
 function backToHero() {
   showOnly('');
   const b = getBtn(); if (b) b.disabled = false;
-  const hero = document.getElementById('hero-card');
-  const actions = document.querySelector('.home-actions');
-  if (hero) hero.style.display = '';
-  if (actions) actions.style.display = '';
-  // Update hero with new content
+  // Reload to show updated photo wall with new image
   if (latestResult) {
-    const img = document.getElementById('hero-img');
-    const story = document.getElementById('hero-story');
-    if (img) img.src = '/' + latestResult.image_path;
-    if (story) story.textContent = latestResult.story_text;
+    window.location.reload();
+  } else {
+    const wall = document.querySelector('.photo-wall');
+    const story = document.getElementById('hero-story-section');
+    const actions = document.querySelector('.home-actions');
+    if (wall) wall.style.display = '';
+    if (story) story.style.display = '';
+    if (actions) actions.style.display = '';
   }
-  // Reload after short delay so user sees the updated hero
-  setTimeout(() => { window.location.reload(); }, 600);
 }
 
 function continueWait() {
@@ -334,9 +336,11 @@ function giveUp() {
   clearAllTimers();
   showOnly('');
   const b = getBtn(); if (b) b.disabled = false;
-  const hero = document.getElementById('hero-card');
+  const wall = document.querySelector('.photo-wall');
+  const story = document.getElementById('hero-story-section');
   const actions = document.querySelector('.home-actions');
-  if (hero) hero.style.display = '';
+  if (wall) wall.style.display = '';
+  if (story) story.style.display = '';
   if (actions) actions.style.display = '';
 }
 

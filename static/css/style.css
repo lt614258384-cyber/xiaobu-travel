@@ -217,6 +217,43 @@ body {
   color: #896650;
 }
 
+/* ── Photo Wall (2-column grid) ── */
+.photo-wall {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.photo-wall-item {
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: #faf6ee;
+  border: 2px solid #dfbc91;
+}
+.photo-wall-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  aspect-ratio: 1 / 1;
+  display: block;
+}
+.latest-story {
+  background: var(--color-paper);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+  border: 3px solid #dfbc91;
+  padding: 24px 20px;
+  margin-bottom: 24px;
+  position: relative;
+}
+.latest-story::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 20px; right: 20px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, #dfbc91 20%, #dfbc91 80%, transparent);
+}
+
 /* ── Home Actions ── */
 .home-actions {
   text-align: center;
