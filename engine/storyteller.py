@@ -10,7 +10,7 @@ STORY_CONFIGS = {
     },
     "yunwu": {
         "url": "https://yunwu.ai/v1/chat/completions",
-        "model": "DeepSeek-V4-Pro",
+        "model": "deepseek-v4-pro",
     },
 }
 
