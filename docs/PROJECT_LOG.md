@@ -4,7 +4,7 @@
 
 ## 日志元数据
 
-- 最后更新：2026-06-22 23:00（Asia/Hong_Kong，UTC+8）
+- 最后更新：2026-06-23 00:30（Asia/Hong_Kong，UTC+8）
 - 仓库：`D:\Xiaobu's travel`
 - 当前分支：`feat/xiaobu-travel`
 - 上游仓库：`https://github.com/lt614258384-cyber/xiaobu-travel`
@@ -274,6 +274,19 @@
 - 测试：`tests/`
 
 ## 会话与开发记录（倒序）
+
+### 2026-06-23 00:30 — 地图网状化 + 信箱导航 + 照片上传修复
+
+- 用户目标：解决地点重复循环问题；添加信箱翻页；修复 iPhone 照片上传。
+- 执行结果：
+  - **地图从线状改为网状**：每个地点连接数从 2-3 提升到平均 10.6（范围 6-13）。区域内部用环 + 随机交叉连接形成网络。跨区桥梁从 16 条增至 30 条，每对相邻区域 4 条桥。10% 概率跳跃到随机地点。
+  - **信箱导航**：letter.html 新增 ← → 箭头按钮、键盘左右方向键翻页、手机滑动切换。app.py 路由查询 prev/next 相邻信件。
+  - **照片上传修复**：MPO（iPhone 实况照片）支持，自动转为 JPEG。放宽 Pillow 格式检测，`pillow_format=None` 时不再拒绝。格式不一致时显示检测到的格式名。
+  - **历史记录恢复**：重导地图清掉的 16 条 journey_log 从备份恢复，通过位置名映射到新 ID。
+- 验证证据：`curl /health` 200；用户浏览器验证信箱翻页、照片上传成功；mesh 生成的第一封就去到迷雾森林（森林区），不再困在海滨区。
+- 代码变化：`engine/state_machine.py`（跳跃逻辑）、`seed/generate_seed.py`（mesh 构建）、`seed/locations_data.py`（新增 14 条桥梁）、`templates/letter.html`（导航 UI）、`app.py`（prev/next 查询）、`uploads.py`（MPO 放宽）、`static/css/style.css`（导航样式）。提交 `d991933`–`71c0ffc`。
+- 遗留问题：无。
+- 下一步：继续体验生成，观察地点多样性。
 
 ### 2026-06-22 23:00 — 新服务器迁移 + 安全审查修复 + 大量功能迭代
 
