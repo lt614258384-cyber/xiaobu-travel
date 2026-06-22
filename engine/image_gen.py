@@ -103,7 +103,7 @@ class TongyiImageGenerator(ImageGenerator):
             raise TimeoutError("Image generation timed out after 5 minutes")
 
         # Download result
-        img_resp = httpx.get(image_url, timeout=60)
+        img_resp = httpx.get(image_url, timeout=120)
         img_resp.raise_for_status()
 
         ts = int(time.time() * 1000)
@@ -126,12 +126,12 @@ class OpenAIImageGenerator(ImageGenerator):
             "n": 1,
             "size": "1024x1024",
         }
-        resp = httpx.post(self.API_URL, json=payload, headers=headers, timeout=120)
+        resp = httpx.post(self.API_URL, json=payload, headers=headers, timeout=300)
         resp.raise_for_status()
         data = resp.json()
 
         image_url = data["data"][0]["url"]
-        img_resp = httpx.get(image_url, timeout=60)
+        img_resp = httpx.get(image_url, timeout=120)
         img_resp.raise_for_status()
 
         ts = int(time.time() * 1000)
@@ -174,7 +174,7 @@ class SeedreamGenerator(ImageGenerator):
                 "response_format": "b64_json",
             }
 
-        resp = httpx.post(self.API_URL, json=payload, headers=headers, timeout=120)
+        resp = httpx.post(self.API_URL, json=payload, headers=headers, timeout=300)
         resp.raise_for_status()
         data = resp.json()
 
