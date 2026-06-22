@@ -4,12 +4,15 @@
 
 ## 日志元数据
 
-- 最后更新：2026-06-22 15:30（Asia/Hong_Kong，UTC+8）
+- 最后更新：2026-06-22 18:00（Asia/Hong_Kong，UTC+8）
 - 仓库：`D:\Xiaobu's travel`
 - 当前分支：`feat/xiaobu-travel`
 - 上游仓库：`https://github.com/lt614258384-cyber/xiaobu-travel`
-- 当前产品阶段：多用户核心框架 + LLM 叙事就绪；Phase 5 Step 1-2 完成（媒体鉴权+图片校验+PostgreSQL+Alembic+Docker）；待 Railway 实际部署
-- 当前首要工作：在 Railway 创建项目并部署，或先完善前端体验
+- 当前产品阶段：多用户核心框架 + LLM 叙事就绪；Tencent 云服务器已部署运行；内容缓冲系统已实施；当前待解决：服务器 GitHub 被墙无法 git pull
+- 当前首要工作：将本地最新代码部署到 Tencent 云服务器（cookie 修复 + 缓冲系统），在服务器端完成 git pull（需配代理或 scp 传文件）
+- 故事模型：DeepSeek V4 Pro（ep-20260622031722-sdjgh，1M 上下文，第一人称）
+- 生图模型：doubao-seedream-4-5-251128（Seedream 4.5，2048x2048）
+- **运维备忘**：服务器 49.233.183.173 (Ubuntu 24.04)，Docker 已配置腾讯云镜像，ufw 已关。容器：xiaobu-travel-app-1 (port 8000) + xiaobu-travel-db-1 (port 5432, healthy)。DATABASE_URL=postgresql://xiaobu:xiaobu@db:5432/xiaobu，env.py 自动 rewrite 为 postgresql+psycopg://
 - 故事模型：DeepSeek V4 Pro（ep-20260622031722-sdjgh，1M 上下文，第一人称）
 - 生图模型：doubao-seedream-4-5-251128（Seedream 4.5，2048x2048）
 
@@ -252,7 +255,7 @@
 
 ### 给下一位 Agent 的最短指令
 
-> 阅读根目录 `AGENTS.md` 和 `docs/PROJECT_LOG.md`，检查 Git 状态，保留所有未跟踪运行时数据，然后从”当前最优先的下一步”继续。结束对话前更新项目日志。
+> 阅读根目录 `AGENTS.md` 和 `docs/PROJECT_LOG.md`，检查 Git 状态，保留所有未跟踪运行时数据（`.env`、`data/`、`xiaobu.db`），然后从”当前最优先的下一步”继续。结束对话前更新项目日志。**当前关键任务**：将最新代码部署到腾讯云服务器 49.233.183.173（`ssh ubuntu@49.233.183.173`），先解决 GitHub 被墙问题（需配代理或 scp 传文件），再 `docker compose up -d --build`。
 
 ## 重要文件索引
 
@@ -273,6 +276,48 @@
 - 测试：`tests/`
 
 ## 会话与开发记录（倒序）
+
+### 2026-06-22 18:00 — 腾讯云部署 + Cookie 修复 + 项目日志交接
+
+- 用户目标：租用腾讯云轻量服务器（北京区，2核2G，Ubuntu 24.04），将项目从 Railway 迁移到国内。
+- 执行结果：
+  - **服务器部署**：SSH 到 `49.233.183.173`，安装 Docker（腾讯云镜像源），`docker compose up -d`。拉取 postgres:16-alpine 和 python:3.13-slim，pip 安装依赖慢（PyPI 20KB/s），约 30 分钟构建完成。两个容器正常运行（app + db），alembic 自动迁移成功，uvicorn 监听 8000。
+  - **HTTP Cookie 问题**：`__Host-` 前缀强制要求 `Secure=True` + HTTPS，但服务器是 HTTP。修改 `middleware/auth.py` 和 `middleware/csrf.py`：非生产环境（无 ENV=production / RAILWAY_PUBLIC_DOMAIN）使用 `sid` 和 `csrf_token` 作为 cookie 名，`secure=False`。前端 JS 同时兼容两种 cookie 名。
+  - **GitHub 被墙**：服务器 `git pull` 报 `GnuTLS recv error`，无法从 GitHub 拉取最新代码。已推送 cookie 修复到 GitHub（`b1ce121`），但服务器未同步。
+  - **项目日志交接**：更新元数据、状态摘要、当前首要工作，添加运维备忘（服务器 IP、Docker 配置、容器名、数据库连接信息）。
+- 验证证据：`curl localhost:8000/health` 返回 200；docker ps 显示两容器运行 1 小时；`alembic.runtime.migration` 日志显示 PostgresqlImpl + 两迁移成功。
+- 代码变化：`middleware/auth.py`、`middleware/csrf.py`、`static/js/app.js`、`templates/index.html`（cookie 名动态化）。`docs/PROJECT_LOG.md` 大幅更新。
+- 遗留问题（给下一位 Agent）：
+  1. **服务器更新**：最新代码（cookie 修复 + 内容缓冲）未部署到服务器。GitHub 被墙，需 scp 或配代理。
+  2. **IMAGE_API_KEY**：服务器 `.env` 中为 `PLACEHOLDER`，需用户更新真实 API Key 后重启容器。
+  3. **图片持久化**：容器重启后上传/生成图片丢失，需加对象存储（Cloudflare R2 免费 10GB）或挂载腾讯云 COS。
+  4. **HTTPS**：HTTP 下 cookie 不安全，生产环境应配置 HTTPS + 域名。
+- 下一步：scp 最新代码到服务器 → `docker compose up -d --build` → 更新 .env 中 IMAGE_API_KEY → 测试完整流程。
+
+### 2026-06-22 17:00 — 内容缓冲系统 + 10 秒收信仪式
+
+- 用户目标：预生成 5 封信存在缓冲中，用户点击后 10 秒仪式 → 秒出结果。后台及时补充。
+- 执行结果：
+  - **ContentBuffer 模型**：新表 `content_buffer`（user_id, story_text, image_path, location_name, weather, mood, status: ready/sent/generating）。
+  - **缓冲逻辑**：`scheduler.refill_buffer()` 后台生成直到 5 封 ready；`scheduler.consume_buffer()` 取最早 ready → 创建 JourneyLog → 标记 sent → 触发异步 refill。
+  - **API 改造**：`POST /generate` 优先从缓冲取，空则退回到直接生成。
+  - **前端 10s 仪式**：轮询检测到新内容后，等待满 10 秒才显示"信箱响了"，保留收信体验。
+  - **超时调整**：后端 API 超时（LLM 20→60s，Seedream 120→300s，图片下载 60→120s），前端总超时 600s。
+- 验证证据：78 tests passed；Alembic 迁移 `a9ff3615df51_add_content_buffer` 生成完成。
+- 代码变化：`models.py`（新增 ContentBuffer）、`scheduler.py`（refill_buffer + consume_buffer 约 130 行）、`app.py`（POST /generate 改造）、`templates/index.html`（10s 最小等待）等。迁移文件新建。
+- 遗留问题：首次缓冲为空需直接生成（慢），之后秒开。
+- 下一步：部署到服务器测试缓冲效果。
+
+### 2026-06-22 16:30 — 动态宠物名 + 多用户名称支持
+
+- 用户目标：应用名"小布的旅行"中"小布"应显示为用户自己的宠物名。
+- 执行结果：
+  - 所有模板中硬编码"小布"替换为 `{{ user.pet_name }}` 或 `{{ profile.name }}`：base.html 标题、index.html 按钮/等待文案/错误提示、mailbox.html 空状态、letter.html alt、profile.html 描述。
+  - `POST /profile` 保存时同步 `current_user.pet_name = name`，确保档案改名后全局生效。
+  - `storyteller.py` 提示词中"你就是小布"改为 `你就是{dog_name}`。
+  - 未登录时 base.html 显示通用"汪星旅行"。
+- 验证证据：78 tests passed。
+- 代码变化：所有模板（base/index/mailbox/letter/profile）、storyteller.py、app.py（user.pet_name 同步）。
 
 ### 2026-06-22 15:30 — Phase 5 Step 2: PostgreSQL + Alembic + Docker
 
