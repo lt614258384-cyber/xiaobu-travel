@@ -1,6 +1,7 @@
 # ── 小布的旅行 docker-compose.yml ──
 # Local testing with app + PostgreSQL
 #
+# Copy .env.example to .env and fill in real values before deploying.
 # FORCE_SECURE_COOKIES=true should only be set when a TLS termination proxy
 # (nginx, Caddy, Railway, etc.) serves HTTPS in front of the app.
 # Without HTTPS, Secure cookies are rejected by browsers and login breaks.
@@ -10,12 +11,11 @@ services:
     build: .
     ports:
       - "8000:8000"
+    env_file:
+      - .env
     environment:
       - DATABASE_URL=postgresql://xiaobu:xiaobu@db:5432/xiaobu
-      - SECRET_KEY=change-me-in-production-use-32-plus-chars
-      - ENV=production
       - PORT=8000
-      # Set FORCE_SECURE_COOKIES=true ONLY after configuring HTTPS
     depends_on:
       db:
         condition: service_healthy
@@ -26,10 +26,9 @@ services:
     image: postgres:16-alpine
     environment:
       - POSTGRES_USER=xiaobu
-      - POSTGRES_PASSWORD=xiaobu
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-xiaobu}
       - POSTGRES_DB=xiaobu
-    ports:
-      - "5432:5432"
+    # No ports exposed — only accessible from internal Docker network
     volumes:
       - pg_data:/var/lib/postgresql/data
     healthcheck:
