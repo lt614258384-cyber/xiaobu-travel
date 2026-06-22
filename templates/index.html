@@ -3,10 +3,11 @@
 
 {# ── State: First-time user, no letters yet ── #}
 {% if not logs %}
-<div class="empty-state" role="status" aria-label="小布还没有寄过信">
+<div class="empty-state" role="status" aria-label="{{ user.pet_name }}还没有寄过信">
     <div class="icon">📭</div>
-    <p class="empty-title">小布还没有寄过信</p>
-    <p class="empty-desc">先去<a href="/profile">设置小布的档案</a>，然后小布就会从汪星寄来第一封信啦</p>
+    <p class="empty-title">{{ user.pet_name }}还没有寄过信</p>
+    <p class="empty-desc">先去<a href="/profile">设置{{ user.pet_name }}的档案</a>，上传照片和 API Key～</p>
+            <button class="btn btn-primary btn-large" onclick="triggerFirstLetter()" style="margin-top:20px;">✨ 寄出第一封信</button>
 </div>
 
 {# ── State: Has letters — show latest letter as Hero ── #}
@@ -16,7 +17,7 @@
 <section class="letter-hero" aria-label="最新来信" data-latest-id="{{ latest.id }}">
   <div class="letter-hero-card" id="hero-card">
     <div class="letter-hero-photo">
-      <img src="/{{ latest.image_path }}" alt="小布在{{ latest.location_name }}" id="hero-img">
+      <img src="/{{ latest.image_path }}" alt="{{ user.pet_name }}在{{ latest.location_name }}" id="hero-img">
     </div>
     <div class="letter-hero-story">
       <p class="letter-story-text" id="hero-story">{{ latest.story_text }}</p>
@@ -32,8 +33,8 @@
 
 <div class="home-actions">
   <button class="btn btn-primary btn-large" id="generate-btn" onclick="triggerLetter()"
-          aria-label="看看小布最近在做什么">
-    ✨ 看看小布最近在做什么
+          aria-label="看看{{ user.pet_name }}最近在做什么">
+    ✨ 看看{{ user.pet_name }}最近在做什么
   </button>
   <a href="/mailbox" class="mailbox-entry" id="mailbox-entry" aria-label="查看汪星信箱，共 {{ logs|length }} 封来信">
     📮 查看汪星信箱<span class="mailbox-count-badge">{{ logs|length }}</span>
@@ -48,19 +49,19 @@
   <div class="waiting-dots" aria-hidden="true">
     <span class="wdot"></span><span class="wdot"></span><span class="wdot"></span><span class="wdot"></span>
   </div>
-  <p class="waiting-title">小布正在写信</p>
-  <p class="waiting-tip" id="waiting-tip">小布正在挑选今天最喜欢的一张照片</p>
+  <p class="waiting-title">{{ user.pet_name }}正在写信</p>
+  <p class="waiting-tip" id="waiting-tip">{{ user.pet_name }}正在挑选今天最喜欢的一张照片</p>
   <p class="waiting-subtle">一般需要 10–25 秒</p>
 </section>
 
 {# ── Letter arrived (hidden by default) ── #}
-<section class="letter-arrived" id="letter-arrived" style="display:none" role="status" aria-label="信箱响了，小布寄来了一封新信">
+<section class="letter-arrived" id="letter-arrived" style="display:none" role="status" aria-label="信箱响了，{{ user.pet_name }}寄来了一封新信">
   <div class="arrived-envelope" aria-hidden="true">
     <div class="envelope-body">
       <div class="envelope-seal">🐾</div>
     </div>
   </div>
-  <p class="arrived-title">信箱响了——小布寄来了一封新信</p>
+  <p class="arrived-title">信箱响了——{{ user.pet_name }}寄来了一封新信</p>
   <button class="btn btn-primary btn-large" onclick="openLetter()" aria-label="拆开看看">
     💌 拆开看看
   </button>
@@ -70,7 +71,7 @@
 <section class="letter-opened" id="letter-opened" style="display:none" aria-label="展开的来信">
   <div class="letter-hero-card letter-new-card" id="new-letter-card">
     <div class="letter-hero-photo">
-      <img src="" alt="小布的最新照片" id="new-img">
+      <img src="" alt="{{ user.pet_name }}的最新照片" id="new-img">
     </div>
     <div class="letter-hero-story">
       <p class="letter-story-text" id="new-story"></p>
@@ -90,7 +91,7 @@
 <section class="gen-error" id="gen-error" style="display:none" role="alert">
   <div class="gen-error-icon">🐕</div>
   <p class="gen-error-title">今天信没能寄到</p>
-  <p class="gen-error-msg" id="gen-error-msg">小布今天在路上耽搁了。可能是邮路不好，也可能只是运气不太好。</p>
+  <p class="gen-error-msg" id="gen-error-msg">{{ user.pet_name }}今天在路上耽搁了。可能是邮路不好，也可能只是运气不太好。</p>
   <button class="btn btn-primary" onclick="retryLetter()">再等等看</button>
   <p class="gen-error-tech" id="gen-error-tech"></p>
 </section>
@@ -98,7 +99,7 @@
 {# ── Timeout prompt (hidden) ── #}
 <section class="timeout-prompt" id="timeout-prompt" style="display:none" role="alert">
   <p class="timeout-title">还在路上…</p>
-  <p class="timeout-msg">45 秒了，小布还在写信。要继续等吗？</p>
+  <p class="timeout-msg">45 秒了，{{ user.pet_name }}还在写信。要继续等吗？</p>
   <div class="timeout-actions">
     <button class="btn btn-primary" onclick="continueWait()">继续等</button>
     <button class="btn btn-ghost" onclick="giveUp()">算了</button>
@@ -107,12 +108,12 @@
 
 <script>
 const PROGRESS_MESSAGES = [
-  '小布正在挑选今天最喜欢的一张照片',
-  '小布把今天的故事写进信里',
+  '{{ user.pet_name }}正在挑选今天最喜欢的一张照片',
+  '{{ user.pet_name }}把今天的故事写进信里',
   '汪星邮局正在盖上一枚爪印',
   '信使海鸥已经出发，信箱快响啦',
 ];
-const SLOW_MESSAGE = '小布今天格外认真，还在挑照片…';
+const SLOW_MESSAGE = '{{ user.pet_name }}今天格外认真，还在挑照片…';
 
 let msgTimer = null;
 let slowTimer = null;
@@ -169,6 +170,7 @@ function clearAllTimers() {
   if (pollTimer) { clearTimeout(pollTimer); pollTimer = null; }
 }
 
+async function triggerFirstLetter() { return triggerLetter(); }
 async function triggerLetter() {
   const btn = document.getElementById('generate-btn');
   beforeId = getLatestLogId();
@@ -215,7 +217,7 @@ async function triggerLetter() {
       if (resp.status === 429) {
         document.getElementById('gen-error-msg').textContent = '今天已经寄了好几封啦，明天再来吧~';
       } else {
-        document.getElementById('gen-error-msg').textContent = '小布今天在路上耽搁了。可能是邮路不好，也可能只是运气不太好。';
+        document.getElementById('gen-error-msg').textContent = '{{ user.pet_name }}今天在路上耽搁了。可能是邮路不好，也可能只是运气不太好。';
       }
       document.getElementById('gen-error-tech').textContent = err.detail || '';
       showOnly('gen-error');
@@ -236,7 +238,7 @@ async function triggerLetter() {
       if (Date.now() - startTime > 75000) {
         // Total timeout (45s prompt + 30s extra = 75s)
         clearAllTimers();
-        document.getElementById('gen-error-msg').textContent = '小布今天在路上耽搁了。可能是邮路不好，也可能只是运气不太好。';
+        document.getElementById('gen-error-msg').textContent = '{{ user.pet_name }}今天在路上耽搁了。可能是邮路不好，也可能只是运气不太好。';
         document.getElementById('gen-error-tech').textContent = '生成超时，请稍后重试';
         showOnly('gen-error');
         document.getElementById('generate-btn').disabled = false;
@@ -288,12 +290,12 @@ function backToHero() {
 function continueWait() {
   showOnly('waiting-ritual');
   const tipEl = document.getElementById('waiting-tip');
-  tipEl.textContent = '小布还在努力…';
+  tipEl.textContent = '{{ user.pet_name }}还在努力…';
 
   // Give another 30s before final timeout
   timeoutTimer = setTimeout(() => {
     clearAllTimers();
-    document.getElementById('gen-error-msg').textContent = '小布今天在路上耽搁了。可能是邮路不好，也可能只是运气不太好。';
+    document.getElementById('gen-error-msg').textContent = '{{ user.pet_name }}今天在路上耽搁了。可能是邮路不好，也可能只是运气不太好。';
     document.getElementById('gen-error-tech').textContent = '生成超时，请稍后重试';
     showOnly('gen-error');
     document.getElementById('generate-btn').disabled = false;
