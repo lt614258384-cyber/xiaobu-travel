@@ -210,7 +210,24 @@ class Storyteller:
         if breed_name and breed_name not in dog_desc:
             dog_desc = f"{breed_name}。{dog_desc}"
 
-        # Pick random action, composition, and lighting for variety
+        # ── Multi-panel comic strip when story is available ──
+        if story_text:
+            prompt = (
+                f"创建一张3行×2列的照片拼贴网格，共6个方形格子，用极细的白色线条分隔。"
+                f"每一格都是从以下旅行故事中提取的1个关键场景，从左到右、从上到下按时间顺序排列，串联起来像一部微型连环画。"
+                f"\n\n"
+                f"角色：{dog_desc}。所有格子中这只{dog_desc}的外貌特征保持完全一致。"
+                f"地点：{location_name}。氛围：{atmosphere}。天气：{weather}。心情：{mood}。"
+                f"\n\n"
+                f"旅行故事（请从中提取6个关键时刻，每格1个）：\n{story_text[:500]}"
+                f"\n\n"
+                f"温暖治愈的旅行摄影风格。低饱和暖色调，柔和自然光，清新蓝绿与金黄配色。"
+                f"背景细节丰富但柔和。画面如同旅行明信片拼贴。"
+                f"避免：3D渲染感、塑料质感、高饱和、变形、模糊、不同品种的狗、文字气泡或字幕。"
+            )
+            return prompt
+
+        # ── Fallback: single image when no story ──
         action = random.choice(ACTIONS)
         composition = random.choice(COMPOSITIONS)
         lighting = random.choice(MOOD_LIGHTING)
@@ -222,23 +239,11 @@ class Storyteller:
             f"动作与姿态：{action}。"
             f"构图：{composition}。"
             f"光线：{lighting}。"
-        )
-
-        # If story is available, extract visual cues for the image
-        if story_text:
-            base += (
-                f"以下是今天的故事，请把故事中出现的具体场景、物品、动物和互动细节画进画面：{story_text[:250]}。"
-                f"如果故事中提到其他动物（如螃蟹、海鸥、蝴蝶等），必须画在画面中。"
-            )
-
-        base += (
             ", 温暖治愈的旅行摄影风格"
             ", 狗狗保持参考图中的品种、毛色、体型、耳朵形状、五官特征完全相同"
             ", 毛发层次分明自然，面部特征清晰可辨"
-            ", 低饱和暖色调，柔和自然光"
-            ", 清新蓝绿与金黄配色"
-            ", 背景细节丰富但柔和虚化"
-            ", 画面精致如同旅行明信片"
+            ", 低饱和暖色调，柔和自然光，清新蓝绿与金黄配色"
+            ", 背景细节丰富但柔和虚化，画面精致如同旅行明信片"
             ", 避免：3D渲染感、塑料质感、高饱和、锐利阴影、僵硬姿势"
             ", 避免：面部变形、模糊、文字、水印、不同品种的狗"
         )
