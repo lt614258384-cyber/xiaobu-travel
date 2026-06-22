@@ -15,5 +15,5 @@ RUN mkdir -p data/uploads data/generated data/features
 # Railway sets PORT=8080
 EXPOSE 8080
 
-# Start: migrate first, then serve
-CMD ["sh", "-c", "echo 'Running migrations...' && python -m alembic upgrade head && echo 'Starting server...' && uvicorn app:app --host 0.0.0.0 --port ${PORT:-8080}"]
+# Start uvicorn immediately (health check can reach it), run migration after short delay
+CMD ["sh", "-c", "uvicorn app:app --host 0.0.0.0 --port ${PORT:-8080} & PID=$! && sleep 5 && python -m alembic upgrade head && wait $PID"]
