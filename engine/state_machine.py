@@ -36,24 +36,33 @@ class StateMachine:
                 session.close()
             return current_loc
 
-        # 10% chance: jump to a random location (exploration spice on top of mesh)
-        if random.random() < 0.10:
-            all_locations = session.query(Location).order_by(func.random()).limit(15).all()
-            # Prefer different region, but accept same region too
-            current_region_id = current_loc.region_id if current_loc else None
+        # Region fatigue: check last 3 visits, force jump if all in same region
+        current_region_id = current_loc.region_id if current_loc else None
+        force_jump = False
+        if current_region_id and state and state.user_id:
+            from models import JourneyLog as JL
+            recent_logs = session.query(JL).filter_by(user_id=state.user_id)\
+                .order_by(JL.id.desc()).limit(3).all()
+            if len(recent_logs) >= 3:
+                recent_locs = [session.get(Location, l.location_id) for l in recent_logs]
+                recent_regions = [l.region_id for l in recent_locs if l]
+                if all(r == current_region_id for r in recent_regions):
+                    force_jump = True
+
+        # Jump: 20% random chance, or forced after 3 same-region visits
+        if force_jump or random.random() < 0.20:
+            all_locations = session.query(Location).order_by(func.random()).limit(20).all()
             other_regions = [loc for loc in all_locations if loc.region_id != current_region_id]
-            if other_regions and random.random() < 0.7:
-                # Usually jump to a new region
+            if other_regions:
                 if close_session:
                     session.close()
                 return random.choice(other_regions)
-            else:
-                # Sometimes jump within same region to skip walking
-                candidates = [loc for loc in all_locations if loc.id != current_loc.id]
-                if candidates:
-                    if close_session:
-                        session.close()
-                    return random.choice(candidates)
+
+        weights = self._calculate_weights(adj_locations, profile)
+        chosen = random.choices(adj_locations, weights=weights, k=1)[0]
+        if close_session:
+            session.close()
+        return chosen
 
         weights = self._calculate_weights(adj_locations, profile)
         chosen = random.choices(adj_locations, weights=weights, k=1)[0]
