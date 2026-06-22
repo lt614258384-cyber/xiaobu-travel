@@ -68,6 +68,23 @@ function getCookie(name) {
     return '';
 }
 
+// Track photos marked for removal
+window.__removedPhotos = [];
+
+function initExistingPhotoRemove() {
+    document.querySelectorAll('.remove-existing').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const path = btn.getAttribute('data-path');
+            window.__removedPhotos.push(path);
+            btn.parentElement.remove();
+            document.getElementById('remove-photos').value = JSON.stringify(window.__removedPhotos);
+        });
+    });
+    // Also clear the list on page load
+    window.__removedPhotos = [];
+    document.getElementById('remove-photos').value = '';
+}
+
 function initProfileForm() {
     const form = document.getElementById("profile-form");
     if (!form) return;
@@ -96,15 +113,15 @@ function initProfileForm() {
             if (resp.ok) {
                 // Stay on profile page so user can see saved changes
                 btn.textContent = "已保存 ✓";
-                setTimeout(() => { btn.textContent = "💾 保存档案"; btn.disabled = false; }, 2000);
+                setTimeout(() => { window.location.reload(); }, 800);
             } else {
                 const err = await resp.json();
                 alert("保存失败: " + (err.detail || "未知错误"));
-                btn.textContent = "保存"; btn.disabled = false;
+                btn.textContent = "💾 保存档案"; btn.disabled = false;
             }
         } catch (err) {
             alert("网络错误: " + err.message);
-            btn.textContent = "保存"; btn.disabled = false;
+            btn.textContent = "💾 保存档案"; btn.disabled = false;
         }
     });
 }
@@ -112,5 +129,6 @@ function initProfileForm() {
 document.addEventListener("DOMContentLoaded", () => {
     initPhotoUpload();
     initTagGroups();
+    initExistingPhotoRemove();
     initProfileForm();
 });

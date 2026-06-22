@@ -77,10 +77,14 @@
                 <p class="hint" style="font-size:0.8rem;" id="photo-count">0/10</p>
             </div>
             <input type="file" id="photo-input" accept="image/*" multiple style="display:none;">
+            <input type="hidden" name="remove_photos" id="remove-photos" value="">
             <div class="photo-previews" id="photo-previews">
                 {% if photos %}
                 {% for photo in photos %}
-                <div class="photo-preview-wrapper"><img src="/{{ photo }}" class="photo-preview" alt="{{ user.pet_name }}"></div>
+                <div class="photo-preview-wrapper existing" data-path="{{ photo }}">
+                    <img src="/{{ photo }}" class="photo-preview" alt="{{ user.pet_name }}">
+                    <button class="remove remove-existing" data-path="{{ photo }}" type="button">&times;</button>
+                </div>
                 {% endfor %}
                 {% endif %}
             </div>

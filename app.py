@@ -165,6 +165,7 @@ async def profile_save(
     text_api_key: str = Form(""),
     real_life_memories: str = Form(""),
     csrf_token: str = Form(None, alias="_csrf_token"),
+    remove_photos: str = Form(""),
     photos: list[UploadFile] = File([]),
 ):
     # CSRF check
@@ -195,6 +196,19 @@ async def profile_save(
 
     # Upload with user-scoped directory
     existing = profile.reference_photos or []
+    # Remove photos marked for deletion
+    if remove_photos:
+        try:
+            to_remove = json.loads(remove_photos)
+            for path in to_remove:
+                if path in existing:
+                    existing.remove(path)
+                    # Delete file from disk
+                    file_path = _DATA_ROOT.parent / path
+                    if file_path.exists():
+                        file_path.unlink()
+        except (json.JSONDecodeError, TypeError):
+            pass
     photo_paths = list(existing)
     for photo in photos:
         if photo.filename and photo.size > 0:
