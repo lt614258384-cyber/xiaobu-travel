@@ -1,5 +1,9 @@
 # ── 小布的旅行 docker-compose.yml ──
 # Local testing with app + PostgreSQL
+#
+# FORCE_SECURE_COOKIES=true should only be set when a TLS termination proxy
+# (nginx, Caddy, Railway, etc.) serves HTTPS in front of the app.
+# Without HTTPS, Secure cookies are rejected by browsers and login breaks.
 
 services:
   app:
@@ -11,6 +15,7 @@ services:
       - SECRET_KEY=change-me-in-production-use-32-plus-chars
       - ENV=production
       - PORT=8000
+      # Set FORCE_SECURE_COOKIES=true ONLY after configuring HTTPS
     depends_on:
       db:
         condition: service_healthy

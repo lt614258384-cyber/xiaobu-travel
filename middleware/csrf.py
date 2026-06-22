@@ -7,7 +7,7 @@ from models import get_session, CsrfToken
 from session_utils import generate_session_token, hash_token
 
 
-_IS_HTTPS = os.getenv("ENV", "") == "production" or os.getenv("RAILWAY_PUBLIC_DOMAIN", "")
+_IS_HTTPS = os.getenv("FORCE_SECURE_COOKIES", "").lower() in ("true", "1", "yes")
 CSRF_COOKIE_NAME = "__Host-csrf" if _IS_HTTPS else "csrf_token"
 
 

@@ -6,8 +6,10 @@ from models import get_session, User
 from session_utils import validate_session, extend_session, generate_session_token
 
 
-# Use __Host- prefix only on HTTPS (__Host- requires Secure=True)
-_IS_HTTPS = os.getenv("ENV", "") == "production" or os.getenv("RAILWAY_PUBLIC_DOMAIN", "")
+# Use __Host- prefix only on HTTPS (__Host- requires Secure=True).
+# FORCE_SECURE_COOKIES=true should only be set when a TLS termination proxy
+# (nginx, Caddy, Railway, etc.) is serving HTTPS in front of the app.
+_IS_HTTPS = os.getenv("FORCE_SECURE_COOKIES", "").lower() in ("true", "1", "yes")
 SESSION_COOKIE_NAME = "__Host-sid" if _IS_HTTPS else "sid"
 COOKIE_MAX_AGE_REMEMBER = 7 * 24 * 3600  # 7 days
 COOKIE_MAX_AGE_SESSION = None  # browser session

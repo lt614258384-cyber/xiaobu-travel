@@ -55,7 +55,7 @@ def authenticated_client(registered_user):
     """Returns a TestClient that is already logged in, with CSRF token available.
 
     Returns (client, user_id, csrf_token).
-    The client has __Host-sid and __Host-csrf cookies set.
+    The client has session and CSRF cookies set (names depend on FORCE_SECURE_COOKIES).
     Use csrf_token as the _csrf_token form field value for POST requests.
     """
     from middleware.auth import SESSION_COOKIE_NAME

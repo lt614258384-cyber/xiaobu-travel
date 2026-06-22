@@ -2,7 +2,7 @@ import pytest
 from fastapi import FastAPI, Request, Form
 from fastapi.testclient import TestClient
 from fastapi.responses import HTMLResponse, JSONResponse
-from middleware.csrf import generate_csrf_token, verify_csrf
+from middleware.csrf import generate_csrf_token, verify_csrf, CSRF_COOKIE_NAME
 
 
 def test_generate_and_verify_csrf_token(tmp_path, monkeypatch):
@@ -35,7 +35,7 @@ def test_verify_csrf_valid():
     response = client.post(
         "/test-csrf",
         data={"csrf_token": "test-token"},
-        cookies={"__Host-csrf": "test-token"},
+        cookies={CSRF_COOKIE_NAME: "test-token"},
     )
     assert response.status_code == 200
     assert response.json() == {"status": "ok"}
@@ -76,6 +76,6 @@ def test_verify_csrf_mismatched_token():
     response = client.post(
         "/test-csrf",
         data={"csrf_token": "correct-token"},
-        cookies={"__Host-csrf": "wrong-token"},
+        cookies={CSRF_COOKIE_NAME: "wrong-token"},
     )
     assert response.status_code == 403

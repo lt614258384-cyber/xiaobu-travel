@@ -4,8 +4,8 @@ from fastapi.templating import Jinja2Templates
 from models import get_session, User
 from crypto_utils import hash_password, verify_password
 from session_utils import create_session, delete_session
-from middleware.auth import _set_session_cookie, SESSION_COOKIE_NAME, COOKIE_MAX_AGE_REMEMBER, COOKIE_MAX_AGE_SESSION
-from middleware.csrf import generate_csrf_token, verify_csrf
+from middleware.auth import _set_session_cookie, SESSION_COOKIE_NAME, COOKIE_MAX_AGE_REMEMBER, COOKIE_MAX_AGE_SESSION, _IS_HTTPS
+from middleware.csrf import generate_csrf_token, verify_csrf, CSRF_COOKIE_NAME
 from middleware.rate_limit import check_rate_limit
 from audit import log_event
 
@@ -114,10 +114,10 @@ async def login(
     response = RedirectResponse(url="/", status_code=303)
     _set_session_cookie(response, token, max_age)
     response.set_cookie(
-        key="__Host-csrf",
+        key=CSRF_COOKIE_NAME,
         value=csrf_raw,
         httponly=False,  # Must be readable by JS/forms
-        secure=True,
+        secure=_IS_HTTPS,
         samesite="lax",
         path="/",
         max_age=86400,
@@ -132,5 +132,5 @@ async def logout(request: Request):
         delete_session(token)
     response = RedirectResponse(url="/login", status_code=303)
     response.delete_cookie(SESSION_COOKIE_NAME)
-    response.delete_cookie("__Host-csrf")
+    response.delete_cookie(CSRF_COOKIE_NAME)
     return response
