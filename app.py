@@ -210,6 +210,16 @@ async def profile_save(
         except (json.JSONDecodeError, TypeError):
             pass
     photo_paths = list(existing)
+    # If new photos are being uploaded and we're at capacity,
+    # remove oldest existing photos to make room
+    new_photos_count = sum(1 for p in photos if p.filename and p.size > 0)
+    if new_photos_count > 0 and len(photo_paths) + new_photos_count > settings.MAX_REFERENCE_PHOTOS:
+        overflow = len(photo_paths) + new_photos_count - settings.MAX_REFERENCE_PHOTOS
+        for old_path in photo_paths[:overflow]:
+            fp = _DATA_ROOT.parent / old_path
+            if fp.exists():
+                fp.unlink()
+        photo_paths = photo_paths[overflow:]
     for photo in photos:
         if photo.filename and photo.size > 0:
             if len(photo_paths) >= settings.MAX_REFERENCE_PHOTOS:
