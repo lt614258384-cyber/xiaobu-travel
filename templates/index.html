@@ -171,12 +171,14 @@ function clearAllTimers() {
 }
 
 async function triggerFirstLetter() { return triggerLetter(); }
+function getBtn() { return document.getElementById('generate-btn'); }
+
 async function triggerLetter() {
-  const btn = document.getElementById('generate-btn');
+  const btn = getBtn();
   beforeId = getLatestLogId();
   latestResult = null;
 
-  btn.disabled = true;
+  if (btn) btn.disabled = true;
   showOnly('waiting-ritual');
 
   // Start rotating messages
@@ -221,7 +223,7 @@ async function triggerLetter() {
       }
       document.getElementById('gen-error-tech').textContent = err.detail || '';
       showOnly('gen-error');
-      document.getElementById('generate-btn').disabled = false;
+      const b = getBtn(); if (b) b.disabled = false;
       return;
     }
 
@@ -241,7 +243,7 @@ async function triggerLetter() {
         document.getElementById('gen-error-msg').textContent = '{{ user.pet_name }}今天在路上耽搁了。可能是邮路不好，也可能只是运气不太好。';
         document.getElementById('gen-error-tech').textContent = '生成超时，请稍后重试';
         showOnly('gen-error');
-        document.getElementById('generate-btn').disabled = false;
+        const b = getBtn(); if (b) b.disabled = false;
         return;
       }
       pollTimer = setTimeout(poll, 2000);
@@ -253,7 +255,7 @@ async function triggerLetter() {
     document.getElementById('gen-error-msg').textContent = '网络波动，信迷路了…';
     document.getElementById('gen-error-tech').textContent = '';
     showOnly('gen-error');
-    document.getElementById('generate-btn').disabled = false;
+    const b = getBtn(); if (b) b.disabled = false;
   }
 }
 
@@ -271,7 +273,7 @@ function openLetter() {
 
 function backToHero() {
   showOnly('');
-  document.getElementById('generate-btn').disabled = false;
+  const b = getBtn(); if (b) b.disabled = false;
   const hero = document.getElementById('hero-card');
   const actions = document.querySelector('.home-actions');
   if (hero) hero.style.display = '';
@@ -298,7 +300,7 @@ function continueWait() {
     document.getElementById('gen-error-msg').textContent = '{{ user.pet_name }}今天在路上耽搁了。可能是邮路不好，也可能只是运气不太好。';
     document.getElementById('gen-error-tech').textContent = '生成超时，请稍后重试';
     showOnly('gen-error');
-    document.getElementById('generate-btn').disabled = false;
+    const b = getBtn(); if (b) b.disabled = false;
   }, 30000);
 
   // Resume polling
@@ -320,7 +322,7 @@ function continueWait() {
 function giveUp() {
   clearAllTimers();
   showOnly('');
-  document.getElementById('generate-btn').disabled = false;
+  const b = getBtn(); if (b) b.disabled = false;
   const hero = document.getElementById('hero-card');
   const actions = document.querySelector('.home-actions');
   if (hero) hero.style.display = '';
@@ -329,7 +331,7 @@ function giveUp() {
 
 function retryLetter() {
   showOnly('');
-  document.getElementById('generate-btn').disabled = false;
+  const b = getBtn(); if (b) b.disabled = false;
   const hero = document.getElementById('hero-card');
   const actions = document.querySelector('.home-actions');
   if (hero) hero.style.display = '';
