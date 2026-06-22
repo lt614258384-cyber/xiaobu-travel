@@ -91,10 +91,11 @@ def validate_image_bytes(data: bytes, declared_suffix: str) -> None:
         )
 
     expected_format = _EXT_TO_PILLOW_FORMAT.get(declared)
-    if expected_format and pillow_format != expected_format:
+    # Accept if format matches OR if magic number already confirmed it
+    if expected_format and pillow_format and pillow_format != expected_format:
         raise HTTPException(
             status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
-            detail=f"文件格式不一致",
+            detail=f"文件格式不一致（检测到 {pillow_format}，期望 {expected_format}）",
         )
 
 
