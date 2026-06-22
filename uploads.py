@@ -91,12 +91,16 @@ def validate_image_bytes(data: bytes, declared_suffix: str) -> None:
         )
 
     expected_format = _EXT_TO_PILLOW_FORMAT.get(declared)
-    # Accept if format matches OR if magic number already confirmed it
-    if expected_format and pillow_format and pillow_format != expected_format:
-        raise HTTPException(
-            status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
-            detail=f"文件格式不一致（检测到 {pillow_format}，期望 {expected_format}）",
-        )
+    # MPO is iPhone Live Photo — same as JPEG internally, convert to plain JPEG on save
+    # Accept if format matches, is MPO/JPEG variant, or magic number already confirmed
+    if expected_format and pillow_format:
+        if pillow_format == 'MPO':
+            pass  # iPhone Live Photo, will be converted to JPEG on save
+        elif pillow_format != expected_format:
+            raise HTTPException(
+                status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+                detail=f"文件格式不一致（检测到 {pillow_format}，期望 {expected_format}）",
+            )
 
 
 def make_reference_photo_filename(original_filename: str) -> str:

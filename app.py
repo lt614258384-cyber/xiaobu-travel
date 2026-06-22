@@ -229,6 +229,15 @@ async def profile_save(
             contents = await photo.read()
             suffix = Path(photo.filename).suffix.lower()
             validate_image_bytes(contents, suffix)
+            # Convert MPO (iPhone Live Photo) to plain JPEG
+            from PIL import Image as PILImage
+            import io as pil_io
+            img = PILImage.open(pil_io.BytesIO(contents))
+            if img.format == 'MPO':
+                buf = pil_io.BytesIO()
+                img.convert('RGB').save(buf, format='JPEG', quality=92)
+                contents = buf.getvalue()
+                suffix = '.jpg'
             # Write validated file
             user_upload_dir = settings.UPLOAD_DIR / str(current_user.id)
             user_upload_dir.mkdir(parents=True, exist_ok=True)
