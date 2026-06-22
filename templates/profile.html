@@ -44,15 +44,24 @@
             <textarea name="habits" placeholder="例如：每天早上要出门散步，喜欢在沙发角落睡觉...">{{ profile.habits if profile else '' }}</textarea>
         </div>
         <div class="form-group">
-            <label>图片生成 API Key</label>
+            <label>API 提供商</label>
+            <select name="api_provider" id="api_provider" style="width:100%;padding:12px;margin-bottom:16px;border:2px solid #d4a574;border-radius:8px;font-size:16px;background:var(--color-bg);">
+              <option value="volcano" {% if profile and profile.api_provider == 'volcano' %}selected{% endif %}>火山引擎</option>
+              <option value="yunwu" {% if profile and profile.api_provider == 'yunwu' %}selected{% endif %}>云雾 API</option>
+            </select>
+
+            <label>API Key</label>
             <input type="password" name="image_api_key" id="image_api_key"
                    value="{{ profile.image_api_key if profile else '' }}"
-                   placeholder="粘贴火山引擎 API Key">
+                   placeholder="粘贴 API Key">
             {% if profile and profile.image_api_key %}
               <small>已保存（末尾：****{{ profile.image_api_key[-4:] }}）</small>
             {% endif %}
-            <p style="font-size:0.8rem;color:var(--color-text-light);margin-top:4px;">
+            <p class="api-hint" id="api-hint-volcano" style="font-size:0.8rem;color:var(--color-text-light);margin-top:4px;{% if profile and profile.api_provider == 'yunwu' %}display:none{% endif %}">
                 去 <a href="https://console.volcengine.com/" target="_blank">火山引擎控制台</a> 创建 API Key，粘贴到这里即可
+            </p>
+            <p class="api-hint" id="api-hint-yunwu" style="font-size:0.8rem;color:var(--color-text-light);margin-top:4px;{% if not profile or profile.api_provider != 'yunwu' %}display:none{% endif %}">
+                去 <a href="https://yunwu.ai" target="_blank">yunwu.ai</a> 获取 API Key，粘贴到这里即可
             </p>
         </div>
         <div class="form-group">
@@ -79,4 +88,12 @@
         <button type="submit" class="btn btn-primary btn-submit">💾 保存档案</button>
     </form>
 </div>
+
+<script>
+document.getElementById('api_provider').addEventListener('change', function() {
+    var v = this.value;
+    document.getElementById('api-hint-volcano').style.display = (v === 'volcano') ? '' : 'none';
+    document.getElementById('api-hint-yunwu').style.display = (v === 'yunwu') ? '' : 'none';
+});
+</script>
 {% endblock %}

@@ -144,6 +144,7 @@ async def profile_save(
     interests: str = Form("[]"),
     habits: str = Form(""),
     content_preference: str = Form("caption"),
+    api_provider: str = Form("volcano"),
     image_api_key: str = Form(""),
     text_api_key: str = Form(""),
     real_life_memories: str = Form(""),
@@ -171,6 +172,7 @@ async def profile_save(
     profile.interests = json.loads(interests) if interests else []
     profile.habits = habits
     profile.content_preference = content_preference
+    profile.api_provider = api_provider
     profile.image_api_key = image_api_key
     profile.text_api_key = text_api_key
     profile.real_life_memories = real_life_memories

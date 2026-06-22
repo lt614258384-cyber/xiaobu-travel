@@ -271,19 +271,27 @@ class Scheduler:
                     if not memory_context:
                         memory_context = ""
 
+                    provider = profile.api_provider or "volcano"
+
                     story = self.storyteller.compose_story(
                         activity, profile,
                         weather=weather, mood=state.mood, features=features,
                         memory_context=memory_context,
                         all_stories_count=len(all_stories),
                         api_key=profile.text_api_key or profile.image_api_key or "",
+                        api_provider=provider,
                     )
 
                     prompt = self.storyteller.compose_prompt(
                         activity, profile, weather, state.mood, features,
                         story_text=story,
                     )
-                    api_type = "seedream" if profile.image_api_key else None
+                    if provider == "yunwu":
+                        api_type = "yunwu"
+                    elif profile.image_api_key:
+                        api_type = "seedream"
+                    else:
+                        api_type = None
                     image_gen = get_image_generator(api_type=api_type, api_key=profile.image_api_key)
                     image_path = image_gen.generate(prompt, profile.reference_photos or [])
                     image_path = image_path.replace("\\", "/")
@@ -377,6 +385,9 @@ class Scheduler:
             if not memory_context:
                 memory_context = ""  # will be built after first story
 
+            # Determine provider for routing
+            provider = profile.api_provider or "volcano"
+
             # Generate story FIRST, so image prompt can reference story details
             story = self.storyteller.compose_story(
                 activity, profile,
@@ -384,6 +395,7 @@ class Scheduler:
                 memory_context=memory_context,
                 all_stories_count=len(all_stories),
                 api_key=profile.text_api_key or profile.image_api_key or "",
+                api_provider=provider,
             )
 
             # Now generate image with story context for richer visual details
@@ -391,7 +403,13 @@ class Scheduler:
                 activity, profile, weather, state.mood, features,
                 story_text=story,
             )
-            api_type = "seedream" if profile.image_api_key else None
+            # Select image generator based on provider
+            if provider == "yunwu":
+                api_type = "yunwu"
+            elif profile.image_api_key:
+                api_type = "seedream"
+            else:
+                api_type = None
             image_gen = get_image_generator(api_type=api_type, api_key=profile.image_api_key)
             image_path = image_gen.generate(prompt, profile.reference_photos or [])
             image_path = image_path.replace("\\", "/")

@@ -186,10 +186,42 @@ class SeedreamGenerator(ImageGenerator):
         return str(output_path)
 
 
+class YunwuImageGenerator(ImageGenerator):
+    """OpenAI-compatible image generation via yunwu.ai. Uses gpt-image-2."""
+    API_URL = "https://yunwu.ai/v1/images/generations"
+
+    def generate(self, prompt: str, reference_photos: list[str]) -> str:
+        headers = {
+            "Authorization": f"Bearer {self._get_api_key()}",
+            "Content-Type": "application/json",
+        }
+
+        payload = {
+            "model": "gpt-image-2",
+            "prompt": prompt,
+            "n": 1,
+            "size": "1024x1024",
+            "response_format": "b64_json",
+        }
+
+        resp = httpx.post(self.API_URL, json=payload, headers=headers, timeout=300)
+        resp.raise_for_status()
+        data = resp.json()
+
+        img_data = data["data"][0]["b64_json"]
+        img_bytes = base64.b64decode(img_data)
+
+        ts = int(time.time() * 1000)
+        output_path = settings.GENERATED_DIR / f"xiaobu_{ts}.png"
+        output_path.write_bytes(img_bytes)
+        return str(output_path)
+
+
 GENERATORS = {
     "tongyi": TongyiImageGenerator,
     "seedream": SeedreamGenerator,
     "openai": OpenAIImageGenerator,
+    "yunwu": YunwuImageGenerator,
     "fake": FakeGenerator,
 }
 

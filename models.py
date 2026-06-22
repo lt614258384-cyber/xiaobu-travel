@@ -18,8 +18,9 @@ class Profile(Base):
     personality_tags = Column(JSON, default=list)
     interests = Column(JSON, default=list)
     habits = Column(Text, default="")
+    api_provider = Column(String(20), default="volcano")  # "volcano" or "yunwu"
     image_api_key = Column(String(200), default="")
-    text_api_key = Column(String(200), default="")
+    text_api_key = Column(String(200), default="")  # deprecated
     content_preference = Column(String(20), default="story")
     real_life_memories = Column(Text, default="")
     reference_photos = Column(JSON, default=list)

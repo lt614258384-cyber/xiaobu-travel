@@ -3,8 +3,16 @@ import httpx
 from models import Activity, Profile
 
 
-STORY_MODEL = "ep-20260622031722-sdjgh"
-STORY_API_URL = "https://ark.cn-beijing.volces.com/api/v3/chat/completions"
+STORY_CONFIGS = {
+    "volcano": {
+        "url": "https://ark.cn-beijing.volces.com/api/v3/chat/completions",
+        "model": "ep-20260622031722-sdjgh",
+    },
+    "yunwu": {
+        "url": "https://yunwu.ai/v1/chat/completions",
+        "model": "DeepSeek-V4-Pro",
+    },
+}
 
 # Action & composition variety for image prompts
 ACTIONS = [
@@ -53,6 +61,7 @@ class Storyteller:
         memory_context: str = "",
         all_stories_count: int = 0,
         api_key: str = "",
+        api_provider: str = "volcano",
     ) -> str:
         # Try LLM story generation if API key is available
         if api_key:
@@ -66,6 +75,7 @@ class Storyteller:
                     memory_context=memory_context,
                     all_stories_count=all_stories_count,
                     api_key=api_key,
+                    api_provider=api_provider,
                 )
                 if story:
                     return story
@@ -88,6 +98,7 @@ class Storyteller:
         memory_context: str,
         all_stories_count: int,
         api_key: str,
+        api_provider: str = "volcano",
     ) -> str:
         dog_name = profile.name or "小布"
         dog_desc = features if features else (profile.appearance or "一只可爱的金毛犬")
@@ -125,10 +136,12 @@ class Storyteller:
             f"闻到了什么气味、爪子底下是什么触感。不要出现\"{dog_name}\"。"
         )
 
+        config = STORY_CONFIGS.get(api_provider, STORY_CONFIGS["volcano"])
+
         resp = httpx.post(
-            STORY_API_URL,
+            config["url"],
             json={
-                "model": STORY_MODEL,
+                "model": config["model"],
                 "messages": [
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": user_message},
