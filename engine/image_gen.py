@@ -50,8 +50,8 @@ class FakeGenerator(ImageGenerator):
     def generate(self, prompt: str, reference_photos: list[str]) -> str:
         img = Image.new("RGB", (512, 512), color=(255, 200, 150))
         ts = int(time.time() * 1000)
-        output = settings.GENERATED_DIR / f"xiaobu_{ts}.png"
-        img.save(output)
+        output = settings.GENERATED_DIR / f"xiaobu_{ts}.jpg"
+        img.save(output, format="JPEG")
         return str(output)
 
 
@@ -176,13 +176,15 @@ class SeedreamGenerator(ImageGenerator):
         resp.raise_for_status()
         data = resp.json()
 
-        # Extract image from response
+        # Extract image from response, convert to optimized JPEG
+        import io
         img_data = data["data"][0]["b64_json"]
-        img_bytes = base64.b64decode(img_data)
+        img = Image.open(io.BytesIO(base64.b64decode(img_data)))
+        img = img.convert("RGB")
 
         ts = int(time.time() * 1000)
-        output_path = settings.GENERATED_DIR / f"xiaobu_{ts}.png"
-        output_path.write_bytes(img_bytes)
+        output_path = settings.GENERATED_DIR / f"xiaobu_{ts}.jpg"
+        img.save(output_path, format="JPEG", quality=85, optimize=True)
         return str(output_path)
 
 
@@ -208,12 +210,14 @@ class YunwuImageGenerator(ImageGenerator):
         resp.raise_for_status()
         data = resp.json()
 
+        import io
         img_data = data["data"][0]["b64_json"]
-        img_bytes = base64.b64decode(img_data)
+        img = Image.open(io.BytesIO(base64.b64decode(img_data)))
+        img = img.convert("RGB")
 
         ts = int(time.time() * 1000)
-        output_path = settings.GENERATED_DIR / f"xiaobu_{ts}.png"
-        output_path.write_bytes(img_bytes)
+        output_path = settings.GENERATED_DIR / f"xiaobu_{ts}.jpg"
+        img.save(output_path, format="JPEG", quality=85, optimize=True)
         return str(output_path)
 
 
